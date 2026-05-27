@@ -4,9 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import restaurantapp.model.User;
-import restaurantapp.service.UserService;
-
-import java.util.Map;
+import restaurantapp.repository.UserRepository;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -14,22 +12,25 @@ import java.util.Map;
 public class AuthController {
 
     @Autowired
-    private UserService userService;
+    private UserRepository userRepository;
 
     @PostMapping("/register")
-    public String registerUser(@RequestBody User user) {
+    public User registerUser(
+            @RequestBody User user
+    ) {
 
-        userService.registerUser(user);
-
-        return "User Registered Successfully";
+        return userRepository.save(user);
     }
 
     @PostMapping("/login")
-    public String loginUser(@RequestBody Map<String, String> loginData) {
+    public User loginUser(
+            @RequestBody User user
+    ) {
 
-        String email = loginData.get("email");
-        String password = loginData.get("password");
-
-        return userService.loginUser(email, password);
+        return userRepository
+                .findByEmailAndPassword(
+                        user.getEmail(),
+                        user.getPassword()
+                );
     }
 }

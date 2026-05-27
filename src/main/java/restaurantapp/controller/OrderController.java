@@ -1,39 +1,63 @@
 package restaurantapp.controller;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import restaurantapp.model.Order;
+import restaurantapp.repository.OrderRepository;
 import restaurantapp.service.OrderService;
 
 @RestController
 @RequestMapping("/api/orders")
+@CrossOrigin("*")
 public class OrderController {
 
     @Autowired
     private OrderService orderService;
 
-    @PostMapping("/place")
-    public Order placeOrder(
+    @Autowired
+    private OrderRepository orderRepository;
+
+    @PostMapping
+    public Order saveOrder(
             @RequestBody Order order) {
 
-        return orderService.placeOrder(order);
+        return orderService.saveOrder(order);
     }
 
-    @GetMapping("/all")
+    @GetMapping
     public List<Order> getAllOrders() {
 
         return orderService.getAllOrders();
     }
 
-    @PutMapping("/update-status/{id}")
+    @GetMapping("/user/{email}")
+    public List<Order> getUserOrders(
+            @PathVariable String email) {
+
+        return orderService.getUserOrders(email);
+    }
+
+    @PutMapping("/{id}")
     public Order updateStatus(
             @PathVariable Long id,
             @RequestParam String status) {
 
-        return orderService
-                .updateOrderStatus(id, status);
+        Optional<Order> optionalOrder =
+                orderService.getOrderById(id);
+
+        if (optionalOrder.isPresent()) {
+
+            Order order = optionalOrder.get();
+
+            order.setStatus(status);
+
+            return orderRepository.save(order);
+        }
+
+        return null;
     }
 }

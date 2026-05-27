@@ -1,6 +1,7 @@
 package restaurantapp.service;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,9 +15,7 @@ public class OrderService {
     @Autowired
     private OrderRepository orderRepository;
 
-    public Order placeOrder(Order order) {
-
-        order.setStatus("ORDER PLACED");
+    public Order saveOrder(Order order) {
 
         return orderRepository.save(order);
     }
@@ -26,20 +25,13 @@ public class OrderService {
         return orderRepository.findAll();
     }
 
-    public Order updateOrderStatus(
-            Long id,
-            String status) {
+    public List<Order> getUserOrders(String email) {
 
-        Order order =
-                orderRepository.findById(id).orElse(null);
+        return orderRepository.findByEmail(email);
+    }
 
-        if (order != null) {
+    public Optional<Order> getOrderById(Long id) {
 
-            order.setStatus(status);
-
-            return orderRepository.save(order);
-        }
-
-        return null;
+        return orderRepository.findById(id);
     }
 }

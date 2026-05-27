@@ -3,6 +3,7 @@ package restaurantapp.model;
 import jakarta.persistence.*;
 
 @Entity
+@Table(name = "food_item")
 public class FoodItem {
 
     @Id
@@ -11,27 +12,16 @@ public class FoodItem {
 
     private String name;
 
-    private String category;
+    private String description;
 
     private double price;
 
-    private String description;
+    private String category;
 
+    @Column(length = 1000)
     private String imageUrl;
 
     public FoodItem() {
-    }
-
-    public FoodItem(Long id, String name, String category,
-                    double price, String description,
-                    String imageUrl) {
-
-        this.id = id;
-        this.name = name;
-        this.category = category;
-        this.price = price;
-        this.description = description;
-        this.imageUrl = imageUrl;
     }
 
     public Long getId() {
@@ -50,12 +40,12 @@ public class FoodItem {
         this.name = name;
     }
 
-    public String getCategory() {
-        return category;
+    public String getDescription() {
+        return description;
     }
 
-    public void setCategory(String category) {
-        this.category = category;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public double getPrice() {
@@ -66,12 +56,12 @@ public class FoodItem {
         this.price = price;
     }
 
-    public String getDescription() {
-        return description;
+    public String getCategory() {
+        return category;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public void setCategory(String category) {
+        this.category = category;
     }
 
     public String getImageUrl() {

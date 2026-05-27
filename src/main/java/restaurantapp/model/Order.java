@@ -11,38 +11,33 @@ public class Order {
     private Long id;
 
     private String customerName;
-
+    private String email;
     private String foodName;
-
+    private double price;
     private int quantity;
+    private double total;
 
-    private double totalPrice;
-
-    private String status;
+    private String status = "Preparing";
 
     public Order() {
     }
 
-    public Order(Long id, String customerName,
-                 String foodName,
-                 int quantity,
-                 double totalPrice,
+    public Order(String customerName, String email,
+                 String foodName, double price,
+                 int quantity, double total,
                  String status) {
 
-        this.id = id;
         this.customerName = customerName;
+        this.email = email;
         this.foodName = foodName;
+        this.price = price;
         this.quantity = quantity;
-        this.totalPrice = totalPrice;
+        this.total = total;
         this.status = status;
     }
 
     public Long getId() {
         return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public String getCustomerName() {
@@ -53,12 +48,28 @@ public class Order {
         this.customerName = customerName;
     }
 
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
     public String getFoodName() {
         return foodName;
     }
 
     public void setFoodName(String foodName) {
         this.foodName = foodName;
+    }
+
+    public double getPrice() {
+        return price;
+    }
+
+    public void setPrice(double price) {
+        this.price = price;
     }
 
     public int getQuantity() {
@@ -69,12 +80,12 @@ public class Order {
         this.quantity = quantity;
     }
 
-    public double getTotalPrice() {
-        return totalPrice;
+    public double getTotal() {
+        return total;
     }
 
-    public void setTotalPrice(double totalPrice) {
-        this.totalPrice = totalPrice;
+    public void setTotal(double total) {
+        this.total = total;
     }
 
     public String getStatus() {
