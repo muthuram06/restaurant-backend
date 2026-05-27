@@ -2,6 +2,7 @@ package restaurantapp.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
+
 import restaurantapp.model.User;
 
 @Repository
