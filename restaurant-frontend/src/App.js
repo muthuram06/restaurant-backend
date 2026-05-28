@@ -32,7 +32,7 @@ function App() {
 
       <Routes>
 
-        {/* ================= USER ROUTES ================= */}
+        {/* USER ROUTES */}
 
         <Route
           path="/"
@@ -79,18 +79,21 @@ function App() {
           element={<FoodDetails />}
         />
 
-        {/* ================= ADMIN ROUTES ================= */}
+        {/* ADMIN ROUTES */}
 
         <Route
           path="/admin-login"
           element={<AdminLogin />}
         />
 
-        <Route path="/admin" element={<AdminAnalytics />} />
+        <Route
+          path="/admin-panel"
+          element={<AdminPanel />}
+        />
 
         <Route
           path="/admin"
-          element={<AdminPanel />}
+          element={<AdminAnalytics />}
         />
 
       </Routes>
