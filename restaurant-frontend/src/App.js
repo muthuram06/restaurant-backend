@@ -26,6 +26,9 @@ import AdminAnalytics from "./pages/AdminAnalytics";
 
 function App() {
 
+  const isLoggedIn =
+    localStorage.getItem("user");
+
   return (
 
     <BrowserRouter>
@@ -35,20 +38,83 @@ function App() {
         {/* USER ROUTES */}
 
         <Route path="/" element={<Home />} />
-        <Route path="/cart" element={<Cart />} />
-        <Route path="/orders" element={<Orders />} />
-        <Route path="/favorites" element={<Favorites />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
-        <Route path="/checkout" element={<Checkout />} />
-        <Route path="/table-booking" element={<TableBooking />} />
-        <Route path="/food-details" element={<FoodDetails />} />
+
+        <Route
+          path="/cart"
+          element={
+            isLoggedIn
+              ? <Cart />
+              : <Login />
+          }
+        />
+
+        <Route
+          path="/orders"
+          element={
+            isLoggedIn
+              ? <Orders />
+              : <Login />
+          }
+        />
+
+        <Route
+          path="/favorites"
+          element={
+            isLoggedIn
+              ? <Favorites />
+              : <Login />
+          }
+        />
+
+        <Route
+          path="/checkout"
+          element={
+            isLoggedIn
+              ? <Checkout />
+              : <Login />
+          }
+        />
+
+        <Route
+          path="/table-booking"
+          element={
+            isLoggedIn
+              ? <TableBooking />
+              : <Login />
+          }
+        />
+
+        <Route
+          path="/food-details"
+          element={<FoodDetails />}
+        />
+
+        <Route
+          path="/login"
+          element={<Login />}
+        />
+
+        <Route
+          path="/register"
+          element={<Register />}
+        />
 
         {/* ADMIN ROUTES */}
 
-        <Route path="/admin-login" element={<AdminLogin />} />
-        <Route path="/admin-panel" element={<AdminPanel />} />
-        <Route path="/admin-analytics" element={<AdminAnalytics />} />
+        <Route
+          path="/admin-login"
+          element={<AdminLogin />}
+        />
+
+        <Route
+          path="/admin-panel"
+          element={<AdminPanel />}
+        />
+
+        <Route
+          path="/admin-analytics"
+          element={<AdminAnalytics />}
+        />
 
       </Routes>
 
