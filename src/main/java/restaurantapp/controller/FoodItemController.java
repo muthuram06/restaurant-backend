@@ -10,7 +10,14 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/food")
-@CrossOrigin(origins = "http://localhost:3000")
+
+@CrossOrigin(
+    origins = {
+        "http://localhost:3000",
+        "https://restaurant-backend-n8firmvjk-muthu-ram-vs-projects.vercel.app"
+    }
+)
+
 public class FoodItemController {
 
     @Autowired
@@ -18,11 +25,17 @@ public class FoodItemController {
 
     @GetMapping("/all")
     public List<FoodItem> getAllFoods() {
+
         return foodItemService.getAllFoods();
+
     }
 
     @PostMapping("/add")
-    public FoodItem addFood(@RequestBody FoodItem foodItem) {
+    public FoodItem addFood(
+            @RequestBody FoodItem foodItem
+    ) {
+
         return foodItemService.addFood(foodItem);
+
     }
 }
