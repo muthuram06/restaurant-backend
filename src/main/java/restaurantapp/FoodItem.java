@@ -24,13 +24,18 @@ public class FoodItem {
     public FoodItem() {
     }
 
-    // CONSTRUCTOR
-    public FoodItem(String name, String category, double price, String imageUrl) {
+    // MAIN CONSTRUCTOR
+    public FoodItem(
+            String name,
+            String description,
+            double price,
+            String imageUrl
+    ) {
         this.name = name;
-        this.category = category;
+        this.description = description;
         this.price = price;
         this.imageUrl = imageUrl;
-        this.description = "";
+        this.category = "Non Veg";
     }
 
     // GETTERS AND SETTERS
