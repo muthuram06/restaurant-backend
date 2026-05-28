@@ -35,7 +35,7 @@ public class FoodItem {
         this.description = description;
         this.price = price;
         this.imageUrl = imageUrl;
-        this.category = "Non Veg";
+        this.category = "Veg";
     }
 
     // GETTERS AND SETTERS
