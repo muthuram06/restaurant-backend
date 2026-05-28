@@ -1,9 +1,11 @@
 
 {
+  "cleanUrls": true,
   "rewrites": [
     {
-      "source": "/((?!static|.*\\..*).*)",
+      "source": "/(.*)",
       "destination": "/index.html"
     }
   ]
 }
+
