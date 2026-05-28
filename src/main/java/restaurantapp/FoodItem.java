@@ -24,6 +24,17 @@ public class FoodItem {
     public FoodItem() {
     }
 
+    // CONSTRUCTOR
+    public FoodItem(String name, String category, double price, String imageUrl) {
+        this.name = name;
+        this.category = category;
+        this.price = price;
+        this.imageUrl = imageUrl;
+        this.description = "";
+    }
+
+    // GETTERS AND SETTERS
+
     public Long getId() {
         return id;
     }
