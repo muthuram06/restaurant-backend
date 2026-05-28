@@ -4,19 +4,23 @@ function AdminAnalytics() {
 
   return (
 
-    <div className="container mt-5">
+    <div style={{ padding: "40px" }}>
 
-      <h1 className="text-center">
-        ADMIN ANALYTICS
-      </h1>
+      <h1>ADMIN ANALYTICS</h1>
 
-      <div className="card p-4 shadow mt-4">
+      <div
+        style={{
+          marginTop: "20px",
+          border: "1px solid gray",
+          padding: "20px"
+        }}
+      >
 
-        <h3>Total Orders : 25</h3>
+        <h2>Total Orders : 25</h2>
 
-        <h3>Total Revenue : ₹ 5000</h3>
+        <h2>Total Revenue : ₹5000</h2>
 
-        <h3>Total Foods : 3</h3>
+        <h2>Total Foods : 3</h2>
 
       </div>
 

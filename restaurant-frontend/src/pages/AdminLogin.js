@@ -13,34 +13,44 @@ function AdminLogin() {
 
   return (
 
-    <div className="container mt-5">
+    <div style={{ padding: "40px" }}>
 
-      <div className="card p-5 shadow">
+      <h1>ADMIN LOGIN</h1>
 
-        <h1 className="text-center mb-4">
-          ADMIN LOGIN
-        </h1>
+      <input
+        type="text"
+        placeholder="Admin Username"
+        style={{
+          padding: "10px",
+          marginTop: "20px",
+          width: "300px",
+          display: "block"
+        }}
+      />
 
-        <input
-          type="text"
-          placeholder="Username"
-          className="form-control mb-3"
-        />
+      <input
+        type="password"
+        placeholder="Admin Password"
+        style={{
+          padding: "10px",
+          marginTop: "20px",
+          width: "300px",
+          display: "block"
+        }}
+      />
 
-        <input
-          type="password"
-          placeholder="Password"
-          className="form-control mb-3"
-        />
-
-        <button
-          className="btn btn-dark"
-          onClick={handleLogin}
-        >
-          Login
-        </button>
-
-      </div>
+      <button
+        onClick={handleLogin}
+        style={{
+          padding: "10px 20px",
+          marginTop: "20px",
+          backgroundColor: "black",
+          color: "white",
+          border: "none"
+        }}
+      >
+        Login
+      </button>
 
     </div>
 

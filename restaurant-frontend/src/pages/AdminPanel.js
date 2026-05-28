@@ -1,22 +1,44 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 
 function AdminPanel() {
 
+  const navigate = useNavigate();
+
   return (
 
-    <div className="container mt-5">
+    <div style={{ padding: "40px" }}>
 
-      <h1 className="text-center">
-        ADMIN PANEL
-      </h1>
+      <h1>ADMIN PANEL</h1>
 
-      <div className="card p-4 shadow mt-4">
+      <button
+        onClick={() => navigate("/admin-analytics")}
+        style={{
+          padding: "10px 20px",
+          marginTop: "20px",
+          backgroundColor: "green",
+          color: "white",
+          border: "none"
+        }}
+      >
+        View Analytics
+      </button>
 
-        <h3>Manage Foods</h3>
+      <div
+        style={{
+          marginTop: "30px",
+          border: "1px solid gray",
+          padding: "20px"
+        }}
+      >
 
-        <button className="btn btn-success mt-3">
-          Add Food
-        </button>
+        <h2>Manage Foods</h2>
+
+        <p>Add Food</p>
+
+        <p>Edit Food</p>
+
+        <p>Delete Food</p>
 
       </div>
 

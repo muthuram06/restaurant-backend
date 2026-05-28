@@ -35,49 +35,25 @@ function App() {
         {/* USER ROUTES */}
 
         <Route path="/" element={<Home />} />
-
         <Route path="/cart" element={<Cart />} />
-
         <Route path="/orders" element={<Orders />} />
-
         <Route path="/favorites" element={<Favorites />} />
-
         <Route path="/login" element={<Login />} />
-
         <Route path="/register" element={<Register />} />
-
         <Route path="/checkout" element={<Checkout />} />
-
-        <Route
-          path="/table-booking"
-          element={<TableBooking />}
-        />
-
-        <Route
-          path="/food-details"
-          element={<FoodDetails />}
-        />
+        <Route path="/table-booking" element={<TableBooking />} />
+        <Route path="/food-details" element={<FoodDetails />} />
 
         {/* ADMIN ROUTES */}
 
-        <Route
-          path="/admin-login"
-          element={<AdminLogin />}
-        />
-
-        <Route
-          path="/admin-panel"
-          element={<AdminPanel />}
-        />
-
-        <Route
-          path="/admin"
-          element={<AdminAnalytics />}
-        />
+        <Route path="/admin-login" element={<AdminLogin />} />
+        <Route path="/admin-panel" element={<AdminPanel />} />
+        <Route path="/admin-analytics" element={<AdminAnalytics />} />
 
       </Routes>
 
     </BrowserRouter>
+
   );
 }
 
