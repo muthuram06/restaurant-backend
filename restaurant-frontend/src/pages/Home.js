@@ -1,51 +1,35 @@
-import React, {
-  useEffect,
-  useState
-} from "react";
-
+import React, { useEffect, useState } from "react";
 import axios from "axios";
+import { Link } from "react-router-dom";
 
-import {
-  Link
-} from "react-router-dom";
-
-import NavbarComponent
-from "../components/NavbarComponent";
-
-import FooterComponent
-from "../components/FooterComponent";
+import NavbarComponent from "../components/NavbarComponent";
+import FooterComponent from "../components/FooterComponent";
 
 function Home() {
 
-  const [foods, setFoods] =
-    useState([]);
-
-  const [search, setSearch] =
-    useState("");
-
-  const [category, setCategory] =
-    useState("All");
+  const [foods, setFoods] = useState([]);
+  const [search, setSearch] = useState("");
+  const [category, setCategory] = useState("All");
 
   useEffect(() => {
-
     fetchFoods();
-
   }, []);
 
   const fetchFoods = async () => {
 
     try {
 
-      const response =
-        await axios.get(
-          "http://localhost:8080/api/food/all"
-        );
+      const response = await axios.get(
+        "https://restaurant-backend-ca51.onrender.com/api/food/all"
+      );
+
+      console.log(response.data);
 
       setFoods(response.data);
 
     } catch (error) {
 
-      console.log(error);
+      console.log("Error fetching foods:", error);
 
     }
   };
@@ -53,14 +37,10 @@ function Home() {
   const addToCart = (food) => {
 
     const cart =
-      JSON.parse(
-        localStorage.getItem("cart")
-      ) || [];
+      JSON.parse(localStorage.getItem("cart")) || [];
 
     const existingFood =
-      cart.find(
-        (item) => item.id === food.id
-      );
+      cart.find((item) => item.id === food.id);
 
     if (existingFood) {
 
@@ -69,11 +49,10 @@ function Home() {
     } else {
 
       cart.push({
-
         ...food,
         quantity: 1
-
       });
+
     }
 
     localStorage.setItem(
@@ -87,9 +66,7 @@ function Home() {
   const addToFavorites = (food) => {
 
     const favorites =
-      JSON.parse(
-        localStorage.getItem("favorites")
-      ) || [];
+      JSON.parse(localStorage.getItem("favorites")) || [];
 
     favorites.push(food);
 
@@ -101,71 +78,48 @@ function Home() {
     alert("Food Added To Favorites");
   };
 
-  const filteredFoods =
-    foods.filter((food) => {
+  const filteredFoods = foods.filter((food) => {
 
-      const matchesSearch =
-        food.name
-          .toLowerCase()
-          .includes(
-            search.toLowerCase()
-          );
+    const matchesSearch =
+      food.name
+        .toLowerCase()
+        .includes(search.toLowerCase());
 
-      const matchesCategory =
+    const matchesCategory =
+      category === "All" ||
+      food.category === category;
 
-        category === "All" ||
+    return matchesSearch && matchesCategory;
 
-        food.category === category;
-
-      return (
-        matchesSearch &&
-        matchesCategory
-      );
-    });
+  });
 
   return (
 
     <div>
 
-      {/* USER NAVBAR */}
       <NavbarComponent />
 
-      {/* VEG BANNER */}
       <div className="alert alert-success text-center fw-bold mb-0">
-
         🌱 100% PURE VEG RESTAURANT
-
       </div>
 
       <div className="container mt-4">
 
-        {/* TITLE */}
         <h1 className="text-center fw-bold mb-3">
-
           Welcome To AFNA'S GARDEN RESTAURANT
-
         </h1>
 
-        {/* BEST SELLERS */}
         <div className="alert alert-warning text-center">
-
           🔥 Best Sellers :
           Paneer Butter Masala,
           Veg Biryani,
           Masala Dosa
-
         </div>
 
-        {/* FOOD COUNT */}
         <h2 className="text-center text-secondary mb-4">
-
-          {filteredFoods.length}
-          {" "}
-          Foods Available
-
+          {filteredFoods.length} Foods Available
         </h2>
 
-        {/* SEARCH */}
         <input
           type="text"
           className="form-control mb-4 shadow-sm"
@@ -176,66 +130,52 @@ function Home() {
           }
         />
 
-        {/* CATEGORY FILTERS */}
         <div className="mb-4 d-flex flex-wrap">
 
           <button
             className="btn btn-dark m-1"
-            onClick={() =>
-              setCategory("All")
-            }
+            onClick={() => setCategory("All")}
           >
             All
           </button>
 
           <button
             className="btn btn-success m-1"
-            onClick={() =>
-              setCategory("South Indian")
-            }
+            onClick={() => setCategory("South Indian")}
           >
             South Indian
           </button>
 
           <button
             className="btn btn-primary m-1"
-            onClick={() =>
-              setCategory("North Indian")
-            }
+            onClick={() => setCategory("North Indian")}
           >
             North Indian
           </button>
 
           <button
             className="btn btn-danger m-1"
-            onClick={() =>
-              setCategory("Chinese")
-            }
+            onClick={() => setCategory("Chinese")}
           >
             Chinese
           </button>
 
           <button
             className="btn btn-warning m-1"
-            onClick={() =>
-              setCategory("Fast Food")
-            }
+            onClick={() => setCategory("Fast Food")}
           >
             Fast Food
           </button>
 
           <button
             className="btn btn-info m-1"
-            onClick={() =>
-              setCategory("Street Food")
-            }
+            onClick={() => setCategory("Street Food")}
           >
             Street Food
           </button>
 
         </div>
 
-        {/* FOOD CARDS */}
         <div className="row">
 
           {filteredFoods.map((food) => (
@@ -247,7 +187,6 @@ function Home() {
 
               <div className="card h-100 shadow border-0">
 
-                {/* FOOD IMAGE */}
                 <img
                   src={food.imageUrl}
                   alt={food.name}
@@ -260,81 +199,46 @@ function Home() {
 
                 <div className="card-body">
 
-                  {/* VEG BADGE */}
                   <span className="badge bg-success mb-2">
-
                     100% VEG
-
                   </span>
 
-                  {/* FOOD NAME */}
-                  <h3>
+                  <h3>{food.name}</h3>
 
-                    {food.name}
+                  <p>{food.description}</p>
 
-                  </h3>
-
-                  {/* DESCRIPTION */}
-                  <p>
-
-                    {food.description}
-
-                  </p>
-
-                  {/* PRICE */}
                   <h4 className="text-success">
-
                     ₹ {food.price}
-
                   </h4>
 
-                  {/* CATEGORY */}
                   <h6 className="text-secondary">
-
                     {food.category}
-
                   </h6>
 
-                  {/* RATING */}
                   <div className="mb-2">
-
                     ⭐⭐⭐⭐⭐
-
                   </div>
 
-                  {/* VIEW DETAILS */}
                   <Link
                     to="/food-details"
                     state={food}
                     className="btn btn-dark w-100 mt-2"
                   >
-
                     View Details
-
                   </Link>
 
-                  {/* ADD TO CART */}
                   <button
                     className="btn btn-success w-100 mt-2"
-                    onClick={() =>
-                      addToCart(food)
-                    }
+                    onClick={() => addToCart(food)}
                   >
-
                     Add To Cart
-
                   </button>
 
-                  {/* FAVORITES */}
                   <button
                     className="btn btn-warning w-100 mt-2"
-                    onClick={() =>
-                      addToFavorites(food)
-                    }
+                    onClick={() => addToFavorites(food)}
                   >
-
                     Add To Favorites
-
                   </button>
 
                 </div>
@@ -349,7 +253,6 @@ function Home() {
 
       </div>
 
-      {/* FOOTER */}
       <FooterComponent />
 
     </div>
