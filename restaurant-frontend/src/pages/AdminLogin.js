@@ -1,74 +1,36 @@
-import React, { useState } from "react";
+import React from "react";
+import { useNavigate } from "react-router-dom";
 
 function AdminLogin() {
 
-  const [username, setUsername] =
-    useState("");
-
-  const [password, setPassword] =
-    useState("");
+  const navigate = useNavigate();
 
   const handleLogin = () => {
 
-    if (
-      username === "admin" &&
-      password === "admin123"
-    ) {
+    navigate("/admin-panel");
 
-      localStorage.setItem(
-        "isAdminLoggedIn",
-        "true"
-      );
-
-      localStorage.setItem(
-        "admin",
-        "true"
-      );
-
-      window.location.href =
-        "/admin-panel";
-
-    } else {
-
-      alert("Invalid Admin Login");
-
-    }
   };
 
   return (
 
     <div className="container mt-5">
 
-      <div
-        className="card shadow p-4"
-        style={{
-          maxWidth: "500px",
-          margin: "auto",
-        }}
-      >
+      <div className="card p-5 shadow">
 
         <h1 className="text-center mb-4">
-          Admin Login
+          ADMIN LOGIN
         </h1>
 
         <input
           type="text"
+          placeholder="Username"
           className="form-control mb-3"
-          placeholder="Admin Username"
-          value={username}
-          onChange={(e) =>
-            setUsername(e.target.value)
-          }
         />
 
         <input
           type="password"
+          placeholder="Password"
           className="form-control mb-3"
-          placeholder="Admin Password"
-          value={password}
-          onChange={(e) =>
-            setPassword(e.target.value)
-          }
         />
 
         <button
@@ -81,6 +43,7 @@ function AdminLogin() {
       </div>
 
     </div>
+
   );
 }
 

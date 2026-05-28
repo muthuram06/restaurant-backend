@@ -1,101 +1,27 @@
 import React from "react";
 
-import {
-  Bar
-} from "react-chartjs-2";
-
-import {
-  Chart as ChartJS,
-  CategoryScale,
-  LinearScale,
-  BarElement,
-  Title,
-  Tooltip,
-  Legend
-} from "chart.js";
-
-import AdminNavbar
-from "../components/AdminNavbar";
-
-ChartJS.register(
-  CategoryScale,
-  LinearScale,
-  BarElement,
-  Title,
-  Tooltip,
-  Legend
-);
-
 function AdminAnalytics() {
-
-  const orders =
-    JSON.parse(
-      localStorage.getItem("orders")
-    ) || [];
-
-  const revenue = orders.reduce(
-
-    (total, order) =>
-
-      total +
-      (order.totalAmount || 0),
-
-    0
-  );
-
-  const data = {
-
-    labels: [
-      "Orders",
-      "Revenue"
-    ],
-
-    datasets: [
-
-      {
-
-        label:
-          "Restaurant Analytics",
-
-        data: [
-          orders.length,
-          revenue
-        ],
-
-        backgroundColor: [
-          "#0d6efd",
-          "#198754"
-        ]
-
-      }
-
-    ]
-
-  };
 
   return (
 
-    <div>
+    <div className="container mt-5">
 
-      <AdminNavbar />
+      <h1 className="text-center">
+        ADMIN ANALYTICS
+      </h1>
 
-      <div className="container mt-5">
+      <div className="card p-4 shadow mt-4">
 
-        <h1 className="mb-5">
+        <h3>Total Orders : 25</h3>
 
-          Analytics Dashboard
+        <h3>Total Revenue : ₹ 5000</h3>
 
-        </h1>
-
-        <div className="card shadow p-4">
-
-          <Bar data={data} />
-
-        </div>
+        <h3>Total Foods : 3</h3>
 
       </div>
 
     </div>
+
   );
 }
 

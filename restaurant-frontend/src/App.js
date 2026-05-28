@@ -32,42 +32,21 @@ function App() {
 
       <Routes>
 
-        {/* ================= USER ROUTES ================= */}
+        {/* USER ROUTES */}
 
-        <Route
-          path="/"
-          element={<Home />}
-        />
+        <Route path="/" element={<Home />} />
 
-        <Route
-          path="/cart"
-          element={<Cart />}
-        />
+        <Route path="/cart" element={<Cart />} />
 
-        <Route
-          path="/orders"
-          element={<Orders />}
-        />
+        <Route path="/orders" element={<Orders />} />
 
-        <Route
-          path="/favorites"
-          element={<Favorites />}
-        />
+        <Route path="/favorites" element={<Favorites />} />
 
-        <Route
-          path="/login"
-          element={<Login />}
-        />
+        <Route path="/login" element={<Login />} />
 
-        <Route
-          path="/register"
-          element={<Register />}
-        />
+        <Route path="/register" element={<Register />} />
 
-        <Route
-          path="/checkout"
-          element={<Checkout />}
-        />
+        <Route path="/checkout" element={<Checkout />} />
 
         <Route
           path="/table-booking"
@@ -79,7 +58,7 @@ function App() {
           element={<FoodDetails />}
         />
 
-        {/* ================= ADMIN ROUTES ================= */}
+        {/* ADMIN ROUTES */}
 
         <Route
           path="/admin-login"
@@ -92,7 +71,7 @@ function App() {
         />
 
         <Route
-          path="/admin-dashboard"
+          path="/admin"
           element={<AdminAnalytics />}
         />
 
