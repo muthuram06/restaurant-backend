@@ -22,6 +22,7 @@ import FoodDetails from "./pages/FoodDetails";
 
 import AdminLogin from "./pages/AdminLogin";
 import AdminPanel from "./pages/AdminPanel";
+import AdminAnalytics from "./pages/AdminAnalytics";
 
 function App() {
 
@@ -84,6 +85,8 @@ function App() {
           path="/admin-login"
           element={<AdminLogin />}
         />
+
+        <Route path="/admin" element={<AdminAnalytics />} />
 
         <Route
           path="/admin"
