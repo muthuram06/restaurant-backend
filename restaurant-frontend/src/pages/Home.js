@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 import NavbarComponent from "../components/NavbarComponent";
 import FooterComponent from "../components/FooterComponent";
@@ -10,6 +10,8 @@ function Home() {
   const [foods, setFoods] = useState([]);
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState("All");
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetchFoods();
@@ -34,48 +36,72 @@ function Home() {
     }
   };
 
-  const addToCart = (food) => {
+  const handleProtectedAction = (callback) => {
 
-    const cart =
-      JSON.parse(localStorage.getItem("cart")) || [];
+    const user = localStorage.getItem("user");
 
-    const existingFood =
-      cart.find((item) => item.id === food.id);
+    if (!user) {
 
-    if (existingFood) {
+      alert("Please Login First");
 
-      existingFood.quantity += 1;
+      navigate("/login");
 
-    } else {
-
-      cart.push({
-        ...food,
-        quantity: 1
-      });
-
+      return;
     }
 
-    localStorage.setItem(
-      "cart",
-      JSON.stringify(cart)
-    );
+    callback();
+  };
 
-    alert("Food Added To Cart");
+  const addToCart = (food) => {
+
+    handleProtectedAction(() => {
+
+      const cart =
+        JSON.parse(localStorage.getItem("cart")) || [];
+
+      const existingFood =
+        cart.find((item) => item.id === food.id);
+
+      if (existingFood) {
+
+        existingFood.quantity += 1;
+
+      } else {
+
+        cart.push({
+          ...food,
+          quantity: 1
+        });
+
+      }
+
+      localStorage.setItem(
+        "cart",
+        JSON.stringify(cart)
+      );
+
+      alert("Food Added To Cart");
+
+    });
   };
 
   const addToFavorites = (food) => {
 
-    const favorites =
-      JSON.parse(localStorage.getItem("favorites")) || [];
+    handleProtectedAction(() => {
 
-    favorites.push(food);
+      const favorites =
+        JSON.parse(localStorage.getItem("favorites")) || [];
 
-    localStorage.setItem(
-      "favorites",
-      JSON.stringify(favorites)
-    );
+      favorites.push(food);
 
-    alert("Food Added To Favorites");
+      localStorage.setItem(
+        "favorites",
+        JSON.stringify(favorites)
+      );
+
+      alert("Food Added To Favorites");
+
+    });
   };
 
   const filteredFoods = foods.filter((food) => {
@@ -141,9 +167,9 @@ function Home() {
 
           <button
             className="btn btn-success m-1"
-            onClick={() => setCategory("South Indian")}
+            onClick={() => setCategory("Veg")}
           >
-            South Indian
+            Veg
           </button>
 
           <button
@@ -155,9 +181,9 @@ function Home() {
 
           <button
             className="btn btn-danger m-1"
-            onClick={() => setCategory("Chinese")}
+            onClick={() => setCategory("South Indian")}
           >
-            Chinese
+            South Indian
           </button>
 
           <button
@@ -165,13 +191,6 @@ function Home() {
             onClick={() => setCategory("Fast Food")}
           >
             Fast Food
-          </button>
-
-          <button
-            className="btn btn-info m-1"
-            onClick={() => setCategory("Street Food")}
-          >
-            Street Food
           </button>
 
         </div>
