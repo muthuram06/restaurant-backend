@@ -1,39 +1,49 @@
-package restaurantapp.config;
+package com.restaurantapp;
 
 import org.springframework.boot.CommandLineRunner;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
+import org.springframework.stereotype.Component;
 
-import restaurantapp.model.FoodItem;
-import restaurantapp.repository.FoodItemRepository;
+@Component
+public class DataLoader implements CommandLineRunner {
 
-@Configuration
-public class DataLoader {
+    private final FoodRepository foodRepository;
 
-    @Bean
-    CommandLineRunner loadData(FoodItemRepository repository) {
-        return args -> {
+    public DataLoader(FoodRepository foodRepository) {
+        this.foodRepository = foodRepository;
+    }
 
-            repository.save(new FoodItem(
-                    "Paneer Butter Masala",
-                    "North Indian",
-                    220,
-                    "https://images.unsplash.com/photo-1603894584373-5ac82b2ae398"
-            ));
+    @Override
+    public void run(String... args) throws Exception {
 
-            repository.save(new FoodItem(
-                    "Masala Dosa",
-                    "South Indian",
-                    120,
-                    "https://images.unsplash.com/photo-1589302168068-964664d93dc0"
-            ));
+        if(foodRepository.count() == 0) {
 
-            repository.save(new FoodItem(
-                    "Veg Biryani",
-                    "Fast Food",
-                    180,
+            foodRepository.save(
+                new Food(
+                    "Chicken Biryani",
+                    "Best spicy biryani",
+                    250,
                     "https://images.unsplash.com/photo-1563379091339-03246963d29a"
-            ));
-        };
+                )
+            );
+
+            foodRepository.save(
+                new Food(
+                    "Fish Fry",
+                    "Crispy fried fish",
+                    180,
+                    "https://images.unsplash.com/photo-1615141982883-c7ad0e69fd62"
+                )
+            );
+
+            foodRepository.save(
+                new Food(
+                    "Paneer Butter Masala",
+                    "Creamy paneer curry",
+                    220,
+                    "https://images.unsplash.com/photo-1631452180519-c014fe946bc7"
+                )
+            );
+
+        }
     }
 }
