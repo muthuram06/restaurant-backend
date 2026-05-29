@@ -50,11 +50,6 @@ function App() {
         />
 
         <Route
-          path="/admin-orders"
-          element={<AdminOrders />}
-        />
-
-        <Route
           path="/orders"
           element={
             isLoggedIn
@@ -120,6 +115,11 @@ function App() {
         <Route
           path="/admin-analytics"
           element={<AdminAnalytics />}
+        />
+
+        <Route
+          path="/admin-orders"
+          element={<AdminOrders />}
         />
 
       </Routes>
