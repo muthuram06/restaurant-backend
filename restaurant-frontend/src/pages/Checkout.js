@@ -10,17 +10,38 @@ function Checkout() {
 
   const handlePayment = () => {
 
-    alert("Payment Successful");
+    const cart =
+      JSON.parse(localStorage.getItem("cart")) || [];
+
+    const totalAmount =
+      Number(
+        localStorage.getItem("totalAmount")
+      ) || 0;
 
     const order = {
-      customerName: name,
-      customerAddress: address,
-      customerPhone: phone,
-      paymentStatus: "PAID"
+
+      username: name,
+
+      address,
+
+      phone,
+
+      totalAmount,
+
+      items: cart,
+
+      status: "Preparing",
+
+      paymentStatus: "PAID",
+
+      orderDate:
+        new Date().toLocaleString()
+
     };
 
     const existingOrders =
-      JSON.parse(localStorage.getItem("orders")) || [];
+      JSON.parse(localStorage.getItem("orders"))
+      || [];
 
     existingOrders.push(order);
 
@@ -28,6 +49,10 @@ function Checkout() {
       "orders",
       JSON.stringify(existingOrders)
     );
+
+    localStorage.removeItem("cart");
+
+    alert("Order Placed Successfully");
 
     window.location.href = "/orders";
   };
@@ -42,7 +67,7 @@ function Checkout() {
 
         <h1 className="mb-4">
 
-          Checkout Page
+          Checkout
 
         </h1>
 
@@ -51,7 +76,7 @@ function Checkout() {
           <input
             type="text"
             className="form-control mb-3"
-            placeholder="Enter Name"
+            placeholder="Name"
             value={name}
             onChange={(e) =>
               setName(e.target.value)
@@ -61,7 +86,7 @@ function Checkout() {
           <input
             type="text"
             className="form-control mb-3"
-            placeholder="Enter Address"
+            placeholder="Address"
             value={address}
             onChange={(e) =>
               setAddress(e.target.value)
@@ -71,7 +96,7 @@ function Checkout() {
           <input
             type="text"
             className="form-control mb-3"
-            placeholder="Enter Phone Number"
+            placeholder="Phone Number"
             value={phone}
             onChange={(e) =>
               setPhone(e.target.value)
@@ -82,9 +107,7 @@ function Checkout() {
             className="btn btn-success"
             onClick={handlePayment}
           >
-
             Pay Now
-
           </button>
 
         </div>
@@ -92,6 +115,7 @@ function Checkout() {
       </div>
 
     </div>
+
   );
 }
 

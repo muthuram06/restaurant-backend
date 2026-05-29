@@ -5,40 +5,72 @@ function AdminPanel() {
 
   const navigate = useNavigate();
 
+  const orders =
+    JSON.parse(localStorage.getItem("orders")) || [];
+
   return (
 
-    <div style={{ padding: "40px" }}>
+    <div className="container mt-5">
 
-      <h1>ADMIN PANEL</h1>
+      <h1 className="text-center mb-4">
+        ADMIN DASHBOARD
+      </h1>
 
-      <button
-        onClick={() => navigate("/admin-analytics")}
-        style={{
-          padding: "10px 20px",
-          marginTop: "20px",
-          backgroundColor: "green",
-          color: "white",
-          border: "none"
-        }}
-      >
-        View Analytics
-      </button>
+      <div className="row">
 
-      <div
-        style={{
-          marginTop: "30px",
-          border: "1px solid gray",
-          padding: "20px"
-        }}
-      >
+        <div className="col-md-4">
 
-        <h2>Manage Foods</h2>
+          <div className="card shadow p-4">
 
-        <p>Add Food</p>
+            <h3>Total Orders</h3>
 
-        <p>Edit Food</p>
+            <h1 className="text-success">
+              {orders.length}
+            </h1>
 
-        <p>Delete Food</p>
+          </div>
+
+        </div>
+
+        <div className="col-md-4">
+
+          <div className="card shadow p-4">
+
+            <h3>Food Management</h3>
+
+            <p>Add / Edit / Delete Foods</p>
+
+          </div>
+
+        </div>
+
+        <div className="col-md-4">
+
+          <div className="card shadow p-4">
+
+            <h3>Admin Actions</h3>
+
+            <button
+              className="btn btn-primary mb-2"
+              onClick={() =>
+                navigate("/admin-orders")
+              }
+            >
+              View Orders
+            </button>
+
+            <button
+              className="btn btn-success"
+              onClick={() =>
+                navigate("/admin-analytics")
+              }
+            >
+              Analytics
+            </button>
+
+          </div>
+
+        </div>
 
       </div>
 

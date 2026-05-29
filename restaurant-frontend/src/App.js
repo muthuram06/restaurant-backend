@@ -23,11 +23,12 @@ import FoodDetails from "./pages/FoodDetails";
 import AdminLogin from "./pages/AdminLogin";
 import AdminPanel from "./pages/AdminPanel";
 import AdminAnalytics from "./pages/AdminAnalytics";
+import AdminOrders from "./pages/AdminOrders";
 
 function App() {
 
   const isLoggedIn =
-    localStorage.getItem("user");
+    localStorage.getItem("isUserLoggedIn") === "true";
 
   return (
 
@@ -46,6 +47,11 @@ function App() {
               ? <Cart />
               : <Login />
           }
+        />
+
+        <Route
+          path="/admin-orders"
+          element={<AdminOrders />}
         />
 
         <Route
@@ -99,7 +105,7 @@ function App() {
           element={<Register />}
         />
 
-        {/* ADMIN ROUTES */}
+        {/* ADMIN */}
 
         <Route
           path="/admin-login"
