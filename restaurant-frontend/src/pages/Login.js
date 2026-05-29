@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import NavbarComponent from "../components/NavbarComponent";
 
 function Login() {
@@ -75,11 +76,26 @@ function Login() {
                     />
 
                     <button
-                        className="btn btn-primary"
+                        className="btn btn-primary w-100"
                         onClick={loginUser}
                     >
                         Login
                     </button>
+
+                    <div className="text-center mt-3">
+
+                        <p>
+                            Don't have an account?
+                        </p>
+
+                        <Link
+                            to="/register"
+                            className="btn btn-success"
+                        >
+                            Register Here
+                        </Link>
+
+                    </div>
 
                 </div>
 
