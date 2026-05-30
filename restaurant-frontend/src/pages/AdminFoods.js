@@ -11,88 +11,100 @@ function AdminFoods() {
 
   const [foodData, setFoodData] =
     useState({
-
       name: "",
       description: "",
       price: "",
       category: "",
       imageUrl: ""
-
     });
 
   const [editingId, setEditingId] =
     useState(null);
 
   useEffect(() => {
-
     fetchFoods();
-
   }, []);
 
   const fetchFoods = async () => {
 
-    const response = await axios.get(
-      "http://localhost:8080/api/food/all"
-    );
+    try {
 
-    setFoods(response.data);
+      const response = await axios.get(
+        "https://restaurant-backend-ca51.onrender.com/api/food/all"
+      );
+
+      setFoods(response.data);
+
+    } catch (error) {
+
+      console.error(error);
+
+      alert("Unable to load foods");
+    }
   };
 
   const handleChange = (e) => {
 
     setFoodData({
-
       ...foodData,
       [e.target.name]:
         e.target.value
-
     });
   };
 
   const addOrUpdateFood =
     async () => {
 
-      if (editingId) {
+      try {
 
-        await axios.put(
+        if (editingId) {
 
-          `http://localhost:8080/api/food/update/${editingId}`,
+          await axios.put(
+            `https://restaurant-backend-ca51.onrender.com/api/food/update/${editingId}`,
+            foodData
+          );
 
-          foodData
-        );
+          alert("Food Updated");
 
-        alert("Food Updated");
+        } else {
 
-      } else {
+          await axios.post(
+            "https://restaurant-backend-ca51.onrender.com/api/food/add",
+            foodData
+          );
 
-        await axios.post(
+          alert("Food Added");
+        }
 
-          "http://localhost:8080/api/food/add",
+        setFoodData({
+          name: "",
+          description: "",
+          price: "",
+          category: "",
+          imageUrl: ""
+        });
 
-          foodData
-        );
+        setEditingId(null);
 
-        alert("Food Added");
+        fetchFoods();
+
+      } catch (error) {
+
+        console.error(error);
+
+        alert("Operation Failed");
       }
-
-      setFoodData({
-
-        name: "",
-        description: "",
-        price: "",
-        category: "",
-        imageUrl: ""
-
-      });
-
-      setEditingId(null);
-
-      fetchFoods();
     };
 
   const editFood = (food) => {
 
-    setFoodData(food);
+    setFoodData({
+      name: food.name,
+      description: food.description,
+      price: food.price,
+      category: food.category,
+      imageUrl: food.imageUrl
+    });
 
     setEditingId(food.id);
   };
@@ -100,25 +112,33 @@ function AdminFoods() {
   const deleteFood =
     async (id) => {
 
-      await axios.delete(
+      try {
 
-        `http://localhost:8080/api/food/delete/${id}`
-      );
+        await axios.delete(
+          `https://restaurant-backend-ca51.onrender.com/api/food/delete/${id}`
+        );
 
-      alert("Food Deleted");
+        alert("Food Deleted");
 
-      fetchFoods();
+        fetchFoods();
+
+      } catch (error) {
+
+        console.error(error);
+
+        alert("Delete Failed");
+      }
     };
 
   return (
 
     <div className="container mt-5">
 
-      <h1 className="mb-4">
+      <h1 className="text-center mb-4">
         Food Management
       </h1>
 
-      <div className="card p-4 shadow mb-5">
+      <div className="card shadow p-4 mb-5">
 
         <input
           type="text"
@@ -169,11 +189,11 @@ function AdminFoods() {
           className="btn btn-primary"
           onClick={addOrUpdateFood}
         >
-
-          {editingId
-            ? "Update Food"
-            : "Add Food"}
-
+          {
+            editingId
+              ? "Update Food"
+              : "Add Food"
+          }
         </button>
 
       </div>
@@ -187,7 +207,7 @@ function AdminFoods() {
             key={food.id}
           >
 
-            <div className="card h-100 shadow">
+            <div className="card shadow h-100">
 
               <img
                 src={food.imageUrl}
@@ -201,27 +221,27 @@ function AdminFoods() {
 
               <div className="card-body">
 
-                <h3>{food.name}</h3>
+                <h4>{food.name}</h4>
 
                 <p>
                   {food.description}
                 </p>
 
-                <h4>
-                  ₹ {food.price}
-                </h4>
-
-                <h5>
-                  {food.category}
+                <h5 className="text-success">
+                  ₹{food.price}
                 </h5>
 
+                <span className="badge bg-success">
+                  {food.category}
+                </span>
+
                 <button
-                  className="btn btn-warning w-100 mt-2"
+                  className="btn btn-warning w-100 mt-3"
                   onClick={() =>
                     editFood(food)
                   }
                 >
-                  Edit
+                  Edit Food
                 </button>
 
                 <button
@@ -230,7 +250,7 @@ function AdminFoods() {
                     deleteFood(food.id)
                   }
                 >
-                  Delete
+                  Delete Food
                 </button>
 
               </div>

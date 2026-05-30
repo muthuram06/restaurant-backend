@@ -5,71 +5,79 @@ function AdminPanel() {
 
   const navigate = useNavigate();
 
-  const orders =
-    JSON.parse(localStorage.getItem("orders")) || [];
+  const logout = () => {
+
+    localStorage.removeItem("isAdminLoggedIn");
+
+    navigate("/admin");
+  };
 
   return (
 
     <div className="container mt-5">
 
-      <h1 className="text-center mb-4">
+      <h1 className="text-center mb-5">
         ADMIN DASHBOARD
       </h1>
 
       <div className="row">
 
-        <div className="col-md-4">
-
-          <div className="card shadow p-4">
-
-            <h3>Total Orders</h3>
-
-            <h1 className="text-success">
-              {orders.length}
-            </h1>
-
-          </div>
-
-        </div>
-
-        <div className="col-md-4">
-
-          <div className="card shadow p-4">
-
-            <h3>Food Management</h3>
-
-            <p>Add / Edit / Delete Foods</p>
-
-          </div>
-
-        </div>
-
-        <div className="col-md-4">
-
-          <div className="card shadow p-4">
-
-            <h3>Admin Actions</h3>
+        <div className="col-md-3">
+          <div className="card shadow p-3">
+            <h4>Food Management</h4>
 
             <button
-              className="btn btn-primary mb-2"
+              className="btn btn-primary mt-3"
+              onClick={() =>
+                navigate("/admin-foods")
+              }
+            >
+              Manage Foods
+            </button>
+          </div>
+        </div>
+
+        <div className="col-md-3">
+          <div className="card shadow p-3">
+            <h4>Orders</h4>
+
+            <button
+              className="btn btn-success mt-3"
               onClick={() =>
                 navigate("/admin-orders")
               }
             >
               View Orders
             </button>
+          </div>
+        </div>
+
+        <div className="col-md-3">
+          <div className="card shadow p-3">
+            <h4>Analytics</h4>
 
             <button
-              className="btn btn-success"
+              className="btn btn-warning mt-3"
               onClick={() =>
                 navigate("/admin-analytics")
               }
             >
               Analytics
             </button>
-
           </div>
+        </div>
 
+        <div className="col-md-3">
+          <div className="card shadow p-3">
+            <h4>Logout</h4>
+
+            <button
+              className="btn btn-danger mt-3"
+              onClick={logout}
+            >
+              Logout
+            </button>
+          </div>
         </div>
 
       </div>

@@ -20,13 +20,11 @@ function AdminLogin() {
         "true"
       );
 
-      alert("Admin Login Successful");
-
-      navigate("/admin");
+      navigate("/admin-panel");
 
     } else {
 
-      alert("Invalid Admin Username or Password");
+      alert("Invalid Admin Credentials");
 
     }
   };
@@ -44,7 +42,7 @@ function AdminLogin() {
         <input
           type="text"
           className="form-control mb-3"
-          placeholder="Enter Admin Username"
+          placeholder="Admin Username"
           value={username}
           onChange={(e) =>
             setUsername(e.target.value)
@@ -54,7 +52,7 @@ function AdminLogin() {
         <input
           type="password"
           className="form-control mb-3"
-          placeholder="Enter Admin Password"
+          placeholder="Admin Password"
           value={password}
           onChange={(e) =>
             setPassword(e.target.value)
