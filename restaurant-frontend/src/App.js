@@ -27,8 +27,11 @@ import AdminOrders from "./pages/AdminOrders";
 
 function App() {
 
-  const isLoggedIn =
+  const isUserLoggedIn =
     localStorage.getItem("isUserLoggedIn") === "true";
+
+  const isAdminLoggedIn =
+    localStorage.getItem("isAdminLoggedIn") === "true";
 
   return (
 
@@ -38,56 +41,9 @@ function App() {
 
         {/* USER ROUTES */}
 
-        <Route path="/" element={<Home />} />
-
         <Route
-          path="/cart"
-          element={
-            isLoggedIn
-              ? <Cart />
-              : <Login />
-          }
-        />
-
-        <Route
-          path="/orders"
-          element={
-            isLoggedIn
-              ? <Orders />
-              : <Login />
-          }
-        />
-
-        <Route
-          path="/favorites"
-          element={
-            isLoggedIn
-              ? <Favorites />
-              : <Login />
-          }
-        />
-
-        <Route
-          path="/checkout"
-          element={
-            isLoggedIn
-              ? <Checkout />
-              : <Login />
-          }
-        />
-
-        <Route
-          path="/table-booking"
-          element={
-            isLoggedIn
-              ? <TableBooking />
-              : <Login />
-          }
-        />
-
-        <Route
-          path="/food-details"
-          element={<FoodDetails />}
+          path="/"
+          element={<Home />}
         />
 
         <Route
@@ -100,7 +56,57 @@ function App() {
           element={<Register />}
         />
 
-        {/* ADMIN */}
+        <Route
+          path="/food-details"
+          element={<FoodDetails />}
+        />
+
+        <Route
+          path="/cart"
+          element={
+            isUserLoggedIn
+              ? <Cart />
+              : <Login />
+          }
+        />
+
+        <Route
+          path="/orders"
+          element={
+            isUserLoggedIn
+              ? <Orders />
+              : <Login />
+          }
+        />
+
+        <Route
+          path="/favorites"
+          element={
+            isUserLoggedIn
+              ? <Favorites />
+              : <Login />
+          }
+        />
+
+        <Route
+          path="/checkout"
+          element={
+            isUserLoggedIn
+              ? <Checkout />
+              : <Login />
+          }
+        />
+
+        <Route
+          path="/table-booking"
+          element={
+            isUserLoggedIn
+              ? <TableBooking />
+              : <Login />
+          }
+        />
+
+        {/* ADMIN ROUTES */}
 
         <Route
           path="/admin-login"
@@ -108,18 +114,30 @@ function App() {
         />
 
         <Route
-          path="/admin-panel"
-          element={<AdminPanel />}
-        />
-
-        <Route
-          path="/admin-analytics"
-          element={<AdminAnalytics />}
+          path="/admin"
+          element={
+            isAdminLoggedIn
+              ? <AdminPanel />
+              : <AdminLogin />
+          }
         />
 
         <Route
           path="/admin-orders"
-          element={<AdminOrders />}
+          element={
+            isAdminLoggedIn
+              ? <AdminOrders />
+              : <AdminLogin />
+          }
+        />
+
+        <Route
+          path="/admin-analytics"
+          element={
+            isAdminLoggedIn
+              ? <AdminAnalytics />
+              : <AdminLogin />
+          }
         />
 
       </Routes>
