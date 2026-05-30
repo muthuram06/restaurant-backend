@@ -26,7 +26,10 @@ function Home() {
 
     } catch (error) {
 
-      console.error("Error loading foods:", error);
+      console.error(
+        "Error loading foods:",
+        error
+      );
 
     }
   };
@@ -40,7 +43,8 @@ function Home() {
 
     const existingFood =
       cart.find(
-        (item) => item.id === food.id
+        (item) =>
+          item.id === food.id
       );
 
     if (existingFood) {
@@ -63,29 +67,32 @@ function Home() {
       JSON.stringify(cart)
     );
 
-    alert("Food Added To Cart");
+    alert(
+      `${food.name} added to cart`
+    );
 
     window.location.reload();
   };
 
-  const filteredFoods = foods.filter((food) => {
+  const filteredFoods =
+    foods.filter((food) => {
 
-    const matchesSearch =
-      food.name
-        .toLowerCase()
-        .includes(
-          search.toLowerCase()
-        );
+      const matchesSearch =
+        food.name
+          .toLowerCase()
+          .includes(
+            search.toLowerCase()
+          );
 
-    const matchesCategory =
-      category === "All" ||
-      food.category === category;
+      const matchesCategory =
+        category === "All" ||
+        food.category === category;
 
-    return (
-      matchesSearch &&
-      matchesCategory
-    );
-  });
+      return (
+        matchesSearch &&
+        matchesCategory
+      );
+    });
 
   return (
     <>
@@ -102,11 +109,15 @@ function Home() {
         </h1>
 
         <div className="alert alert-warning text-center">
-          🔥 Best Sellers : Paneer Butter Masala, Veg Biryani, Masala Dosa
+          🔥 Best Sellers :
+          Paneer Butter Masala,
+          Veg Biryani,
+          Masala Dosa
         </div>
 
         <h2 className="text-center text-secondary mb-4">
-          {filteredFoods.length} Foods Available
+          {filteredFoods.length}
+          {" "}Foods Available
         </h2>
 
         <input
@@ -142,7 +153,9 @@ function Home() {
           <button
             className="btn btn-primary me-2"
             onClick={() =>
-              setCategory("North Indian")
+              setCategory(
+                "North Indian"
+              )
             }
           >
             North Indian
@@ -151,74 +164,95 @@ function Home() {
           <button
             className="btn btn-danger me-2"
             onClick={() =>
-              setCategory("South Indian")
+              setCategory(
+                "South Indian"
+              )
             }
           >
             South Indian
           </button>
 
           <button
-            className="btn btn-warning"
+            className="btn btn-warning me-2"
             onClick={() =>
-              setCategory("Fast Food")
+              setCategory(
+                "Fast Food"
+              )
             }
           >
             Fast Food
+          </button>
+
+          <button
+            className="btn btn-info"
+            onClick={() =>
+              setCategory(
+                "Street Food"
+              )
+            }
+          >
+            Street Food
           </button>
 
         </div>
 
         <div className="row">
 
-          {filteredFoods.map((food) => (
+          {filteredFoods.map(
+            (food) => (
 
-            <div
-              className="col-md-4 mb-4"
-              key={food.id}
-            >
+              <div
+                className="col-md-4 mb-4"
+                key={food.id}
+              >
 
-              <div className="card shadow h-100">
+                <div className="card shadow h-100">
 
-                <img
-                  src={food.imageUrl}
-                  alt={food.name}
-                  className="card-img-top"
-                  style={{
-                    height: "250px",
-                    objectFit: "cover"
-                  }}
-                />
+                  <img
+                    src={food.imageUrl}
+                    alt={food.name}
+                    className="card-img-top"
+                    style={{
+                      height: "250px",
+                      objectFit: "cover"
+                    }}
+                  />
 
-                <div className="card-body">
+                  <div className="card-body">
 
-                  <h4>{food.name}</h4>
+                    <h4>
+                      {food.name}
+                    </h4>
 
-                  <p>{food.description}</p>
+                    <p>
+                      {food.category}
+                    </p>
 
-                  <h5 className="text-success">
-                    ₹{food.price}
-                  </h5>
+                    <h5 className="text-success">
+                      ₹{food.price}
+                    </h5>
 
-                  <span className="badge bg-success">
-                    {food.category}
-                  </span>
+                    <span className="badge bg-success">
+                      Veg
+                    </span>
 
-                  <button
-                    className="btn btn-primary w-100 mt-3"
-                    onClick={() =>
-                      addToCart(food)
-                    }
-                  >
-                    Add To Cart
-                  </button>
+                    <button
+                      className="btn btn-primary w-100 mt-3"
+                      onClick={() =>
+                        addToCart(food)
+                      }
+                    >
+                      Add To Cart
+                    </button>
+
+                  </div>
 
                 </div>
 
               </div>
 
-            </div>
-
-          ))}
+            )
+          )}
 
         </div>
 
