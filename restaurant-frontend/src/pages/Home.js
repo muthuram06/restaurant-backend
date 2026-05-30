@@ -22,6 +22,8 @@ function Home() {
         "https://restaurant-backend-ca51.onrender.com/api/food/all"
       );
 
+      console.log("Foods Loaded:", response.data);
+
       setFoods(response.data);
 
     } catch (error) {
@@ -30,7 +32,6 @@ function Home() {
         "Error loading foods:",
         error
       );
-
     }
   };
 
@@ -54,11 +55,8 @@ function Home() {
     } else {
 
       cart.push({
-
         ...food,
-
         quantity: 1
-
       });
     }
 
@@ -67,11 +65,7 @@ function Home() {
       JSON.stringify(cart)
     );
 
-    alert(
-      `${food.name} added to cart`
-    );
-
-    window.location.reload();
+    alert(`${food.name} added to cart`);
   };
 
   const filteredFoods =
@@ -86,7 +80,8 @@ function Home() {
 
       const matchesCategory =
         category === "All" ||
-        food.category === category;
+        food.category === category ||
+        food.description === category;
 
       return (
         matchesSearch &&
@@ -116,8 +111,7 @@ function Home() {
         </div>
 
         <h2 className="text-center text-secondary mb-4">
-          {filteredFoods.length}
-          {" "}Foods Available
+          {filteredFoods.length} Foods Available
         </h2>
 
         <input
@@ -153,9 +147,7 @@ function Home() {
           <button
             className="btn btn-primary me-2"
             onClick={() =>
-              setCategory(
-                "North Indian"
-              )
+              setCategory("North Indian")
             }
           >
             North Indian
@@ -164,9 +156,7 @@ function Home() {
           <button
             className="btn btn-danger me-2"
             onClick={() =>
-              setCategory(
-                "South Indian"
-              )
+              setCategory("South Indian")
             }
           >
             South Indian
@@ -175,9 +165,7 @@ function Home() {
           <button
             className="btn btn-warning me-2"
             onClick={() =>
-              setCategory(
-                "Fast Food"
-              )
+              setCategory("Fast Food")
             }
           >
             Fast Food
@@ -186,73 +174,65 @@ function Home() {
           <button
             className="btn btn-info"
             onClick={() =>
-              setCategory(
-                "Street Food"
-              )
+              setCategory("Chinese")
             }
           >
-            Street Food
+            Chinese
           </button>
 
         </div>
 
         <div className="row">
 
-          {filteredFoods.map(
-            (food) => (
+          {filteredFoods.map((food) => (
 
-              <div
-                className="col-md-4 mb-4"
-                key={food.id}
-              >
+            <div
+              className="col-md-4 mb-4"
+              key={food.id}
+            >
 
-                <div className="card shadow h-100">
+              <div className="card shadow h-100">
 
-                  <img
-                    src={food.imageUrl}
-                    alt={food.name}
-                    className="card-img-top"
-                    style={{
-                      height: "250px",
-                      objectFit: "cover"
-                    }}
-                  />
+                <img
+                  src={food.imageUrl}
+                  alt={food.name}
+                  className="card-img-top"
+                  style={{
+                    height: "250px",
+                    objectFit: "cover"
+                  }}
+                />
 
-                  <div className="card-body">
+                <div className="card-body">
 
-                    <h4>
-                      {food.name}
-                    </h4>
+                  <h4>{food.name}</h4>
 
-                    <p>
-                      {food.category}
-                    </p>
+                  <p>{food.description}</p>
 
-                    <h5 className="text-success">
-                      ₹{food.price}
-                    </h5>
+                  <h5 className="text-success">
+                    ₹{food.price}
+                  </h5>
 
-                    <span className="badge bg-success">
-                      Veg
-                    </span>
+                  <span className="badge bg-success">
+                    {food.category}
+                  </span>
 
-                    <button
-                      className="btn btn-primary w-100 mt-3"
-                      onClick={() =>
-                        addToCart(food)
-                      }
-                    >
-                      Add To Cart
-                    </button>
-
-                  </div>
+                  <button
+                    className="btn btn-primary w-100 mt-3"
+                    onClick={() =>
+                      addToCart(food)
+                    }
+                  >
+                    Add To Cart
+                  </button>
 
                 </div>
 
               </div>
 
-            )
-          )}
+            </div>
+
+          ))}
 
         </div>
 
