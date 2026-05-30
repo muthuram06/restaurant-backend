@@ -96,6 +96,43 @@ function Login() {
                         </Link>
 
                     </div>
+                </div>
+            </div>
+        </div>
+    );
+}
+
+export default Login;
+
+<div className="text-center mt-3">
+
+    <p>
+        Don't have an account?
+    </p>
+
+    <Link
+        to="/register"
+        className="btn btn-success"
+    >
+        Register Here
+    </Link>
+
+</div>
+
+                    <div className="text-center mt-3">
+
+                        <p>
+                            Don't have an account?
+                        </p>
+
+                        <Link
+                            to="/register"
+                            className="btn btn-success"
+                        >
+                            Register Here
+                        </Link>
+
+                    </div>
 
                 </div>
 
