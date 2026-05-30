@@ -1,56 +1,74 @@
-import React from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 function AdminLogin() {
 
   const navigate = useNavigate();
 
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+
   const handleLogin = () => {
 
-    navigate("/admin-panel");
+    if (
+      username === "admin" &&
+      password === "admin123"
+    ) {
 
+      localStorage.setItem(
+        "isAdminLoggedIn",
+        "true"
+      );
+
+      alert("Admin Login Successful");
+
+      navigate("/admin");
+
+    } else {
+
+      alert("Invalid Admin Username or Password");
+
+    }
   };
 
   return (
 
-    <div style={{ padding: "40px" }}>
+    <div className="container mt-5">
 
-      <h1>ADMIN LOGIN</h1>
+      <div className="card shadow p-4">
 
-      <input
-        type="text"
-        placeholder="Admin Username"
-        style={{
-          padding: "10px",
-          marginTop: "20px",
-          width: "300px",
-          display: "block"
-        }}
-      />
+        <h1 className="text-center mb-4">
+          Admin Login
+        </h1>
 
-      <input
-        type="password"
-        placeholder="Admin Password"
-        style={{
-          padding: "10px",
-          marginTop: "20px",
-          width: "300px",
-          display: "block"
-        }}
-      />
+        <input
+          type="text"
+          className="form-control mb-3"
+          placeholder="Enter Admin Username"
+          value={username}
+          onChange={(e) =>
+            setUsername(e.target.value)
+          }
+        />
 
-      <button
-        onClick={handleLogin}
-        style={{
-          padding: "10px 20px",
-          marginTop: "20px",
-          backgroundColor: "black",
-          color: "white",
-          border: "none"
-        }}
-      >
-        Login
-      </button>
+        <input
+          type="password"
+          className="form-control mb-3"
+          placeholder="Enter Admin Password"
+          value={password}
+          onChange={(e) =>
+            setPassword(e.target.value)
+          }
+        />
+
+        <button
+          className="btn btn-dark w-100"
+          onClick={handleLogin}
+        >
+          Login
+        </button>
+
+      </div>
 
     </div>
 
