@@ -1,5 +1,4 @@
 import React from "react";
-
 import {
   BrowserRouter,
   Routes,
@@ -22,8 +21,9 @@ import FoodDetails from "./pages/FoodDetails";
 
 import AdminLogin from "./pages/AdminLogin";
 import AdminPanel from "./pages/AdminPanel";
-import AdminAnalytics from "./pages/AdminAnalytics";
+import AdminFoods from "./pages/AdminFoods";
 import AdminOrders from "./pages/AdminOrders";
+import AdminAnalytics from "./pages/AdminAnalytics";
 
 function App() {
 
@@ -34,7 +34,6 @@ function App() {
     localStorage.getItem("isAdminLoggedIn") === "true";
 
   return (
-
     <BrowserRouter>
 
       <Routes>
@@ -123,6 +122,15 @@ function App() {
         />
 
         <Route
+          path="/admin-foods"
+          element={
+            isAdminLoggedIn
+              ? <AdminFoods />
+              : <AdminLogin />
+          }
+        />
+
+        <Route
           path="/admin-orders"
           element={
             isAdminLoggedIn
@@ -143,7 +151,6 @@ function App() {
       </Routes>
 
     </BrowserRouter>
-
   );
 }
 
