@@ -5,11 +5,8 @@ function AdminLogin() {
 
   const navigate = useNavigate();
 
-  const [username, setUsername] =
-    useState("");
-
-  const [password, setPassword] =
-    useState("");
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
 
   const loginAdmin = () => {
 
@@ -23,7 +20,9 @@ function AdminLogin() {
         "true"
       );
 
-      navigate("/admin-panel");
+      alert("Admin Login Successful");
+
+      navigate("/admin");
 
     } else {
 
@@ -36,13 +35,14 @@ function AdminLogin() {
 
     <div className="container mt-5">
 
-      <div className="card p-4 shadow">
+      <div className="card shadow p-4">
 
-        <h1 className="mb-4">
+        <h1 className="text-center mb-4">
           Admin Login
         </h1>
 
         <input
+          type="text"
           className="form-control mb-3"
           placeholder="Username"
           value={username}
@@ -62,7 +62,7 @@ function AdminLogin() {
         />
 
         <button
-          className="btn btn-primary"
+          className="btn btn-primary w-100"
           onClick={loginAdmin}
         >
           Login

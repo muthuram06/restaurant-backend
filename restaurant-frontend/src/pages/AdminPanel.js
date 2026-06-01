@@ -7,9 +7,11 @@ function AdminPanel() {
 
   const logout = () => {
 
-    localStorage.removeItem("isAdminLoggedIn");
+    localStorage.removeItem(
+      "isAdminLoggedIn"
+    );
 
-    navigate("/admin");
+    navigate("/admin-login");
   };
 
   return (
@@ -20,10 +22,11 @@ function AdminPanel() {
         ADMIN DASHBOARD
       </h1>
 
-      <div className="row">
+      <div className="row g-4">
 
-        <div className="col-md-3">
-          <div className="card shadow p-3">
+        <div className="col-md-4">
+          <div className="card shadow p-4">
+
             <h4>Food Management</h4>
 
             <button
@@ -34,12 +37,14 @@ function AdminPanel() {
             >
               Manage Foods
             </button>
+
           </div>
         </div>
 
-        <div className="col-md-3">
-          <div className="card shadow p-3">
-            <h4>Orders</h4>
+        <div className="col-md-4">
+          <div className="card shadow p-4">
+
+            <h4>Orders Management</h4>
 
             <button
               className="btn btn-success mt-3"
@@ -49,11 +54,13 @@ function AdminPanel() {
             >
               View Orders
             </button>
+
           </div>
         </div>
 
-        <div className="col-md-3">
-          <div className="card shadow p-3">
+        <div className="col-md-4">
+          <div className="card shadow p-4">
+
             <h4>Analytics</h4>
 
             <button
@@ -62,28 +69,26 @@ function AdminPanel() {
                 navigate("/admin-analytics")
               }
             >
-              Analytics
+              View Analytics
             </button>
-          </div>
-        </div>
 
-        <div className="col-md-3">
-          <div className="card shadow p-3">
-            <h4>Logout</h4>
-
-            <button
-              className="btn btn-danger mt-3"
-              onClick={logout}
-            >
-              Logout
-            </button>
           </div>
         </div>
 
       </div>
 
-    </div>
+      <div className="text-center mt-5">
 
+        <button
+          className="btn btn-danger"
+          onClick={logout}
+        >
+          Logout
+        </button>
+
+      </div>
+
+    </div>
   );
 }
 
