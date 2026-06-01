@@ -24,21 +24,19 @@ public class FoodItem {
     public FoodItem() {
     }
 
-    // MAIN CONSTRUCTOR
     public FoodItem(
             String name,
             String description,
             double price,
+            String category,
             String imageUrl
     ) {
         this.name = name;
         this.description = description;
         this.price = price;
+        this.category = category;
         this.imageUrl = imageUrl;
-        this.category = "Veg";
     }
-
-    // GETTERS AND SETTERS
 
     public Long getId() {
         return id;
