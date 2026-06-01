@@ -5,10 +5,13 @@ function AdminLogin() {
 
   const navigate = useNavigate();
 
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
+  const [username, setUsername] =
+    useState("");
 
-  const handleLogin = () => {
+  const [password, setPassword] =
+    useState("");
+
+  const loginAdmin = () => {
 
     if (
       username === "admin" &&
@@ -24,7 +27,7 @@ function AdminLogin() {
 
     } else {
 
-      alert("Invalid Admin Credentials");
+      alert("Invalid Admin Login");
 
     }
   };
@@ -33,16 +36,15 @@ function AdminLogin() {
 
     <div className="container mt-5">
 
-      <div className="card shadow p-4">
+      <div className="card p-4 shadow">
 
-        <h1 className="text-center mb-4">
+        <h1 className="mb-4">
           Admin Login
         </h1>
 
         <input
-          type="text"
           className="form-control mb-3"
-          placeholder="Admin Username"
+          placeholder="Username"
           value={username}
           onChange={(e) =>
             setUsername(e.target.value)
@@ -52,7 +54,7 @@ function AdminLogin() {
         <input
           type="password"
           className="form-control mb-3"
-          placeholder="Admin Password"
+          placeholder="Password"
           value={password}
           onChange={(e) =>
             setPassword(e.target.value)
@@ -60,8 +62,8 @@ function AdminLogin() {
         />
 
         <button
-          className="btn btn-dark w-100"
-          onClick={handleLogin}
+          className="btn btn-primary"
+          onClick={loginAdmin}
         >
           Login
         </button>
@@ -69,7 +71,6 @@ function AdminLogin() {
       </div>
 
     </div>
-
   );
 }
 

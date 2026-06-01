@@ -2,7 +2,8 @@ import React from "react";
 import {
   BrowserRouter,
   Routes,
-  Route
+  Route,
+  Navigate
 } from "react-router-dom";
 
 /* USER PAGES */
@@ -40,32 +41,20 @@ function App() {
 
         {/* USER ROUTES */}
 
-        <Route
-          path="/"
-          element={<Home />}
-        />
+        <Route path="/" element={<Home />} />
 
-        <Route
-          path="/login"
-          element={<Login />}
-        />
+        <Route path="/login" element={<Login />} />
 
-        <Route
-          path="/register"
-          element={<Register />}
-        />
+        <Route path="/register" element={<Register />} />
 
-        <Route
-          path="/food-details"
-          element={<FoodDetails />}
-        />
+        <Route path="/food-details" element={<FoodDetails />} />
 
         <Route
           path="/cart"
           element={
             isUserLoggedIn
               ? <Cart />
-              : <Login />
+              : <Navigate to="/login" />
           }
         />
 
@@ -74,7 +63,7 @@ function App() {
           element={
             isUserLoggedIn
               ? <Orders />
-              : <Login />
+              : <Navigate to="/login" />
           }
         />
 
@@ -83,7 +72,7 @@ function App() {
           element={
             isUserLoggedIn
               ? <Favorites />
-              : <Login />
+              : <Navigate to="/login" />
           }
         />
 
@@ -92,7 +81,7 @@ function App() {
           element={
             isUserLoggedIn
               ? <Checkout />
-              : <Login />
+              : <Navigate to="/login" />
           }
         />
 
@@ -101,7 +90,7 @@ function App() {
           element={
             isUserLoggedIn
               ? <TableBooking />
-              : <Login />
+              : <Navigate to="/login" />
           }
         />
 
@@ -117,7 +106,7 @@ function App() {
           element={
             isAdminLoggedIn
               ? <AdminPanel />
-              : <AdminLogin />
+              : <Navigate to="/admin-login" />
           }
         />
 
@@ -126,7 +115,7 @@ function App() {
           element={
             isAdminLoggedIn
               ? <AdminFoods />
-              : <AdminLogin />
+              : <Navigate to="/admin-login" />
           }
         />
 
@@ -135,7 +124,7 @@ function App() {
           element={
             isAdminLoggedIn
               ? <AdminOrders />
-              : <AdminLogin />
+              : <Navigate to="/admin-login" />
           }
         />
 
@@ -144,7 +133,7 @@ function App() {
           element={
             isAdminLoggedIn
               ? <AdminAnalytics />
-              : <AdminLogin />
+              : <Navigate to="/admin-login" />
           }
         />
 
