@@ -12,6 +12,16 @@ function Checkout() {
     const cart =
       JSON.parse(localStorage.getItem("cart")) || [];
 
+    if (!name.trim()) {
+      alert("Please enter customer name");
+      return;
+    }
+
+    if (!email.trim()) {
+      alert("Please enter email");
+      return;
+    }
+
     if (cart.length === 0) {
       alert("Cart is empty");
       return;
@@ -19,11 +29,17 @@ function Checkout() {
 
     try {
 
+      localStorage.setItem(
+        "userEmail",
+        email
+      );
+
       for (const item of cart) {
 
         const order = {
 
           customerName: name,
+
           email: email,
 
           foodName: item.name,
@@ -65,7 +81,6 @@ function Checkout() {
   };
 
   return (
-
     <div>
 
       <NavbarComponent />
@@ -84,21 +99,17 @@ function Checkout() {
             placeholder="Customer Name"
             value={name}
             onChange={(e) =>
-              setName(
-                e.target.value
-              )
+              setName(e.target.value)
             }
           />
 
           <input
             type="email"
             className="form-control mb-3"
-            placeholder="Email"
+            placeholder="Email Address"
             value={email}
             onChange={(e) =>
-              setEmail(
-                e.target.value
-              )
+              setEmail(e.target.value)
             }
           />
 
