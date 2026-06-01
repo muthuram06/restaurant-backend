@@ -22,8 +22,6 @@ function Home() {
         "https://restaurant-backend-ca51.onrender.com/api/food/all"
       );
 
-      console.log("Foods Loaded:", response.data);
-
       setFoods(response.data);
 
     } catch (error) {
@@ -50,7 +48,8 @@ function Home() {
 
     if (existingFood) {
 
-      existingFood.quantity += 1;
+      existingFood.quantity =
+        (existingFood.quantity || 1) + 1;
 
     } else {
 
@@ -58,6 +57,7 @@ function Home() {
         ...food,
         quantity: 1
       });
+
     }
 
     localStorage.setItem(
@@ -65,7 +65,9 @@ function Home() {
       JSON.stringify(cart)
     );
 
-    alert(`${food.name} added to cart`);
+    window.dispatchEvent(
+      new Event("cartUpdated")
+    );
   };
 
   const filteredFoods =

@@ -1,29 +1,79 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import React, {
+  useEffect,
+  useState
+} from "react";
+
+import {
+  Link
+} from "react-router-dom";
 
 function NavbarComponent() {
 
+  const [cartCount, setCartCount] =
+    useState(0);
+
+  useEffect(() => {
+
+    const updateCartCount = () => {
+
+      const cart =
+        JSON.parse(
+          localStorage.getItem("cart")
+        ) || [];
+
+      const totalItems =
+        cart.reduce(
+          (sum, item) =>
+            sum + (item.quantity || 1),
+          0
+        );
+
+      setCartCount(totalItems);
+    };
+
+    updateCartCount();
+
+    window.addEventListener(
+      "cartUpdated",
+      updateCartCount
+    );
+
+    return () => {
+
+      window.removeEventListener(
+        "cartUpdated",
+        updateCartCount
+      );
+
+    };
+
+  }, []);
+
   const toggleDarkMode = () => {
-    document.body.classList.toggle("bg-dark");
-    document.body.classList.toggle("text-white");
+
+    document.body.classList.toggle(
+      "bg-dark"
+    );
+
+    document.body.classList.toggle(
+      "text-white"
+    );
   };
 
-  const cart =
-    JSON.parse(localStorage.getItem("cart")) || [];
-
   return (
+
     <nav className="navbar navbar-dark bg-dark px-4 shadow">
 
-      {/* LOGO */}
       <Link
         to="/"
         className="navbar-brand fw-bold fs-2 text-white"
-        style={{ textDecoration: "none" }}
+        style={{
+          textDecoration: "none"
+        }}
       >
         🌱 AFNA'S GARDEN
       </Link>
 
-      {/* MENU */}
       <div className="d-flex flex-wrap">
 
         <Link
@@ -37,7 +87,7 @@ function NavbarComponent() {
           to="/cart"
           className="btn btn-success mx-2"
         >
-          Cart ({cart.length})
+          Cart ({cartCount})
         </Link>
 
         <Link
