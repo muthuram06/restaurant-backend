@@ -1,63 +1,40 @@
-import React, {
-  useEffect,
-  useState
-} from "react";
+import React, { useEffect, useState } from "react";
+import axios from "axios";
 
 function AdminOrders() {
 
-  const [orders, setOrders] =
-    useState([]);
+  const [orders, setOrders] = useState([]);
+
+  const API_URL =
+    "https://restaurant-backend-ca51.onrender.com/api/orders";
 
   useEffect(() => {
-
-    const storedOrders =
-      JSON.parse(
-        localStorage.getItem("orders")
-      ) || [];
-
-    setOrders(storedOrders);
-
+    loadOrders();
   }, []);
 
-  const updateStatus = (
-    index,
-    status
-  ) => {
-
-    const updatedOrders =
-      [...orders];
-
-    updatedOrders[index].status =
-      status;
-
-    localStorage.setItem(
-
-      "orders",
-
-      JSON.stringify(updatedOrders)
-
-    );
-
-    setOrders(updatedOrders);
+  const loadOrders = () => {
+    axios
+      .get(API_URL)
+      .then((response) => {
+        setOrders(response.data);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
   };
 
-  const deleteOrder = (index) => {
+  const updateStatus = (id, status) => {
 
-    const updatedOrders =
-      orders.filter(
-
-        (_, i) => i !== index
-      );
-
-    localStorage.setItem(
-
-      "orders",
-
-      JSON.stringify(updatedOrders)
-
-    );
-
-    setOrders(updatedOrders);
+    axios
+      .put(
+        `${API_URL}/${id}?status=${status}`
+      )
+      .then(() => {
+        loadOrders();
+      })
+      .catch((error) => {
+        console.error(error);
+      });
   };
 
   return (
@@ -71,42 +48,59 @@ function AdminOrders() {
       {orders.length === 0 ? (
 
         <div className="alert alert-warning">
-
           No Orders Available
-
         </div>
 
       ) : (
 
-        orders.map((order, index) => (
+        orders.map((order) => (
 
           <div
             className="card p-4 mb-4 shadow"
-            key={index}
+            key={order.id}
           >
 
-            <h3>
-              User:
+            <h4>
+              Customer :
               {" "}
-              {order.username || "Guest"}
-            </h3>
+              {order.customerName}
+            </h4>
 
             <h5>
-              Status:
+              Email :
               {" "}
+              {order.email}
+            </h5>
 
-              <span className="text-primary">
+            <h5>
+              Food :
+              {" "}
+              {order.foodName}
+            </h5>
 
-                {order.status || "Preparing"}
+            <h5>
+              Quantity :
+              {" "}
+              {order.quantity}
+            </h5>
 
-              </span>
+            <h5>
+              Price :
+              ₹{order.price}
             </h5>
 
             <h4 className="text-success">
-
-              ₹ {order.totalAmount}
-
+              Total :
+              ₹{order.total}
             </h4>
+
+            <h5>
+              Status :
+              {" "}
+              <span className="text-primary">
+                {order.status}
+              </span>
+            </h5>
 
             <div className="mt-3">
 
@@ -114,7 +108,7 @@ function AdminOrders() {
                 className="btn btn-warning me-2"
                 onClick={() =>
                   updateStatus(
-                    index,
+                    order.id,
                     "Cooking"
                   )
                 }
@@ -126,19 +120,19 @@ function AdminOrders() {
                 className="btn btn-info me-2"
                 onClick={() =>
                   updateStatus(
-                    index,
+                    order.id,
                     "Out For Delivery"
                   )
                 }
               >
-                Delivery
+                Out For Delivery
               </button>
 
               <button
-                className="btn btn-success me-2"
+                className="btn btn-success"
                 onClick={() =>
                   updateStatus(
-                    index,
+                    order.id,
                     "Delivered"
                   )
                 }
@@ -146,43 +140,7 @@ function AdminOrders() {
                 Delivered
               </button>
 
-              <button
-                className="btn btn-danger"
-                onClick={() =>
-                  deleteOrder(index)
-                }
-              >
-                Delete
-              </button>
-
             </div>
-
-            <hr />
-
-            <h4>
-              Ordered Foods
-            </h4>
-
-            {(order.items || []).map(
-
-              (food, i) => (
-
-                <div
-                  key={i}
-                  className="border p-2 mb-2"
-                >
-
-                  <h5>{food.name}</h5>
-
-                  <p>
-                    ₹ {food.price}
-                  </p>
-
-                </div>
-
-              )
-
-            )}
 
           </div>
 
@@ -191,6 +149,7 @@ function AdminOrders() {
       )}
 
     </div>
+
   );
 }
 

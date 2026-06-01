@@ -21,8 +21,7 @@ export const updateOrderStatus = (
   id,
   status
 ) => {
-
   return axios.put(
-    `${API_URL}/${id}/${status}`
+    `${API_URL}/${id}?status=${status}`
   );
 };

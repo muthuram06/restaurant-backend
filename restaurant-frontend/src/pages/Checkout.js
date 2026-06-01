@@ -1,60 +1,67 @@
 import React, { useState } from "react";
-
 import NavbarComponent from "../components/NavbarComponent";
+import axios from "axios";
 
 function Checkout() {
 
   const [name, setName] = useState("");
-  const [address, setAddress] = useState("");
-  const [phone, setPhone] = useState("");
+  const [email, setEmail] = useState("");
 
-  const handlePayment = () => {
+  const handlePayment = async () => {
 
     const cart =
       JSON.parse(localStorage.getItem("cart")) || [];
 
-    const totalAmount =
-      Number(
-        localStorage.getItem("totalAmount")
-      ) || 0;
+    if (cart.length === 0) {
+      alert("Cart is empty");
+      return;
+    }
 
-    const order = {
+    try {
 
-      username: name,
+      for (const item of cart) {
 
-      address,
+        const order = {
 
-      phone,
+          customerName: name,
+          email: email,
 
-      totalAmount,
+          foodName: item.name,
 
-      items: cart,
+          price: item.price,
 
-      status: "Preparing",
+          quantity: item.quantity || 1,
 
-      paymentStatus: "PAID",
+          total:
+            item.price *
+            (item.quantity || 1),
 
-      orderDate:
-        new Date().toLocaleString()
+          status: "Preparing"
+        };
 
-    };
+        await axios.post(
+          "https://restaurant-backend-ca51.onrender.com/api/orders",
+          order
+        );
+      }
 
-    const existingOrders =
-      JSON.parse(localStorage.getItem("orders"))
-      || [];
+      localStorage.removeItem("cart");
 
-    existingOrders.push(order);
+      alert(
+        "Order Placed Successfully"
+      );
 
-    localStorage.setItem(
-      "orders",
-      JSON.stringify(existingOrders)
-    );
+      window.location.href =
+        "/orders";
 
-    localStorage.removeItem("cart");
+    } catch (error) {
 
-    alert("Order Placed Successfully");
+      console.error(error);
 
-    window.location.href = "/orders";
+      alert(
+        "Failed to place order"
+      );
+    }
   };
 
   return (
@@ -66,9 +73,7 @@ function Checkout() {
       <div className="container mt-5">
 
         <h1 className="mb-4">
-
           Checkout
-
         </h1>
 
         <div className="card p-4 shadow">
@@ -76,30 +81,24 @@ function Checkout() {
           <input
             type="text"
             className="form-control mb-3"
-            placeholder="Name"
+            placeholder="Customer Name"
             value={name}
             onChange={(e) =>
-              setName(e.target.value)
+              setName(
+                e.target.value
+              )
             }
           />
 
           <input
-            type="text"
+            type="email"
             className="form-control mb-3"
-            placeholder="Address"
-            value={address}
+            placeholder="Email"
+            value={email}
             onChange={(e) =>
-              setAddress(e.target.value)
-            }
-          />
-
-          <input
-            type="text"
-            className="form-control mb-3"
-            placeholder="Phone Number"
-            value={phone}
-            onChange={(e) =>
-              setPhone(e.target.value)
+              setEmail(
+                e.target.value
+              )
             }
           />
 
@@ -107,7 +106,7 @@ function Checkout() {
             className="btn btn-success"
             onClick={handlePayment}
           >
-            Pay Now
+            Place Order
           </button>
 
         </div>
@@ -115,7 +114,6 @@ function Checkout() {
       </div>
 
     </div>
-
   );
 }
 
