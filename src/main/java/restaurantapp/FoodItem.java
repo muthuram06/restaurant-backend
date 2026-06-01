@@ -28,6 +28,19 @@ public class FoodItem {
             String name,
             String description,
             double price,
+            String imageUrl
+    ) {
+        this.name = name;
+        this.description = description;
+        this.price = price;
+        this.imageUrl = imageUrl;
+        this.category = "Veg";
+    }
+
+    public FoodItem(
+            String name,
+            String description,
+            double price,
             String category,
             String imageUrl
     ) {
@@ -36,10 +49,6 @@ public class FoodItem {
         this.price = price;
         this.category = category;
         this.imageUrl = imageUrl;
-    }
-
-    public Long getId() {
-        return id;
     }
 
     public void setId(Long id) {
