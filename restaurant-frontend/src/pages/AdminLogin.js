@@ -35,7 +35,7 @@ function AdminLogin() {
 
     <div className="container mt-5">
 
-      <div className="card shadow p-4">
+      <div className="card p-4 shadow">
 
         <h1 className="text-center mb-4">
           Admin Login
@@ -71,6 +71,7 @@ function AdminLogin() {
       </div>
 
     </div>
+
   );
 }
 
