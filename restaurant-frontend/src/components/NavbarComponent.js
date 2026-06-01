@@ -1,85 +1,80 @@
-import React from "react";
-
-import {
-  Link
-} from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 
 function NavbarComponent() {
 
+  const [cartCount, setCartCount] = useState(0);
+
+  useEffect(() => {
+    const cart =
+      JSON.parse(localStorage.getItem("cart")) || [];
+
+    setCartCount(cart.length);
+  }, []);
+
   const toggleDarkMode = () => {
-
-    document.body.classList.toggle(
-      "bg-dark"
-    );
-
-    document.body.classList.toggle(
-      "text-white"
-    );
+    document.body.classList.toggle("bg-dark");
+    document.body.classList.toggle("text-white");
   };
 
-  const cart =
-    JSON.parse(
-      localStorage.getItem("cart")
-    ) || [];
-
   return (
-
     <nav className="navbar navbar-dark bg-dark px-4 shadow">
 
-      {/* LOGO */}
-
       <h2 className="text-white fw-bold">
-
         🌱 AFNA'S GARDEN
-
       </h2>
 
-      {/* NAVIGATION */}
-
-      <div className="d-flex flex-wrap">
+      <div className="d-flex flex-wrap gap-2">
 
         <Link
           to="/"
-          className="btn btn-warning mx-2"
+          className="btn btn-warning"
         >
           Home
         </Link>
 
         <Link
           to="/cart"
-          className="btn btn-success mx-2"
+          className="btn btn-success"
         >
-          Cart ({cart.length})
+          Cart ({cartCount})
         </Link>
 
         <Link
           to="/orders"
-          className="btn btn-info mx-2"
+          className="btn btn-info"
         >
           Orders
         </Link>
 
         <Link
           to="/favorites"
-          className="btn btn-danger mx-2"
+          className="btn btn-danger"
         >
           Favorites
         </Link>
 
         <Link
           to="/table-booking"
-          className="btn btn-primary mx-2"
+          className="btn btn-primary"
         >
           Book Table
         </Link>
 
+        {/* ADMIN LOGIN BUTTON */}
+
+        <Link
+          to="/admin-login"
+          className="btn btn-dark border border-light"
+        >
+          Admin
+        </Link>
+
         <button
-          className="btn btn-secondary mx-2"
+          className="btn btn-secondary"
           onClick={toggleDarkMode}
         >
-
           Dark Mode
-
         </button>
 
       </div>
