@@ -34,26 +34,33 @@ function AdminAnalytics() {
     0
   );
 
+  const totalCustomers =
+    [...new Set(
+      orders.map(
+        order => order.email
+      )
+    )].length;
+
   const preparingOrders =
     orders.filter(
-      (o) => o.status === "Preparing"
+      order => order.status === "Preparing"
     ).length;
 
   const cookingOrders =
     orders.filter(
-      (o) => o.status === "Cooking"
+      order => order.status === "Cooking"
     ).length;
 
   const deliveryOrders =
     orders.filter(
-      (o) =>
-        o.status ===
+      order =>
+        order.status ===
         "Out For Delivery"
     ).length;
 
   const deliveredOrders =
     orders.filter(
-      (o) => o.status === "Delivered"
+      order => order.status === "Delivered"
     ).length;
 
   const chartData = [
@@ -84,13 +91,9 @@ function AdminAnalytics() {
 
   return (
 
-    <div
-      className="container mt-5"
-    >
+    <div className="container mt-5">
 
-      <h1
-        className="text-center mb-5 fw-bold"
-      >
+      <h1 className="text-center fw-bold mb-5">
         📊 Admin Analytics Dashboard
       </h1>
 
@@ -116,9 +119,9 @@ function AdminAnalytics() {
 
         <div className="col-md-3">
           <div className="card shadow border-0 text-center p-4">
-            <h5>Preparing</h5>
-            <h1 className="text-warning">
-              {preparingOrders}
+            <h5>Customers</h5>
+            <h1 className="text-info">
+              {totalCustomers}
             </h1>
           </div>
         </div>
@@ -157,7 +160,6 @@ function AdminAnalytics() {
 
               {chartData.map(
                 (entry, index) => (
-
                   <Cell
                     key={index}
                     fill={
@@ -167,7 +169,6 @@ function AdminAnalytics() {
                       ]
                     }
                   />
-
                 )
               )}
 
@@ -184,7 +185,6 @@ function AdminAnalytics() {
       </div>
 
     </div>
-
   );
 }
 

@@ -1,5 +1,7 @@
 package restaurantapp.model;
 
+import java.time.LocalDateTime;
+
 import jakarta.persistence.*;
 
 @Entity
@@ -31,7 +33,10 @@ public class Order {
 
     private String status = "Preparing";
 
+    private LocalDateTime orderDate;
+
     public Order() {
+        this.orderDate = LocalDateTime.now();
     }
 
     public Order(
@@ -56,6 +61,7 @@ public class Order {
         this.quantity = quantity;
         this.total = total;
         this.status = status;
+        this.orderDate = LocalDateTime.now();
     }
 
     public Long getId() {
@@ -140,5 +146,13 @@ public class Order {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public LocalDateTime getOrderDate() {
+        return orderDate;
+    }
+
+    public void setOrderDate(LocalDateTime orderDate) {
+        this.orderDate = orderDate;
     }
 }

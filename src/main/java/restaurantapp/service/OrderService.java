@@ -17,6 +17,12 @@ public class OrderService {
 
     public Order saveOrder(Order order) {
 
+        if (order.getStatus() == null ||
+            order.getStatus().isEmpty()) {
+
+            order.setStatus("Preparing");
+        }
+
         return orderRepository.save(order);
     }
 
@@ -33,5 +39,15 @@ public class OrderService {
     public Optional<Order> getOrderById(Long id) {
 
         return orderRepository.findById(id);
+    }
+
+    public void deleteOrder(Long id) {
+
+        orderRepository.deleteById(id);
+    }
+
+    public long getTotalOrders() {
+
+        return orderRepository.count();
     }
 }

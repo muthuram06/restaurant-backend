@@ -171,9 +171,7 @@ function AdminPanel() {
                 <button
                   className="btn btn-primary w-100"
                   onClick={() =>
-                    navigate(
-                      "/admin-foods"
-                    )
+                    navigate("/admin-foods")
                   }
                 >
                   Manage Foods
@@ -211,9 +209,7 @@ function AdminPanel() {
                 <button
                   className="btn btn-success w-100"
                   onClick={() =>
-                    navigate(
-                      "/admin-orders"
-                    )
+                    navigate("/admin-orders")
                   }
                 >
                   View Orders
@@ -251,9 +247,7 @@ function AdminPanel() {
                 <button
                   className="btn btn-warning w-100"
                   onClick={() =>
-                    navigate(
-                      "/admin-analytics"
-                    )
+                    navigate("/admin-analytics")
                   }
                 >
                   View Analytics
