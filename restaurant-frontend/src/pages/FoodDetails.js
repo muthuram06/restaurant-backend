@@ -1,12 +1,7 @@
 import React from "react";
+import { useLocation } from "react-router-dom";
+import NavbarComponent from "../components/NavbarComponent";
 import Reviews from "./Reviews";
-
-import {
-  useLocation
-} from "react-router-dom";
-
-import NavbarComponent
-from "../components/NavbarComponent";
 
 function FoodDetails() {
 
@@ -25,7 +20,9 @@ function FoodDetails() {
         </h2>
 
       </div>
+
     );
+
   }
 
   const addToCart = () => {
@@ -35,16 +32,38 @@ function FoodDetails() {
         localStorage.getItem("cart")
       ) || [];
 
-    existingCart.push(food);
+    const existingItem =
+      existingCart.find(
+        (item) => item.id === food.id
+      );
+
+    if (existingItem) {
+
+      existingItem.quantity =
+        (existingItem.quantity || 1) + 1;
+
+    } else {
+
+      existingCart.push({
+        ...food,
+        quantity: 1
+      });
+
+    }
 
     localStorage.setItem(
       "cart",
       JSON.stringify(existingCart)
     );
 
+    window.dispatchEvent(
+      new Event("cartUpdated")
+    );
+
     alert(
       "Food Added To Cart"
     );
+
   };
 
   return (
@@ -75,29 +94,19 @@ function FoodDetails() {
           <div className="col-md-6">
 
             <h1 className="fw-bold">
-
               {food.name}
-
             </h1>
 
             <span className="badge bg-success fs-6 mb-3">
-
               PURE VEG
-
             </span>
 
             <h3 className="text-success mb-3">
-
               ₹ {food.price}
-
             </h3>
 
             <h5 className="text-secondary mb-3">
-
-              Category:
-              {" "}
-              {food.category}
-
+              Category : {food.category}
             </h5>
 
             <p
@@ -106,25 +115,18 @@ function FoodDetails() {
                 fontSize: "18px"
               }}
             >
-
               {food.description}
-
             </p>
 
             <div className="mt-4">
 
               <h5>
-
-                ⭐ 4.8 Rating
-
+                ⭐ Premium Restaurant Item
               </h5>
 
               <p>
-
-                Healthy and delicious
-                veg restaurant special
-                food.
-
+                Freshly prepared using
+                quality ingredients.
               </p>
 
             </div>
@@ -133,20 +135,27 @@ function FoodDetails() {
               className="btn btn-success btn-lg mt-4 w-100"
               onClick={addToCart}
             >
-
-              Add To Cart
-
+              🛒 Add To Cart
             </button>
 
           </div>
 
         </div>
 
+        <div className="mt-5">
+
+          <Reviews
+            foodName={food.name}
+          />
+
+        </div>
+
       </div>
 
     </div>
-  );
-}
 
+  );
+
+}
 
 export default FoodDetails;

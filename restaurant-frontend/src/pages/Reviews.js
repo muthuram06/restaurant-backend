@@ -25,6 +25,27 @@ function Reviews({ foodName }) {
   const API_URL =
     "https://restaurant-backend-ca51.onrender.com/api/reviews";
 
+  const loadReviews = () => {
+
+    axios
+      .get(
+        `${API_URL}/${foodName}`
+      )
+      .then((response) => {
+
+        setReviews(
+          response.data
+        );
+
+      })
+      .catch((error) => {
+
+        console.error(error);
+
+      });
+
+  };
+
   useEffect(() => {
 
     if (foodName) {
@@ -33,27 +54,8 @@ function Reviews({ foodName }) {
 
     }
 
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [foodName]);
-
-  const loadReviews = () => {
-
-    axios
-      .get(`${API_URL}/${foodName}`)
-      .then((response) => {
-
-        setReviews(response.data);
-
-      })
-      .catch((error) => {
-
-        console.error(
-          "Failed to load reviews",
-          error
-        );
-
-      });
-
-  };
 
   const submitReview = () => {
 
@@ -146,6 +148,7 @@ function Reviews({ foodName }) {
           )
         }
       >
+
         <option value="5">
           ⭐⭐⭐⭐⭐ (5)
         </option>
@@ -165,6 +168,7 @@ function Reviews({ foodName }) {
         <option value="1">
           ⭐ (1)
         </option>
+
       </select>
 
       <textarea
