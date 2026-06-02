@@ -14,7 +14,7 @@ public class Review {
 
     private String customerName;
 
-    private int rating;
+    private Integer rating;
 
     @Column(length = 1000)
     private String comment;
@@ -42,11 +42,11 @@ public class Review {
         this.customerName = customerName;
     }
 
-    public int getRating() {
+    public Integer getRating() {
         return rating;
     }
 
-    public void setRating(int rating) {
+    public void setRating(Integer rating) {
         this.rating = rating;
     }
 

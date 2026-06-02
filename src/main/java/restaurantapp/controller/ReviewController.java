@@ -23,8 +23,14 @@ public class ReviewController {
         return reviewRepository.save(review);
     }
 
+    @GetMapping
+    public List<Review> getAllReviews() {
+
+        return reviewRepository.findAll();
+    }
+
     @GetMapping("/{foodName}")
-    public List<Review> getReviews(
+    public List<Review> getFoodReviews(
             @PathVariable String foodName) {
 
         return reviewRepository
