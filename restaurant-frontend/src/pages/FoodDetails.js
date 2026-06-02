@@ -1,4 +1,5 @@
 import React from "react";
+import Reviews from "./Reviews";
 
 import {
   useLocation
@@ -146,5 +147,6 @@ function FoodDetails() {
     </div>
   );
 }
+
 
 export default FoodDetails;
