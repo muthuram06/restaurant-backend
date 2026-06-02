@@ -5,7 +5,6 @@ import NavbarComponent from "../components/NavbarComponent";
 import FooterComponent from "../components/FooterComponent";
 
 function Home() {
-
   const [foods, setFoods] = useState([]);
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState("All");
@@ -15,49 +14,36 @@ function Home() {
   }, []);
 
   const fetchFoods = async () => {
-
     try {
-
       const response = await axios.get(
         "https://restaurant-backend-ca51.onrender.com/api/food/all"
       );
 
-      setFoods(response.data);
+      console.log("Foods Loaded:", response.data);
 
+      setFoods(Array.isArray(response.data) ? response.data : []);
     } catch (error) {
-
-      console.error(
-        "Error loading foods:",
-        error
-      );
+      console.error("Error loading foods:", error);
+      setFoods([]);
     }
   };
 
   const addToCart = (food) => {
-
     let cart =
-      JSON.parse(
-        localStorage.getItem("cart")
-      ) || [];
+      JSON.parse(localStorage.getItem("cart")) || [];
 
-    const existingFood =
-      cart.find(
-        (item) =>
-          item.id === food.id
-      );
+    const existingFood = cart.find(
+      (item) => item.name === food.name
+    );
 
     if (existingFood) {
-
       existingFood.quantity =
         (existingFood.quantity || 1) + 1;
-
     } else {
-
       cart.push({
         ...food,
         quantity: 1
       });
-
     }
 
     localStorage.setItem(
@@ -70,26 +56,19 @@ function Home() {
     );
   };
 
-  const filteredFoods =
-    foods.filter((food) => {
+  const filteredFoods = foods.filter((food) => {
+    const matchesSearch =
+      (food.name || "")
+        .toLowerCase()
+        .includes(search.toLowerCase());
 
-      const matchesSearch =
-        food.name
-          .toLowerCase()
-          .includes(
-            search.toLowerCase()
-          );
+    const matchesCategory =
+      category === "All" ||
+      food.category === category ||
+      food.description === category;
 
-      const matchesCategory =
-        category === "All" ||
-        food.category === category ||
-        food.description === category;
-
-      return (
-        matchesSearch &&
-        matchesCategory
-      );
-    });
+    return matchesSearch && matchesCategory;
+  });
 
   return (
     <>
@@ -100,7 +79,6 @@ function Home() {
       </div>
 
       <div className="container mt-4">
-
         <h1 className="text-center fw-bold">
           Welcome To AFNA'S GARDEN RESTAURANT
         </h1>
@@ -127,117 +105,98 @@ function Home() {
         />
 
         <div className="mb-4">
-
           <button
             className="btn btn-dark me-2"
-            onClick={() =>
-              setCategory("All")
-            }
+            onClick={() => setCategory("All")}
           >
             All
           </button>
 
           <button
             className="btn btn-success me-2"
-            onClick={() =>
-              setCategory("Veg")
-            }
+            onClick={() => setCategory("Veg")}
           >
             Veg
           </button>
 
           <button
             className="btn btn-primary me-2"
-            onClick={() =>
-              setCategory("North Indian")
-            }
+            onClick={() => setCategory("North Indian")}
           >
             North Indian
           </button>
 
           <button
             className="btn btn-danger me-2"
-            onClick={() =>
-              setCategory("South Indian")
-            }
+            onClick={() => setCategory("South Indian")}
           >
             South Indian
           </button>
 
           <button
             className="btn btn-warning me-2"
-            onClick={() =>
-              setCategory("Fast Food")
-            }
+            onClick={() => setCategory("Fast Food")}
           >
             Fast Food
           </button>
 
           <button
             className="btn btn-info"
-            onClick={() =>
-              setCategory("Chinese")
-            }
+            onClick={() => setCategory("Chinese")}
           >
             Chinese
           </button>
-
         </div>
 
         <div className="row">
+          {filteredFoods.length > 0 ? (
+            filteredFoods.map((food, index) => (
+              <div
+                className="col-md-4 mb-4"
+                key={index}
+              >
+                <div className="card shadow h-100">
+                  <img
+                    src={food.imageUrl}
+                    alt={food.name}
+                    className="card-img-top"
+                    style={{
+                      height: "250px",
+                      objectFit: "cover"
+                    }}
+                  />
 
-          {filteredFoods.map((food) => (
+                  <div className="card-body">
+                    <h4>{food.name}</h4>
 
-            <div
-              className="col-md-4 mb-4"
-              key={food.id}
-            >
+                    <p>{food.description}</p>
 
-              <div className="card shadow h-100">
+                    <h5 className="text-success">
+                      ₹{food.price}
+                    </h5>
 
-                <img
-                  src={food.imageUrl}
-                  alt={food.name}
-                  className="card-img-top"
-                  style={{
-                    height: "250px",
-                    objectFit: "cover"
-                  }}
-                />
+                    <span className="badge bg-success">
+                      {food.category}
+                    </span>
 
-                <div className="card-body">
-
-                  <h4>{food.name}</h4>
-
-                  <p>{food.description}</p>
-
-                  <h5 className="text-success">
-                    ₹{food.price}
-                  </h5>
-
-                  <span className="badge bg-success">
-                    {food.category}
-                  </span>
-
-                  <button
-                    className="btn btn-primary w-100 mt-3"
-                    onClick={() =>
-                      addToCart(food)
-                    }
-                  >
-                    Add To Cart
-                  </button>
-
+                    <button
+                      className="btn btn-primary w-100 mt-3"
+                      onClick={() =>
+                        addToCart(food)
+                      }
+                    >
+                      Add To Cart
+                    </button>
+                  </div>
                 </div>
-
               </div>
-
+            ))
+          ) : (
+            <div className="text-center">
+              <h4>No Foods Found</h4>
             </div>
-
-          ))}
-
+          )}
         </div>
-
       </div>
 
       <FooterComponent />
