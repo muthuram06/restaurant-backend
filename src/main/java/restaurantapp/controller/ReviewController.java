@@ -18,25 +18,16 @@ public class ReviewController {
 
     @PostMapping
     public Review saveReview(
-        @RequestBody Review review
-    ) {
+            @RequestBody Review review) {
 
         return reviewRepository.save(review);
     }
 
-    @GetMapping
-    public List<Review> getAllReviews() {
-
-        return reviewRepository.findAll();
-    }
-
     @GetMapping("/{foodName}")
-    public List<Review> getFoodReviews(
-        @PathVariable String foodName
-    ) {
+    public List<Review> getReviews(
+            @PathVariable String foodName) {
 
-        return reviewRepository.findByFoodName(
-            foodName
-        );
+        return reviewRepository
+                .findByFoodName(foodName);
     }
 }

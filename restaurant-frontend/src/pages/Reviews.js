@@ -27,20 +27,28 @@ function Reviews({ foodName }) {
 
   useEffect(() => {
 
-    loadReviews();
+    if (foodName) {
 
-  }, []);
+      loadReviews();
+
+    }
+
+  }, [foodName]);
 
   const loadReviews = () => {
 
     axios
-      .get(
-        `${API_URL}/${foodName}`
-      )
+      .get(`${API_URL}/${foodName}`)
       .then((response) => {
 
-        setReviews(
-          response.data
+        setReviews(response.data);
+
+      })
+      .catch((error) => {
+
+        console.error(
+          "Failed to load reviews",
+          error
         );
 
       });
@@ -49,6 +57,24 @@ function Reviews({ foodName }) {
 
   const submitReview = () => {
 
+    if (!customerName.trim()) {
+
+      alert(
+        "Please enter your name"
+      );
+
+      return;
+    }
+
+    if (!comment.trim()) {
+
+      alert(
+        "Please enter review"
+      );
+
+      return;
+    }
+
     axios
       .post(API_URL, {
 
@@ -56,7 +82,7 @@ function Reviews({ foodName }) {
 
         customerName,
 
-        rating,
+        rating: Number(rating),
 
         comment
 
@@ -65,8 +91,22 @@ function Reviews({ foodName }) {
 
         setCustomerName("");
         setComment("");
+        setRating(5);
 
         loadReviews();
+
+        alert(
+          "Review Submitted Successfully"
+        );
+
+      })
+      .catch((error) => {
+
+        console.error(error);
+
+        alert(
+          "Failed to submit review"
+        );
 
       });
 
@@ -74,16 +114,21 @@ function Reviews({ foodName }) {
 
   return (
 
-    <div className="card p-4 shadow mt-4">
+    <div
+      className="card shadow-lg border-0 p-4 mt-5"
+      style={{
+        borderRadius: "20px"
+      }}
+    >
 
-      <h3>
-        ⭐ Food Reviews
+      <h3 className="fw-bold mb-4">
+        ⭐ Customer Reviews
       </h3>
 
       <input
         type="text"
-        className="form-control mb-2"
-        placeholder="Your Name"
+        className="form-control mb-3"
+        placeholder="Enter Your Name"
         value={customerName}
         onChange={(e) =>
           setCustomerName(
@@ -93,7 +138,7 @@ function Reviews({ foodName }) {
       />
 
       <select
-        className="form-control mb-2"
+        className="form-control mb-3"
         value={rating}
         onChange={(e) =>
           setRating(
@@ -102,30 +147,30 @@ function Reviews({ foodName }) {
         }
       >
         <option value="5">
-          ⭐⭐⭐⭐⭐
+          ⭐⭐⭐⭐⭐ (5)
         </option>
 
         <option value="4">
-          ⭐⭐⭐⭐
+          ⭐⭐⭐⭐ (4)
         </option>
 
         <option value="3">
-          ⭐⭐⭐
+          ⭐⭐⭐ (3)
         </option>
 
         <option value="2">
-          ⭐⭐
+          ⭐⭐ (2)
         </option>
 
         <option value="1">
-          ⭐
+          ⭐ (1)
         </option>
-
       </select>
 
       <textarea
         className="form-control mb-3"
-        placeholder="Review"
+        rows="3"
+        placeholder="Write Your Review"
         value={comment}
         onChange={(e) =>
           setComment(
@@ -143,36 +188,45 @@ function Reviews({ foodName }) {
 
       <hr />
 
-      {reviews.map(
-        (review) => (
+      {reviews.length === 0 ? (
+
+        <div className="alert alert-info">
+          No Reviews Yet
+        </div>
+
+      ) : (
+
+        reviews.map((review) => (
 
           <div
             key={review.id}
-            className="mb-3"
+            className="card border-0 shadow-sm p-3 mb-3"
           >
 
-            <h5>
-              {review.customerName}
+            <h5 className="fw-bold">
+              👤 {review.customerName}
             </h5>
 
-            <p>
+            <p className="text-warning fs-5 mb-1">
               {"⭐".repeat(
                 review.rating
               )}
             </p>
 
-            <p>
+            <p className="mb-0">
               {review.comment}
             </p>
 
           </div>
 
-        )
+        ))
+
       )}
 
     </div>
 
   );
+
 }
 
 export default Reviews;
