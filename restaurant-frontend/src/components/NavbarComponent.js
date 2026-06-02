@@ -4,13 +4,21 @@ import React, {
 } from "react";
 
 import {
-  Link
+  Link,
+  useNavigate
 } from "react-router-dom";
 
 function NavbarComponent() {
 
   const [cartCount, setCartCount] =
     useState(0);
+
+  const navigate = useNavigate();
+
+  const isLoggedIn =
+    localStorage.getItem(
+      "isUserLoggedIn"
+    ) === "true";
 
   useEffect(() => {
 
@@ -49,78 +57,118 @@ function NavbarComponent() {
 
   }, []);
 
-  const toggleDarkMode = () => {
+  const logout = () => {
 
-    document.body.classList.toggle(
-      "bg-dark"
+    localStorage.removeItem(
+      "isUserLoggedIn"
     );
 
-    document.body.classList.toggle(
-      "text-white"
+    localStorage.removeItem(
+      "userEmail"
     );
+
+    navigate("/login");
   };
 
   return (
 
-    <nav className="navbar navbar-dark bg-dark px-4 shadow">
+    <nav
+      className="navbar navbar-expand-lg navbar-dark shadow"
+      style={{
+        background:
+          "linear-gradient(90deg,#111827,#1f2937)"
+      }}
+    >
 
-      <Link
-        to="/"
-        className="navbar-brand fw-bold fs-2 text-white"
-        style={{
-          textDecoration: "none"
-        }}
-      >
-        🌱 AFNA'S GARDEN
-      </Link>
-
-      <div className="d-flex flex-wrap">
+      <div className="container">
 
         <Link
           to="/"
-          className="btn btn-warning mx-2"
+          className="navbar-brand fw-bold fs-3"
+          style={{
+            textDecoration: "none"
+          }}
         >
-          Home
+          🌱 AFNA'S GARDEN
         </Link>
 
-        <Link
-          to="/cart"
-          className="btn btn-success mx-2"
-        >
-          Cart ({cartCount})
-        </Link>
+        <div className="d-flex flex-wrap gap-2">
 
-        <Link
-          to="/orders"
-          className="btn btn-info mx-2"
-        >
-          Orders
-        </Link>
+          <Link
+            to="/"
+            className="btn btn-warning"
+          >
+            Home
+          </Link>
 
-        <Link
-          to="/favorites"
-          className="btn btn-danger mx-2"
-        >
-          Favorites
-        </Link>
+          <Link
+            to="/cart"
+            className="btn btn-success"
+          >
+            Cart ({cartCount})
+          </Link>
 
-        <Link
-          to="/table-booking"
-          className="btn btn-primary mx-2"
-        >
-          Book Table
-        </Link>
+          <Link
+            to="/orders"
+            className="btn btn-info"
+          >
+            Orders
+          </Link>
 
-        <button
-          className="btn btn-secondary mx-2"
-          onClick={toggleDarkMode}
-        >
-          Dark Mode
-        </button>
+          <Link
+            to="/favorites"
+            className="btn btn-danger"
+          >
+            Favorites
+          </Link>
+
+          <Link
+            to="/table-booking"
+            className="btn btn-primary"
+          >
+            Book Table
+          </Link>
+
+          {isLoggedIn ? (
+            <>
+              <Link
+                to="/profile"
+                className="btn btn-light"
+              >
+                Profile
+              </Link>
+
+              <button
+                className="btn btn-outline-light"
+                onClick={logout}
+              >
+                Logout
+              </button>
+            </>
+          ) : (
+            <>
+              <Link
+                to="/login"
+                className="btn btn-light"
+              >
+                Login
+              </Link>
+
+              <Link
+                to="/register"
+                className="btn btn-outline-light"
+              >
+                Register
+              </Link>
+            </>
+          )}
+
+        </div>
 
       </div>
 
     </nav>
+
   );
 }
 

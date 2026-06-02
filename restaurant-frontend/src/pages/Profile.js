@@ -1,47 +1,59 @@
+import React from "react";
 import NavbarComponent from "../components/NavbarComponent";
 
 function Profile() {
 
-    const currentUser =
-        JSON.parse(localStorage.getItem("currentUser"));
+  const email =
+    localStorage.getItem("userEmail");
 
-    return (
+  return (
 
-        <div>
+    <div>
 
-            <NavbarComponent />
+      <NavbarComponent />
 
-            <div className="container mt-5">
+      <div className="container mt-5">
 
-                <div className="card shadow p-4">
+        <div
+          className="card shadow-lg border-0 p-5"
+          style={{
+            borderRadius: "20px"
+          }}
+        >
 
-                    <h2 className="mb-4">
-                        User Profile
-                    </h2>
+          <div className="text-center">
 
-                    <h4>
-                        Name:
-                        {" "}
-                        {currentUser?.name}
-                    </h4>
+            <h1>👤</h1>
 
-                    <h4>
-                        Email:
-                        {" "}
-                        {currentUser?.email}
-                    </h4>
+            <h2>My Profile</h2>
 
-                    <h4>
-                        Role:
-                        User
-                    </h4>
+            <hr />
 
-                </div>
+            <h5>
+              Email :
+              {" "}
+              {email}
+            </h5>
 
-            </div>
+            <h5>
+              Role :
+              Customer
+            </h5>
+
+            <h5>
+              Restaurant :
+              AFNA'S GARDEN
+            </h5>
+
+          </div>
 
         </div>
-    );
+
+      </div>
+
+    </div>
+
+  );
 }
 
 export default Profile;
