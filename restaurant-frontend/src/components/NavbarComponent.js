@@ -59,10 +59,6 @@ function NavbarComponent() {
       "text-white"
     );
   };
-  const [phone, setPhone] = useState("");
-  const [address, setAddress] = useState("");
-  const [paymentMethod, setPaymentMethod] =
-    useState("Cash On Delivery");
 
   return (
 
