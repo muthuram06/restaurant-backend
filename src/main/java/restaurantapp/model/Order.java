@@ -36,32 +36,13 @@ public class Order {
     private LocalDateTime orderDate;
 
     public Order() {
-        this.orderDate = LocalDateTime.now();
     }
 
-    public Order(
-            String customerName,
-            String email,
-            String phone,
-            String address,
-            String paymentMethod,
-            String foodName,
-            double price,
-            int quantity,
-            double total,
-            String status) {
-
-        this.customerName = customerName;
-        this.email = email;
-        this.phone = phone;
-        this.address = address;
-        this.paymentMethod = paymentMethod;
-        this.foodName = foodName;
-        this.price = price;
-        this.quantity = quantity;
-        this.total = total;
-        this.status = status;
-        this.orderDate = LocalDateTime.now();
+    @PrePersist
+    public void prePersist() {
+        if (orderDate == null) {
+            orderDate = LocalDateTime.now();
+        }
     }
 
     public Long getId() {
