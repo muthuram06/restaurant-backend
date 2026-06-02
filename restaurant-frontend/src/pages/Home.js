@@ -5,50 +5,49 @@ import NavbarComponent from "../components/NavbarComponent";
 import FooterComponent from "../components/FooterComponent";
 
 function Home() {
+
   const [foods, setFoods] = useState([]);
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState("All");
+  const [cart, setCart] = useState([]);
 
   useEffect(() => {
     fetchFoods();
+
+    const savedCart =
+      JSON.parse(localStorage.getItem("cart")) || [];
+
+    setCart(savedCart);
   }, []);
 
   const fetchFoods = async () => {
     try {
+
       const response = await axios.get(
         "https://restaurant-backend-ca51.onrender.com/api/food/all"
       );
 
-      console.log("Foods Loaded:", response.data);
+      setFoods(
+        Array.isArray(response.data)
+          ? response.data
+          : []
+      );
 
-      setFoods(Array.isArray(response.data) ? response.data : []);
     } catch (error) {
-      console.error("Error loading foods:", error);
+
+      console.error(error);
+
       setFoods([]);
     }
   };
 
-  const addToCart = (food) => {
-    let cart =
-      JSON.parse(localStorage.getItem("cart")) || [];
+  const updateCartStorage = (updatedCart) => {
 
-    const existingFood = cart.find(
-      (item) => item.name === food.name
-    );
-
-    if (existingFood) {
-      existingFood.quantity =
-        (existingFood.quantity || 1) + 1;
-    } else {
-      cart.push({
-        ...food,
-        quantity: 1
-      });
-    }
+    setCart(updatedCart);
 
     localStorage.setItem(
       "cart",
-      JSON.stringify(cart)
+      JSON.stringify(updatedCart)
     );
 
     window.dispatchEvent(
@@ -56,10 +55,72 @@ function Home() {
     );
   };
 
+  const addToCart = (food) => {
+
+    let updatedCart = [...cart];
+
+    const existingFood =
+      updatedCart.find(
+        (item) => item.name === food.name
+      );
+
+    if (existingFood) {
+
+      existingFood.quantity += 1;
+
+    } else {
+
+      updatedCart.push({
+        ...food,
+        quantity: 1
+      });
+
+    }
+
+    updateCartStorage(updatedCart);
+  };
+
+  const decreaseQuantity = (food) => {
+
+    let updatedCart = [...cart];
+
+    const existingFood =
+      updatedCart.find(
+        (item) => item.name === food.name
+      );
+
+    if (!existingFood) return;
+
+    if (existingFood.quantity > 1) {
+
+      existingFood.quantity -= 1;
+
+    } else {
+
+      updatedCart =
+        updatedCart.filter(
+          (item) => item.name !== food.name
+        );
+    }
+
+    updateCartStorage(updatedCart);
+  };
+
+  const getQuantity = (foodName) => {
+
+    const item =
+      cart.find(
+        (food) => food.name === foodName
+      );
+
+    return item ? item.quantity : 0;
+  };
+
   const filteredFoods = foods.filter((food) => {
+
     const matchesSearch =
-      (food.name || "")
-        .toLowerCase()
+      food.name
+        ?.toLowerCase()
         .includes(search.toLowerCase());
 
     const matchesCategory =
@@ -67,7 +128,10 @@ function Home() {
       food.category === category ||
       food.description === category;
 
-    return matchesSearch && matchesCategory;
+    return (
+      matchesSearch &&
+      matchesCategory
+    );
   });
 
   return (
@@ -79,6 +143,7 @@ function Home() {
       </div>
 
       <div className="container mt-4">
+
         <h1 className="text-center fw-bold">
           Welcome To AFNA'S GARDEN RESTAURANT
         </h1>
@@ -97,7 +162,7 @@ function Home() {
         <input
           type="text"
           className="form-control mb-4"
-          placeholder="🔍 Search Veg Foods..."
+          placeholder="🔍 Search Foods..."
           value={search}
           onChange={(e) =>
             setSearch(e.target.value)
@@ -105,101 +170,179 @@ function Home() {
         />
 
         <div className="mb-4">
+
           <button
             className="btn btn-dark me-2"
-            onClick={() => setCategory("All")}
+            onClick={() =>
+              setCategory("All")
+            }
           >
             All
           </button>
 
           <button
             className="btn btn-success me-2"
-            onClick={() => setCategory("Veg")}
+            onClick={() =>
+              setCategory("Veg")
+            }
           >
             Veg
           </button>
 
           <button
             className="btn btn-primary me-2"
-            onClick={() => setCategory("North Indian")}
+            onClick={() =>
+              setCategory("North Indian")
+            }
           >
             North Indian
           </button>
 
           <button
             className="btn btn-danger me-2"
-            onClick={() => setCategory("South Indian")}
+            onClick={() =>
+              setCategory("South Indian")
+            }
           >
             South Indian
           </button>
 
           <button
             className="btn btn-warning me-2"
-            onClick={() => setCategory("Fast Food")}
+            onClick={() =>
+              setCategory("Fast Food")
+            }
           >
             Fast Food
           </button>
 
           <button
             className="btn btn-info"
-            onClick={() => setCategory("Chinese")}
+            onClick={() =>
+              setCategory("Chinese")
+            }
           >
             Chinese
           </button>
+
         </div>
 
         <div className="row">
+
           {filteredFoods.length > 0 ? (
-            filteredFoods.map((food, index) => (
-              <div
-                className="col-md-4 mb-4"
-                key={index}
-              >
-                <div className="card shadow h-100">
-                  <img
-                    src={food.imageUrl}
-                    alt={food.name}
-                    className="card-img-top"
+
+            filteredFoods.map(
+              (food, index) => (
+
+                <div
+                  className="col-md-4 mb-4"
+                  key={index}
+                >
+
+                  <div
+                    className="card shadow-lg border-0 h-100"
                     style={{
-                      height: "250px",
-                      objectFit: "cover"
+                      borderRadius: "20px"
                     }}
-                  />
+                  >
 
-                  <div className="card-body">
-                    <h4>{food.name}</h4>
+                    <img
+                      src={food.imageUrl}
+                      alt={food.name}
+                      className="card-img-top"
+                      style={{
+                        height: "250px",
+                        objectFit: "cover"
+                      }}
+                    />
 
-                    <p>{food.description}</p>
+                    <div className="card-body text-center">
 
-                    <h5 className="text-success">
-                      ₹{food.price}
-                    </h5>
+                      <h4>{food.name}</h4>
 
-                    <span className="badge bg-success">
-                      {food.category}
-                    </span>
+                      <p>
+                        {food.description}
+                      </p>
 
-                    <button
-                      className="btn btn-primary w-100 mt-3"
-                      onClick={() =>
-                        addToCart(food)
-                      }
-                    >
-                      Add To Cart
-                    </button>
+                      <h4 className="text-success">
+                        ₹{food.price}
+                      </h4>
+
+                      <span className="badge bg-success">
+                        {food.category}
+                      </span>
+
+                      <div className="mt-3">
+
+                        {getQuantity(food.name) === 0 ? (
+
+                          <button
+                            className="btn btn-primary w-100"
+                            onClick={() =>
+                              addToCart(food)
+                            }
+                          >
+                            🛒 Add To Cart
+                          </button>
+
+                        ) : (
+
+                          <div className="d-flex justify-content-center align-items-center">
+
+                            <button
+                              className="btn btn-danger"
+                              onClick={() =>
+                                decreaseQuantity(food)
+                              }
+                            >
+                              -
+                            </button>
+
+                            <span
+                              className="mx-3 fw-bold fs-4"
+                            >
+                              {getQuantity(
+                                food.name
+                              )}
+                            </span>
+
+                            <button
+                              className="btn btn-success"
+                              onClick={() =>
+                                addToCart(food)
+                              }
+                            >
+                              +
+                            </button>
+
+                          </div>
+
+                        )}
+
+                      </div>
+
+                    </div>
+
                   </div>
+
                 </div>
-              </div>
-            ))
+              )
+            )
+
           ) : (
+
             <div className="text-center">
-              <h4>No Foods Found</h4>
+              <h3>No Foods Found</h3>
             </div>
+
           )}
+
         </div>
+
       </div>
 
       <FooterComponent />
+
     </>
   );
 }
