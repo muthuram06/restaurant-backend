@@ -6,11 +6,20 @@ function Checkout() {
 
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
+  const [address, setAddress] = useState("");
+  const [paymentMethod, setPaymentMethod] =
+    useState("Cash On Delivery");
+
+  const [loading, setLoading] =
+    useState(false);
 
   const handlePayment = async () => {
 
     const cart =
-      JSON.parse(localStorage.getItem("cart")) || [];
+      JSON.parse(
+        localStorage.getItem("cart")
+      ) || [];
 
     if (!name.trim()) {
       alert("Please enter customer name");
@@ -22,12 +31,24 @@ function Checkout() {
       return;
     }
 
+    if (!phone.trim()) {
+      alert("Please enter phone number");
+      return;
+    }
+
+    if (!address.trim()) {
+      alert("Please enter address");
+      return;
+    }
+
     if (cart.length === 0) {
       alert("Cart is empty");
       return;
     }
 
     try {
+
+      setLoading(true);
 
       localStorage.setItem(
         "userEmail",
@@ -41,6 +62,12 @@ function Checkout() {
           customerName: name,
 
           email: email,
+
+          phone: phone,
+
+          address: address,
+
+          paymentMethod: paymentMethod,
 
           foodName: item.name,
 
@@ -63,6 +90,10 @@ function Checkout() {
 
       localStorage.removeItem("cart");
 
+      window.dispatchEvent(
+        new Event("cartUpdated")
+      );
+
       alert(
         "Order Placed Successfully"
       );
@@ -77,21 +108,32 @@ function Checkout() {
       alert(
         "Failed to place order"
       );
+
+    } finally {
+
+      setLoading(false);
+
     }
   };
 
   return (
+
     <div>
 
       <NavbarComponent />
 
       <div className="container mt-5">
 
-        <h1 className="mb-4">
+        <h1 className="mb-4 fw-bold">
           Checkout
         </h1>
 
-        <div className="card p-4 shadow">
+        <div
+          className="card shadow-lg p-4 border-0"
+          style={{
+            borderRadius: "20px"
+          }}
+        >
 
           <input
             type="text"
@@ -113,11 +155,60 @@ function Checkout() {
             }
           />
 
-          <button
-            className="btn btn-success"
-            onClick={handlePayment}
+          <input
+            type="text"
+            className="form-control mb-3"
+            placeholder="Phone Number"
+            value={phone}
+            onChange={(e) =>
+              setPhone(e.target.value)
+            }
+          />
+
+          <textarea
+            className="form-control mb-3"
+            rows="3"
+            placeholder="Delivery Address"
+            value={address}
+            onChange={(e) =>
+              setAddress(e.target.value)
+            }
+          />
+
+          <select
+            className="form-control mb-4"
+            value={paymentMethod}
+            onChange={(e) =>
+              setPaymentMethod(
+                e.target.value
+              )
+            }
           >
-            Place Order
+            <option>
+              Cash On Delivery
+            </option>
+
+            <option>
+              UPI
+            </option>
+
+            <option>
+              Credit Card
+            </option>
+
+            <option>
+              Debit Card
+            </option>
+          </select>
+
+          <button
+            className="btn btn-success btn-lg"
+            onClick={handlePayment}
+            disabled={loading}
+          >
+            {loading
+              ? "Placing Order..."
+              : "Place Order"}
           </button>
 
         </div>

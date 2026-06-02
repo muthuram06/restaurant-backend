@@ -11,10 +11,22 @@ public class Order {
     private Long id;
 
     private String customerName;
+
     private String email;
+
+    private String phone;
+
+    @Column(length = 1000)
+    private String address;
+
+    private String paymentMethod;
+
     private String foodName;
+
     private double price;
+
     private int quantity;
+
     private double total;
 
     private String status = "Preparing";
@@ -22,13 +34,23 @@ public class Order {
     public Order() {
     }
 
-    public Order(String customerName, String email,
-                 String foodName, double price,
-                 int quantity, double total,
-                 String status) {
+    public Order(
+            String customerName,
+            String email,
+            String phone,
+            String address,
+            String paymentMethod,
+            String foodName,
+            double price,
+            int quantity,
+            double total,
+            String status) {
 
         this.customerName = customerName;
         this.email = email;
+        this.phone = phone;
+        this.address = address;
+        this.paymentMethod = paymentMethod;
         this.foodName = foodName;
         this.price = price;
         this.quantity = quantity;
@@ -54,6 +76,30 @@ public class Order {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public String getPaymentMethod() {
+        return paymentMethod;
+    }
+
+    public void setPaymentMethod(String paymentMethod) {
+        this.paymentMethod = paymentMethod;
     }
 
     public String getFoodName() {
