@@ -27,6 +27,7 @@ import AdminPanel from "./pages/AdminPanel";
 import AdminFoods from "./pages/AdminFoods";
 import AdminOrders from "./pages/AdminOrders";
 import AdminAnalytics from "./pages/AdminAnalytics";
+import AdminCustomers from "./pages/AdminCustomers";
 
 function App() {
 
@@ -155,6 +156,15 @@ function App() {
               : <Navigate to="/admin-login" replace />
           }
         />
+
+          <Route
+            path="/admin-customers"
+            element={
+              isAdminLoggedIn
+                ? <AdminCustomers />
+                : <Navigate to="/admin-login" replace />
+            }
+          />
 
         {/* FALLBACK */}
 
