@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 
 function AdminOrders() {
+
   const [orders, setOrders] = useState([]);
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("All");
@@ -11,9 +12,17 @@ function AdminOrders() {
 
   useEffect(() => {
     loadOrders();
+
+    const interval = setInterval(() => {
+      loadOrders();
+    }, 30000);
+
+    return () => clearInterval(interval);
+
   }, []);
 
   const loadOrders = () => {
+
     axios
       .get(API_URL)
       .then((response) => {
@@ -22,9 +31,11 @@ function AdminOrders() {
       .catch((error) => {
         console.error(error);
       });
+
   };
 
   const updateStatus = (id, status) => {
+
     axios
       .put(`${API_URL}/${id}?status=${status}`)
       .then(() => {
@@ -33,20 +44,57 @@ function AdminOrders() {
       .catch((error) => {
         console.error(error);
       });
+
   };
 
   const getBadgeColor = (status) => {
-    if (status === "Preparing") return "warning";
-    if (status === "Cooking") return "info";
-    if (status === "Out For Delivery") return "primary";
-    if (status === "Delivered") return "success";
-    return "secondary";
+
+    switch (status) {
+
+      case "Preparing":
+        return "warning";
+
+      case "Cooking":
+        return "info";
+
+      case "Out For Delivery":
+        return "primary";
+
+      case "Delivered":
+        return "success";
+
+      default:
+        return "secondary";
+    }
+  };
+
+  const getProgress = (status) => {
+
+    switch (status) {
+
+      case "Preparing":
+        return 25;
+
+      case "Cooking":
+        return 50;
+
+      case "Out For Delivery":
+        return 75;
+
+      case "Delivered":
+        return 100;
+
+      default:
+        return 0;
+    }
   };
 
   const filteredOrders = orders.filter((order) => {
-    const matchesSearch = order.customerName
-      ?.toLowerCase()
-      .includes(search.toLowerCase());
+
+    const matchesSearch =
+      order.customerName
+        ?.toLowerCase()
+        .includes(search.toLowerCase());
 
     const matchesStatus =
       statusFilter === "All"
@@ -54,165 +102,292 @@ function AdminOrders() {
         : order.status === statusFilter;
 
     return matchesSearch && matchesStatus;
+
   });
 
+  const totalRevenue = filteredOrders.reduce(
+    (sum, order) => sum + (order.total || 0),
+    0
+  );
+
+  const deliveredOrders =
+    filteredOrders.filter(
+      (o) => o.status === "Delivered"
+    ).length;
+
   return (
-    <div className="container mt-5">
-      <div className="d-flex justify-content-between align-items-center mb-4">
-        <h1>📦 Admin Orders Dashboard</h1>
 
-        <button
-          className="btn btn-dark"
-          onClick={loadOrders}
-        >
-          Refresh Orders
-        </button>
-      </div>
+    <div
+      style={{
+        minHeight: "100vh",
+        background:
+          "linear-gradient(135deg,#eef2ff,#f8fafc)"
+      }}
+    >
 
-      <div className="row mb-4">
-        <div className="col-md-6">
-          <input
-            type="text"
-            className="form-control"
-            placeholder="Search Customer"
-            value={search}
-            onChange={(e) =>
-              setSearch(e.target.value)
-            }
-          />
-        </div>
+      <div className="container py-5">
 
-        <div className="col-md-4">
-          <select
-            className="form-control"
-            value={statusFilter}
-            onChange={(e) =>
-              setStatusFilter(e.target.value)
-            }
+        <div className="d-flex justify-content-between align-items-center mb-4">
+
+          <h1 className="fw-bold">
+            📦 Admin Orders Dashboard
+          </h1>
+
+          <button
+            className="btn btn-dark"
+            onClick={loadOrders}
           >
-            <option>All</option>
-            <option>Preparing</option>
-            <option>Cooking</option>
-            <option>Out For Delivery</option>
-            <option>Delivered</option>
-          </select>
+            🔄 Refresh
+          </button>
+
         </div>
-      </div>
 
-      <div className="alert alert-primary">
-        Total Orders:
-        <strong> {filteredOrders.length}</strong>
-      </div>
+        <div className="row mb-4">
 
-      {filteredOrders.length === 0 ? (
-        <div className="alert alert-warning">
-          No Orders Found
-        </div>
-      ) : (
-        filteredOrders.map((order) => (
-          <div
-            key={order.id}
-            className="card shadow border-0 mb-4"
-          >
-            <div className="card-body">
-              <h4 className="mb-3">
-                👤 {order.customerName}
-              </h4>
-
-              <p>
-                <strong>Email:</strong>{" "}
-                {order.email}
-              </p>
-
-              <p>
-                <strong>Phone:</strong>{" "}
-                {order.phone || "N/A"}
-              </p>
-
-              <p>
-                <strong>Address:</strong>{" "}
-                {order.address || "N/A"}
-              </p>
-
-              <p>
-                <strong>Payment:</strong>{" "}
-                <span className="badge bg-success">
-                  {order.paymentMethod || "COD"}
-                </span>
-              </p>
-
-              <p>
-                <strong>Food:</strong>{" "}
-                {order.foodName}
-              </p>
-
-              <p>
-                <strong>Quantity:</strong>{" "}
-                {order.quantity}
-              </p>
-
-              <p>
-                <strong>Price:</strong> ₹
-                {order.price}
-              </p>
-
-              <h4 className="text-success">
-                Total: ₹{order.total}
-              </h4>
-
-              <h5>
-                Status:{" "}
-                <span
-                  className={`badge bg-${getBadgeColor(
-                    order.status
-                  )}`}
-                >
-                  {order.status}
-                </span>
-              </h5>
-
-              <div className="mt-4">
-                <button
-                  className="btn btn-warning me-2"
-                  onClick={() =>
-                    updateStatus(
-                      order.id,
-                      "Cooking"
-                    )
-                  }
-                >
-                  Cooking
-                </button>
-
-                <button
-                  className="btn btn-primary me-2"
-                  onClick={() =>
-                    updateStatus(
-                      order.id,
-                      "Out For Delivery"
-                    )
-                  }
-                >
-                  Out For Delivery
-                </button>
-
-                <button
-                  className="btn btn-success"
-                  onClick={() =>
-                    updateStatus(
-                      order.id,
-                      "Delivered"
-                    )
-                  }
-                >
-                  Delivered
-                </button>
-              </div>
+          <div className="col-md-3 mb-3">
+            <div className="card shadow border-0 text-center p-4">
+              <h5>Total Orders</h5>
+              <h2 className="text-primary">
+                {filteredOrders.length}
+              </h2>
             </div>
           </div>
-        ))
-      )}
+
+          <div className="col-md-3 mb-3">
+            <div className="card shadow border-0 text-center p-4">
+              <h5>Total Revenue</h5>
+              <h2 className="text-success">
+                ₹{totalRevenue}
+              </h2>
+            </div>
+          </div>
+
+          <div className="col-md-3 mb-3">
+            <div className="card shadow border-0 text-center p-4">
+              <h5>Delivered</h5>
+              <h2 className="text-success">
+                {deliveredOrders}
+              </h2>
+            </div>
+          </div>
+
+          <div className="col-md-3 mb-3">
+            <div className="card shadow border-0 text-center p-4">
+              <h5>Pending</h5>
+              <h2 className="text-warning">
+                {filteredOrders.length - deliveredOrders}
+              </h2>
+            </div>
+          </div>
+
+        </div>
+
+        <div className="row mb-4">
+
+          <div className="col-md-6 mb-2">
+
+            <input
+              type="text"
+              className="form-control"
+              placeholder="🔍 Search Customer"
+              value={search}
+              onChange={(e) =>
+                setSearch(e.target.value)
+              }
+            />
+
+          </div>
+
+          <div className="col-md-4 mb-2">
+
+            <select
+              className="form-control"
+              value={statusFilter}
+              onChange={(e) =>
+                setStatusFilter(e.target.value)
+              }
+            >
+              <option>All</option>
+              <option>Preparing</option>
+              <option>Cooking</option>
+              <option>Out For Delivery</option>
+              <option>Delivered</option>
+            </select>
+
+          </div>
+
+        </div>
+
+        {filteredOrders.length === 0 ? (
+
+          <div className="alert alert-warning">
+            No Orders Found
+          </div>
+
+        ) : (
+
+          filteredOrders.map((order) => (
+
+            <div
+              key={order.id}
+              className="card shadow-lg border-0 mb-4"
+              style={{
+                borderRadius: "20px"
+              }}
+            >
+
+              <div className="card-body p-4">
+
+                <div className="d-flex justify-content-between">
+
+                  <h3 className="fw-bold">
+                    👤 {order.customerName}
+                  </h3>
+
+                  <span
+                    className={`badge bg-${getBadgeColor(
+                      order.status
+                    )}`}
+                    style={{
+                      fontSize: "14px",
+                      padding: "10px"
+                    }}
+                  >
+                    {order.status}
+                  </span>
+
+                </div>
+
+                <div className="progress mt-3 mb-4">
+                  <div
+                    className={`progress-bar bg-${getBadgeColor(
+                      order.status
+                    )}`}
+                    style={{
+                      width: `${getProgress(order.status)}%`
+                    }}
+                  ></div>
+                </div>
+
+                <div className="row">
+
+                  <div className="col-md-6">
+
+                    <p>
+                      <strong>Email:</strong>
+                      {" "}
+                      {order.email}
+                    </p>
+
+                    <p>
+                      <strong>Phone:</strong>
+                      {" "}
+                      {order.phone || "N/A"}
+                    </p>
+
+                    <p>
+                      <strong>Address:</strong>
+                      {" "}
+                      {order.address || "N/A"}
+                    </p>
+
+                  </div>
+
+                  <div className="col-md-6">
+
+                    <p>
+                      <strong>Payment:</strong>
+                      {" "}
+                      {order.paymentMethod || "COD"}
+                    </p>
+
+                    <p>
+                      <strong>Food:</strong>
+                      {" "}
+                      {order.foodName}
+                    </p>
+
+                    <p>
+                      <strong>Quantity:</strong>
+                      {" "}
+                      {order.quantity}
+                    </p>
+
+                    <p>
+                      <strong>Price:</strong>
+                      ₹{order.price}
+                    </p>
+
+                  </div>
+
+                </div>
+
+                <div
+                  className="mt-3 p-3"
+                  style={{
+                    background: "#ecfdf5",
+                    borderRadius: "12px"
+                  }}
+                >
+
+                  <h3 className="text-success mb-0">
+                    Total : ₹{order.total}
+                  </h3>
+
+                </div>
+
+                <div className="mt-4">
+
+                  <button
+                    className="btn btn-warning me-2"
+                    onClick={() =>
+                      updateStatus(
+                        order.id,
+                        "Cooking"
+                      )
+                    }
+                  >
+                    Cooking
+                  </button>
+
+                  <button
+                    className="btn btn-primary me-2"
+                    onClick={() =>
+                      updateStatus(
+                        order.id,
+                        "Out For Delivery"
+                      )
+                    }
+                  >
+                    Out For Delivery
+                  </button>
+
+                  <button
+                    className="btn btn-success"
+                    onClick={() =>
+                      updateStatus(
+                        order.id,
+                        "Delivered"
+                      )
+                    }
+                  >
+                    Delivered
+                  </button>
+
+                </div>
+
+              </div>
+
+            </div>
+
+          ))
+
+        )}
+
+      </div>
+
     </div>
+
   );
 }
 

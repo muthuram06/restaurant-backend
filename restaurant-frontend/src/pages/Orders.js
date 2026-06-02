@@ -5,11 +5,9 @@ import axios from "axios";
 function Orders() {
 
   const [orders, setOrders] = useState([]);
-  const [loading, setLoading] =
-    useState(true);
+  const [loading, setLoading] = useState(true);
 
-  const email =
-    localStorage.getItem("userEmail");
+  const email = localStorage.getItem("userEmail");
 
   useEffect(() => {
 
@@ -22,20 +20,20 @@ function Orders() {
         .then((response) => {
 
           setOrders(response.data);
-
           setLoading(false);
 
         })
         .catch((error) => {
 
           console.error(error);
-
           setLoading(false);
+
         });
 
     } else {
 
       setLoading(false);
+
     }
 
   }, [email]);
@@ -61,12 +59,43 @@ function Orders() {
     }
   };
 
+  const getProgress = (status) => {
+
+    switch (status) {
+
+      case "Preparing":
+        return 25;
+
+      case "Cooking":
+        return 50;
+
+      case "Out For Delivery":
+        return 75;
+
+      case "Delivered":
+        return 100;
+
+      default:
+        return 0;
+    }
+  };
+
+  const totalAmount = orders.reduce(
+    (sum, order) => sum + (order.total || 0),
+    0
+  );
+
+  const deliveredOrders = orders.filter(
+    (o) => o.status === "Delivered"
+  ).length;
+
   return (
+
     <div
       style={{
         minHeight: "100vh",
         background:
-          "linear-gradient(to right,#f8ffae,#43c6ac)"
+          "linear-gradient(135deg,#f8ffae,#43c6ac)"
       }}
     >
 
@@ -74,19 +103,50 @@ function Orders() {
 
       <div className="container py-5">
 
-        <h1
-          className="text-center fw-bold mb-5"
-        >
+        <h1 className="text-center fw-bold mb-5">
           📦 My Orders
         </h1>
+
+        {!loading && orders.length > 0 && (
+
+          <div className="row mb-5">
+
+            <div className="col-md-4 mb-3">
+              <div className="card shadow border-0 text-center p-4">
+                <h5>Total Orders</h5>
+                <h2 className="text-primary">
+                  {orders.length}
+                </h2>
+              </div>
+            </div>
+
+            <div className="col-md-4 mb-3">
+              <div className="card shadow border-0 text-center p-4">
+                <h5>Total Spent</h5>
+                <h2 className="text-success">
+                  ₹{totalAmount}
+                </h2>
+              </div>
+            </div>
+
+            <div className="col-md-4 mb-3">
+              <div className="card shadow border-0 text-center p-4">
+                <h5>Delivered</h5>
+                <h2 className="text-warning">
+                  {deliveredOrders}
+                </h2>
+              </div>
+            </div>
+
+          </div>
+
+        )}
 
         {loading ? (
 
           <div className="text-center">
 
-            <div
-              className="spinner-border text-success"
-            ></div>
+            <div className="spinner-border text-success"></div>
 
             <h4 className="mt-3">
               Loading Orders...
@@ -96,9 +156,7 @@ function Orders() {
 
         ) : orders.length === 0 ? (
 
-          <div
-            className="alert alert-warning text-center"
-          >
+          <div className="alert alert-warning text-center">
             No Orders Found
           </div>
 
@@ -110,26 +168,24 @@ function Orders() {
               key={order.id}
               className="card shadow-lg border-0 mb-4"
               style={{
-                borderRadius: "20px"
+                borderRadius: "25px",
+                overflow: "hidden"
               }}
             >
 
               <div className="card-body p-4">
 
-                <div
-                  className="d-flex justify-content-between"
-                >
+                <div className="d-flex justify-content-between align-items-center">
 
-                  <h3 className="fw-bold">
+                  <h3 className="fw-bold mb-0">
                     🍽 {order.foodName}
                   </h3>
 
                   <span
-                    className={`badge bg-${getStatusColor(
-                      order.status
-                    )}`}
+                    className={`badge bg-${getStatusColor(order.status)}`}
                     style={{
-                      fontSize: "15px"
+                      fontSize: "14px",
+                      padding: "10px"
                     }}
                   >
                     {order.status}
@@ -137,53 +193,69 @@ function Orders() {
 
                 </div>
 
-                <hr />
+                <div className="progress mt-3 mb-4">
+                  <div
+                    className={`progress-bar bg-${getStatusColor(order.status)}`}
+                    style={{
+                      width: `${getProgress(order.status)}%`
+                    }}
+                  ></div>
+                </div>
 
-                <h5>
-                  👤 Customer :
-                  {" "}
-                  {order.customerName}
-                </h5>
+                <div className="row">
 
-                <h5>
-                  📧 Email :
-                  {" "}
-                  {order.email}
-                </h5>
+                  <div className="col-md-6">
 
-                <h5>
-                  📱 Phone :
-                  {" "}
-                  {order.phone || "N/A"}
-                </h5>
+                    <h5>👤 {order.customerName}</h5>
 
-                <h5>
-                  📍 Address :
-                  {" "}
-                  {order.address || "N/A"}
-                </h5>
+                    <h6>📧 {order.email}</h6>
 
-                <h5>
-                  💳 Payment :
-                  {" "}
-                  {order.paymentMethod || "N/A"}
-                </h5>
+                    <h6>
+                      📱 {order.phone || "N/A"}
+                    </h6>
 
-                <h5>
-                  🔢 Quantity :
-                  {" "}
-                  {order.quantity}
-                </h5>
+                    <h6>
+                      📍 {order.address || "N/A"}
+                    </h6>
 
-                <h5>
-                  💰 Price :
-                  ₹{order.price}
-                </h5>
+                  </div>
 
-                <h3 className="text-success fw-bold mt-3">
-                  Total :
-                  ₹{order.total}
-                </h3>
+                  <div className="col-md-6">
+
+                    <h6>
+                      💳 Payment :
+                      {" "}
+                      {order.paymentMethod || "N/A"}
+                    </h6>
+
+                    <h6>
+                      🔢 Quantity :
+                      {" "}
+                      {order.quantity}
+                    </h6>
+
+                    <h6>
+                      💰 Price :
+                      ₹{order.price}
+                    </h6>
+
+                  </div>
+
+                </div>
+
+                <div
+                  className="mt-4 p-3"
+                  style={{
+                    background: "#ecfdf5",
+                    borderRadius: "15px"
+                  }}
+                >
+
+                  <h2 className="text-success fw-bold mb-0">
+                    Total : ₹{order.total}
+                  </h2>
+
+                </div>
 
               </div>
 
@@ -196,6 +268,7 @@ function Orders() {
       </div>
 
     </div>
+
   );
 }
 
