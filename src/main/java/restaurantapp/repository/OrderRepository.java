@@ -9,7 +9,12 @@ import restaurantapp.model.Order;
 
 @Repository
 public interface OrderRepository
-extends JpaRepository<Order, Long> {
+        extends JpaRepository<Order, Long> {
 
     List<Order> findByEmail(String email);
+
+    List<Order> findByStatus(String status);
+
+    List<Order> findByCustomerNameContainingIgnoreCase(
+            String customerName);
 }

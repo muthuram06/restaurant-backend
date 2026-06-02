@@ -25,6 +25,12 @@ public class OrderController {
     public Order saveOrder(
             @RequestBody Order order) {
 
+        if (order.getStatus() == null ||
+            order.getStatus().isEmpty()) {
+
+            order.setStatus("Preparing");
+        }
+
         return orderService.saveOrder(order);
     }
 
@@ -39,6 +45,16 @@ public class OrderController {
             @PathVariable String email) {
 
         return orderService.getUserOrders(email);
+    }
+
+    @GetMapping("/{id}")
+    public Order getOrderById(
+            @PathVariable Long id) {
+
+        Optional<Order> order =
+                orderService.getOrderById(id);
+
+        return order.orElse(null);
     }
 
     @PutMapping("/{id}")
@@ -59,5 +75,12 @@ public class OrderController {
         }
 
         return null;
+    }
+
+    @DeleteMapping("/{id}")
+    public void deleteOrder(
+            @PathVariable Long id) {
+
+        orderRepository.deleteById(id);
     }
 }
