@@ -168,8 +168,7 @@ function Orders() {
               key={order.id}
               className="card shadow-lg border-0 mb-4"
               style={{
-                borderRadius: "25px",
-                overflow: "hidden"
+                borderRadius: "25px"
               }}
             >
 
@@ -177,7 +176,7 @@ function Orders() {
 
                 <div className="d-flex justify-content-between align-items-center">
 
-                  <h3 className="fw-bold mb-0">
+                  <h3 className="fw-bold">
                     🍽 {order.foodName}
                   </h3>
 
@@ -194,12 +193,14 @@ function Orders() {
                 </div>
 
                 <div className="progress mt-3 mb-4">
+
                   <div
                     className={`progress-bar bg-${getStatusColor(order.status)}`}
                     style={{
                       width: `${getProgress(order.status)}%`
                     }}
                   ></div>
+
                 </div>
 
                 <div className="row">
@@ -225,7 +226,7 @@ function Orders() {
                     <h6>
                       💳 Payment :
                       {" "}
-                      {order.paymentMethod || "N/A"}
+                      {order.paymentMethod || "COD"}
                     </h6>
 
                     <h6>
