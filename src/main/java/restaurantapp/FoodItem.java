@@ -12,6 +12,7 @@ public class FoodItem {
 
     private String name;
 
+    @Column(length = 1000)
     private String description;
 
     private double price;
@@ -20,6 +21,10 @@ public class FoodItem {
 
     @Column(length = 1000)
     private String imageUrl;
+
+    private double rating = 4.8;
+
+    private int reviews = 120;
 
     public FoodItem() {
     }
@@ -35,6 +40,8 @@ public class FoodItem {
         this.price = price;
         this.imageUrl = imageUrl;
         this.category = "Veg";
+        this.rating = 4.8;
+        this.reviews = 120;
     }
 
     public FoodItem(
@@ -49,6 +56,12 @@ public class FoodItem {
         this.price = price;
         this.category = category;
         this.imageUrl = imageUrl;
+        this.rating = 4.8;
+        this.reviews = 120;
+    }
+
+    public Long getId() {
+        return id;
     }
 
     public void setId(Long id) {
@@ -93,5 +106,21 @@ public class FoodItem {
 
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
+    }
+
+    public double getRating() {
+        return rating;
+    }
+
+    public void setRating(double rating) {
+        this.rating = rating;
+    }
+
+    public int getReviews() {
+        return reviews;
+    }
+
+    public void setReviews(int reviews) {
+        this.reviews = reviews;
     }
 }

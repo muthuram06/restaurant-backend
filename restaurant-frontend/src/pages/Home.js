@@ -39,7 +39,9 @@ function Home() {
 
       console.error(error);
       setFoods([]);
+
     }
+
   };
 
   const updateCartStorage = (updatedCart) => {
@@ -54,6 +56,7 @@ function Home() {
     window.dispatchEvent(
       new Event("cartUpdated")
     );
+
   };
 
   const addToCart = (food) => {
@@ -79,6 +82,7 @@ function Home() {
     }
 
     updateCartStorage(updatedCart);
+
   };
 
   const decreaseQuantity = (food) => {
@@ -102,9 +106,11 @@ function Home() {
         updatedCart.filter(
           (item) => item.name !== food.name
         );
+
     }
 
     updateCartStorage(updatedCart);
+
   };
 
   const getQuantity = (foodName) => {
@@ -115,6 +121,7 @@ function Home() {
       );
 
     return item ? item.quantity : 0;
+
   };
 
   const filteredFoods = foods.filter((food) =>
@@ -124,7 +131,9 @@ function Home() {
   );
 
   return (
+
     <>
+
       <NavbarComponent />
 
       <div
@@ -132,10 +141,11 @@ function Home() {
         style={{
           background:
             "linear-gradient(135deg,#14532d,#166534,#22c55e)",
-          padding: "60px 20px",
+          padding: "70px 20px",
           borderRadius: "0 0 30px 30px"
         }}
       >
+
         <h1
           className="fw-bold"
           style={{
@@ -151,53 +161,67 @@ function Home() {
 
         <p className="mt-3">
           Experience delicious vegetarian food
-          made with love.
+          made with love and premium ingredients.
         </p>
+
       </div>
 
       <div className="container mt-4">
 
         <div className="alert alert-warning text-center shadow-sm">
+
           🔥 Best Sellers :
           Paneer Butter Masala •
           Veg Biryani •
           Masala Dosa
+
         </div>
 
         <div className="row text-center mb-5">
 
           <div className="col-md-4">
+
             <div className="card p-3">
+
               <h2 className="text-success">
                 {foods.length}+
               </h2>
+
               <p>Food Items</p>
+
             </div>
+
           </div>
 
           <div className="col-md-4">
+
             <div className="card p-3">
+
               <h2 className="text-primary">
                 500+
               </h2>
+
               <p>Happy Customers</p>
+
             </div>
+
           </div>
 
           <div className="col-md-4">
+
             <div className="card p-3">
+
               <h2 className="text-warning">
-                4.8 ★
+                ⭐ 4.8
               </h2>
+
               <p>Customer Rating</p>
+
             </div>
+
           </div>
 
         </div>
-
-        <h2 className="text-center mb-4 text-secondary">
-          {filteredFoods.length} Foods Available
-        </h2>
 
         <input
           type="text"
@@ -213,108 +237,145 @@ function Home() {
 
           {filteredFoods.length > 0 ? (
 
-            filteredFoods.map(
-              (food, index) => (
+            filteredFoods.map((food, index) => (
+
+              <div
+                className="col-md-4 mb-4"
+                key={index}
+              >
 
                 <div
-                  className="col-md-4 mb-4"
-                  key={index}
+                  className="card h-100 shadow-lg border-0"
+                  style={{
+                    borderRadius: "20px"
+                  }}
                 >
 
-                  <div
-                    className="card h-100"
+                  <img
+                    src={food.imageUrl}
+                    alt={food.name}
+                    className="card-img-top"
                     style={{
-                      borderRadius: "20px"
+                      height: "250px",
+                      objectFit: "cover"
                     }}
-                  >
+                  />
 
-                    <img
-                      src={food.imageUrl}
-                      alt={food.name}
-                      className="card-img-top"
-                      style={{
-                        height: "250px",
-                        objectFit: "cover"
-                      }}
-                    />
+                  <div className="card-body text-center">
 
-                    <div className="card-body text-center">
+                    <div className="mb-2">
 
-                      <h3 className="fw-bold">
-                        {food.name}
-                      </h3>
-
-                      <p className="text-muted">
-                        {food.description}
-                      </p>
-
-                      <h2 className="text-success">
-                        ₹{food.price}
-                      </h2>
-
-                      <span className="badge bg-success">
-                        🌱 {food.category}
+                      <span className="badge bg-danger me-2">
+                        🔥 Popular
                       </span>
 
-                      <div className="mt-4">
+                      <span className="badge bg-warning text-dark">
+                        ⭐ 4.8
+                      </span>
 
-                        {getQuantity(food.name) === 0 ? (
+                    </div>
+
+                    <h3 className="fw-bold">
+                      {food.name}
+                    </h3>
+
+                    <p className="text-secondary">
+                      {food.category}
+                    </p>
+
+                    <div className="mb-3">
+
+                      <span className="badge bg-info me-2">
+                        ⭐ 4.8 Rating
+                      </span>
+
+                      <span className="badge bg-success">
+                        📝 120 Reviews
+                      </span>
+
+                    </div>
+
+                    <p
+                      className="text-muted"
+                      style={{
+                        minHeight: "60px"
+                      }}
+                    >
+                      {
+                        food.description ||
+                        "Fresh vegetarian food prepared with premium ingredients."
+                      }
+                    </p>
+
+                    <h2 className="text-success fw-bold">
+                      ₹{food.price}
+                    </h2>
+
+                    <span className="badge bg-success">
+                      🌱 Veg
+                    </span>
+
+                    <div className="mt-4">
+
+                      {getQuantity(food.name) === 0 ? (
+
+                        <button
+                          className="btn btn-primary w-100"
+                          onClick={() =>
+                            addToCart(food)
+                          }
+                        >
+                          🛒 Add To Cart
+                        </button>
+
+                      ) : (
+
+                        <div className="d-flex justify-content-center align-items-center">
 
                           <button
-                            className="btn btn-primary w-100"
+                            className="btn btn-danger"
+                            onClick={() =>
+                              decreaseQuantity(food)
+                            }
+                          >
+                            -
+                          </button>
+
+                          <span className="mx-4 fw-bold fs-3">
+                            {getQuantity(food.name)}
+                          </span>
+
+                          <button
+                            className="btn btn-success"
                             onClick={() =>
                               addToCart(food)
                             }
                           >
-                            🛒 Add To Cart
+                            +
                           </button>
 
-                        ) : (
+                        </div>
 
-                          <div className="d-flex justify-content-center align-items-center">
-
-                            <button
-                              className="btn btn-danger"
-                              onClick={() =>
-                                decreaseQuantity(food)
-                              }
-                            >
-                              -
-                            </button>
-
-                            <span
-                              className="mx-4 fw-bold fs-3"
-                            >
-                              {getQuantity(food.name)}
-                            </span>
-
-                            <button
-                              className="btn btn-success"
-                              onClick={() =>
-                                addToCart(food)
-                              }
-                            >
-                              +
-                            </button>
-
-                          </div>
-
-                        )}
-
-                      </div>
+                      )}
 
                     </div>
 
                   </div>
 
                 </div>
-              )
-            )
+
+              </div>
+
+            ))
 
           ) : (
 
             <div className="text-center">
-              <h3>No Foods Found</h3>
+
+              <h3>
+                No Foods Found
+              </h3>
+
             </div>
 
           )}
@@ -326,7 +387,9 @@ function Home() {
       <FooterComponent />
 
     </>
+
   );
+
 }
 
 export default Home;
