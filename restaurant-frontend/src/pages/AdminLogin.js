@@ -5,9 +5,11 @@ function AdminLogin() {
 
   const navigate = useNavigate();
 
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-  const [showPassword, setShowPassword] = useState(false);
+  const [username, setUsername] =
+    useState("");
+
+  const [password, setPassword] =
+    useState("");
 
   const loginAdmin = () => {
 
@@ -21,15 +23,20 @@ function AdminLogin() {
         "true"
       );
 
-      alert("Welcome Admin!");
+      alert(
+        "Admin Login Successful"
+      );
 
       navigate("/admin");
 
     } else {
 
-      alert("Invalid Username or Password");
+      alert(
+        "Invalid Username or Password"
+      );
 
     }
+
   };
 
   return (
@@ -38,7 +45,7 @@ function AdminLogin() {
       style={{
         minHeight: "100vh",
         background:
-          "linear-gradient(135deg,#0f172a,#1e3a8a,#2563eb)",
+          "linear-gradient(135deg,#0f172a,#1e293b,#334155)",
         display: "flex",
         justifyContent: "center",
         alignItems: "center"
@@ -46,81 +53,82 @@ function AdminLogin() {
     >
 
       <div
-        className="card border-0 shadow-lg"
+        className="card shadow-lg border-0"
         style={{
-          width: "500px",
-          borderRadius: "25px",
-          padding: "30px"
+          width: "450px",
+          borderRadius: "25px"
         }}
       >
 
-        <div className="text-center">
+        <div className="card-body p-5">
 
-          <h1 style={{ fontSize: "70px" }}>
-            🍽
-          </h1>
+          <div className="text-center mb-4">
 
-          <h1 className="fw-bold">
-            AFNA'S GARDEN
-          </h1>
+            <h1 style={{ fontSize: "70px" }}>
+              🍽
+            </h1>
 
-          <h4 className="text-muted mb-4">
-            Admin Control Center
-          </h4>
+            <h2 className="fw-bold">
+              AFNA'S GARDEN
+            </h2>
 
-        </div>
+            <p className="text-muted">
+              Restaurant Admin Portal
+            </p>
 
-        <input
-          type="text"
-          className="form-control mb-3"
-          placeholder="Admin Username"
-          value={username}
-          onChange={(e) =>
-            setUsername(e.target.value)
-          }
-        />
-
-        <div className="input-group mb-4">
+          </div>
 
           <input
-            type={
-              showPassword
-                ? "text"
-                : "password"
+            type="text"
+            className="form-control mb-3"
+            placeholder="Admin Username"
+            value={username}
+            onChange={(e) =>
+              setUsername(
+                e.target.value
+              )
             }
-            className="form-control"
-            placeholder="Password"
+          />
+
+          <input
+            type="password"
+            className="form-control mb-4"
+            placeholder="Admin Password"
             value={password}
             onChange={(e) =>
-              setPassword(e.target.value)
+              setPassword(
+                e.target.value
+              )
             }
           />
 
           <button
-            className="btn btn-outline-secondary"
-            onClick={() =>
-              setShowPassword(
-                !showPassword
-              )
-            }
+            className="btn btn-success w-100"
+            onClick={loginAdmin}
           >
-            {showPassword
-              ? "Hide"
-              : "Show"}
+            Login To Dashboard
           </button>
 
-        </div>
+          <div className="text-center mt-4">
 
-        <button
-          className="btn btn-primary btn-lg"
-          onClick={loginAdmin}
-        >
-          Login To Dashboard
-        </button>
+            <small className="text-muted">
+              Username : admin
+            </small>
+
+            <br />
+
+            <small className="text-muted">
+              Password : admin123
+            </small>
+
+          </div>
+
+        </div>
 
       </div>
 
     </div>
+
   );
 }
 
