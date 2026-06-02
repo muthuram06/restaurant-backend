@@ -17,6 +17,10 @@ import Checkout from "./pages/Checkout";
 import TableBooking from "./pages/TableBooking";
 import FoodDetails from "./pages/FoodDetails";
 
+/* OPTIONAL USER PAGES */
+import Profile from "./pages/Profile";
+import Payment from "./pages/Payment";
+
 /* ADMIN PAGES */
 import AdminLogin from "./pages/AdminLogin";
 import AdminPanel from "./pages/AdminPanel";
@@ -37,15 +41,14 @@ function App() {
 
       <Routes>
 
-        {/* USER ROUTES */}
+        {/* PUBLIC ROUTES */}
 
         <Route path="/" element={<Home />} />
-
         <Route path="/login" element={<Login />} />
-
         <Route path="/register" element={<Register />} />
-
         <Route path="/food-details" element={<FoodDetails />} />
+
+        {/* USER PROTECTED ROUTES */}
 
         <Route
           path="/cart"
@@ -88,6 +91,24 @@ function App() {
           element={
             isUserLoggedIn
               ? <TableBooking />
+              : <Navigate to="/login" replace />
+          }
+        />
+
+        <Route
+          path="/profile"
+          element={
+            isUserLoggedIn
+              ? <Profile />
+              : <Navigate to="/login" replace />
+          }
+        />
+
+        <Route
+          path="/payment"
+          element={
+            isUserLoggedIn
+              ? <Payment />
               : <Navigate to="/login" replace />
           }
         />
@@ -135,7 +156,7 @@ function App() {
           }
         />
 
-        {/* DEFAULT ROUTE */}
+        {/* FALLBACK */}
 
         <Route
           path="*"

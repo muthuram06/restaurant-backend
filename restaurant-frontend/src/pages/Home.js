@@ -8,19 +8,21 @@ function Home() {
 
   const [foods, setFoods] = useState([]);
   const [search, setSearch] = useState("");
-  const [category, setCategory] = useState("All");
   const [cart, setCart] = useState([]);
 
   useEffect(() => {
+
     fetchFoods();
 
     const savedCart =
       JSON.parse(localStorage.getItem("cart")) || [];
 
     setCart(savedCart);
+
   }, []);
 
   const fetchFoods = async () => {
+
     try {
 
       const response = await axios.get(
@@ -36,7 +38,6 @@ function Home() {
     } catch (error) {
 
       console.error(error);
-
       setFoods([]);
     }
   };
@@ -116,116 +117,97 @@ function Home() {
     return item ? item.quantity : 0;
   };
 
-  const filteredFoods = foods.filter((food) => {
-
-    const matchesSearch =
-      food.name
-        ?.toLowerCase()
-        .includes(search.toLowerCase());
-
-    const matchesCategory =
-      category === "All" ||
-      food.category === category ||
-      food.description === category;
-
-    return (
-      matchesSearch &&
-      matchesCategory
-    );
-  });
+  const filteredFoods = foods.filter((food) =>
+    food.name
+      ?.toLowerCase()
+      .includes(search.toLowerCase())
+  );
 
   return (
     <>
       <NavbarComponent />
 
-      <div className="alert alert-success text-center fw-bold mb-0">
-        🌱 100% PURE VEG RESTAURANT
+      <div
+        className="text-center text-white"
+        style={{
+          background:
+            "linear-gradient(135deg,#14532d,#166534,#22c55e)",
+          padding: "60px 20px",
+          borderRadius: "0 0 30px 30px"
+        }}
+      >
+        <h1
+          className="fw-bold"
+          style={{
+            fontSize: "60px"
+          }}
+        >
+          🍽 AFNA'S GARDEN
+        </h1>
+
+        <h4>
+          Fresh • Healthy • Pure Vegetarian
+        </h4>
+
+        <p className="mt-3">
+          Experience delicious vegetarian food
+          made with love.
+        </p>
       </div>
 
       <div className="container mt-4">
 
-        <h1 className="text-center fw-bold">
-          Welcome To AFNA'S GARDEN RESTAURANT
-        </h1>
-
-        <div className="alert alert-warning text-center">
+        <div className="alert alert-warning text-center shadow-sm">
           🔥 Best Sellers :
-          Paneer Butter Masala,
-          Veg Biryani,
+          Paneer Butter Masala •
+          Veg Biryani •
           Masala Dosa
         </div>
 
-        <h2 className="text-center text-secondary mb-4">
+        <div className="row text-center mb-5">
+
+          <div className="col-md-4">
+            <div className="card p-3">
+              <h2 className="text-success">
+                {foods.length}+
+              </h2>
+              <p>Food Items</p>
+            </div>
+          </div>
+
+          <div className="col-md-4">
+            <div className="card p-3">
+              <h2 className="text-primary">
+                500+
+              </h2>
+              <p>Happy Customers</p>
+            </div>
+          </div>
+
+          <div className="col-md-4">
+            <div className="card p-3">
+              <h2 className="text-warning">
+                4.8 ★
+              </h2>
+              <p>Customer Rating</p>
+            </div>
+          </div>
+
+        </div>
+
+        <h2 className="text-center mb-4 text-secondary">
           {filteredFoods.length} Foods Available
         </h2>
 
         <input
           type="text"
-          className="form-control mb-4"
+          className="form-control mb-5"
           placeholder="🔍 Search Foods..."
           value={search}
           onChange={(e) =>
             setSearch(e.target.value)
           }
         />
-
-        <div className="mb-4">
-
-          <button
-            className="btn btn-dark me-2"
-            onClick={() =>
-              setCategory("All")
-            }
-          >
-            All
-          </button>
-
-          <button
-            className="btn btn-success me-2"
-            onClick={() =>
-              setCategory("Veg")
-            }
-          >
-            Veg
-          </button>
-
-          <button
-            className="btn btn-primary me-2"
-            onClick={() =>
-              setCategory("North Indian")
-            }
-          >
-            North Indian
-          </button>
-
-          <button
-            className="btn btn-danger me-2"
-            onClick={() =>
-              setCategory("South Indian")
-            }
-          >
-            South Indian
-          </button>
-
-          <button
-            className="btn btn-warning me-2"
-            onClick={() =>
-              setCategory("Fast Food")
-            }
-          >
-            Fast Food
-          </button>
-
-          <button
-            className="btn btn-info"
-            onClick={() =>
-              setCategory("Chinese")
-            }
-          >
-            Chinese
-          </button>
-
-        </div>
 
         <div className="row">
 
@@ -240,7 +222,7 @@ function Home() {
                 >
 
                   <div
-                    className="card shadow-lg border-0 h-100"
+                    className="card h-100"
                     style={{
                       borderRadius: "20px"
                     }}
@@ -258,21 +240,23 @@ function Home() {
 
                     <div className="card-body text-center">
 
-                      <h4>{food.name}</h4>
+                      <h3 className="fw-bold">
+                        {food.name}
+                      </h3>
 
-                      <p>
+                      <p className="text-muted">
                         {food.description}
                       </p>
 
-                      <h4 className="text-success">
+                      <h2 className="text-success">
                         ₹{food.price}
-                      </h4>
+                      </h2>
 
                       <span className="badge bg-success">
-                        {food.category}
+                        🌱 {food.category}
                       </span>
 
-                      <div className="mt-3">
+                      <div className="mt-4">
 
                         {getQuantity(food.name) === 0 ? (
 
@@ -299,11 +283,9 @@ function Home() {
                             </button>
 
                             <span
-                              className="mx-3 fw-bold fs-4"
+                              className="mx-4 fw-bold fs-3"
                             >
-                              {getQuantity(
-                                food.name
-                              )}
+                              {getQuantity(food.name)}
                             </span>
 
                             <button
