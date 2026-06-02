@@ -7,6 +7,7 @@ function AdminLogin() {
 
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
 
   const loginAdmin = () => {
 
@@ -20,58 +21,106 @@ function AdminLogin() {
         "true"
       );
 
-      alert("Admin Login Successful");
+      alert("Welcome Admin!");
 
       navigate("/admin");
 
     } else {
 
-      alert("Invalid Admin Login");
+      alert("Invalid Username or Password");
 
     }
   };
 
   return (
 
-    <div className="container mt-5">
+    <div
+      style={{
+        minHeight: "100vh",
+        background:
+          "linear-gradient(135deg,#0f172a,#1e3a8a,#2563eb)",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center"
+      }}
+    >
 
-      <div className="card p-4 shadow">
+      <div
+        className="card border-0 shadow-lg"
+        style={{
+          width: "500px",
+          borderRadius: "25px",
+          padding: "30px"
+        }}
+      >
 
-        <h1 className="text-center mb-4">
-          Admin Login
-        </h1>
+        <div className="text-center">
+
+          <h1 style={{ fontSize: "70px" }}>
+            🍽
+          </h1>
+
+          <h1 className="fw-bold">
+            AFNA'S GARDEN
+          </h1>
+
+          <h4 className="text-muted mb-4">
+            Admin Control Center
+          </h4>
+
+        </div>
 
         <input
           type="text"
           className="form-control mb-3"
-          placeholder="Username"
+          placeholder="Admin Username"
           value={username}
           onChange={(e) =>
             setUsername(e.target.value)
           }
         />
 
-        <input
-          type="password"
-          className="form-control mb-3"
-          placeholder="Password"
-          value={password}
-          onChange={(e) =>
-            setPassword(e.target.value)
-          }
-        />
+        <div className="input-group mb-4">
+
+          <input
+            type={
+              showPassword
+                ? "text"
+                : "password"
+            }
+            className="form-control"
+            placeholder="Password"
+            value={password}
+            onChange={(e) =>
+              setPassword(e.target.value)
+            }
+          />
+
+          <button
+            className="btn btn-outline-secondary"
+            onClick={() =>
+              setShowPassword(
+                !showPassword
+              )
+            }
+          >
+            {showPassword
+              ? "Hide"
+              : "Show"}
+          </button>
+
+        </div>
 
         <button
-          className="btn btn-primary w-100"
+          className="btn btn-primary btn-lg"
           onClick={loginAdmin}
         >
-          Login
+          Login To Dashboard
         </button>
 
       </div>
 
     </div>
-
   );
 }
 
