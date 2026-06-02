@@ -5,12 +5,14 @@ function AdminOrders() {
 
   const [orders, setOrders] = useState([]);
   const [search, setSearch] = useState("");
-  const [statusFilter, setStatusFilter] = useState("All");
+  const [statusFilter, setStatusFilter] =
+    useState("All");
 
   const API_URL =
     "https://restaurant-backend-ca51.onrender.com/api/orders";
 
   useEffect(() => {
+
     loadOrders();
 
     const interval = setInterval(() => {
@@ -37,13 +39,36 @@ function AdminOrders() {
   const updateStatus = (id, status) => {
 
     axios
-      .put(`${API_URL}/${id}?status=${status}`)
+      .put(
+        `${API_URL}/${id}?status=${status}`
+      )
       .then(() => {
         loadOrders();
       })
       .catch((error) => {
         console.error(error);
       });
+
+  };
+
+  const deleteOrder = (id) => {
+
+    if (
+      window.confirm(
+        "Are you sure you want to delete this order?"
+      )
+    ) {
+
+      axios
+        .delete(`${API_URL}/${id}`)
+        .then(() => {
+          loadOrders();
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+
+    }
 
   };
 
@@ -89,30 +114,40 @@ function AdminOrders() {
     }
   };
 
-  const filteredOrders = orders.filter((order) => {
+  const filteredOrders =
+    orders.filter((order) => {
 
-    const matchesSearch =
-      order.customerName
-        ?.toLowerCase()
-        .includes(search.toLowerCase());
+      const matchesSearch =
+        order.customerName
+          ?.toLowerCase()
+          .includes(
+            search.toLowerCase()
+          );
 
-    const matchesStatus =
-      statusFilter === "All"
-        ? true
-        : order.status === statusFilter;
+      const matchesStatus =
+        statusFilter === "All"
+          ? true
+          : order.status ===
+            statusFilter;
 
-    return matchesSearch && matchesStatus;
+      return (
+        matchesSearch &&
+        matchesStatus
+      );
 
-  });
+    });
 
-  const totalRevenue = filteredOrders.reduce(
-    (sum, order) => sum + (order.total || 0),
-    0
-  );
+  const totalRevenue =
+    filteredOrders.reduce(
+      (sum, order) =>
+        sum + (order.total || 0),
+      0
+    );
 
   const deliveredOrders =
     filteredOrders.filter(
-      (o) => o.status === "Delivered"
+      (o) =>
+        o.status === "Delivered"
     ).length;
 
   return (
@@ -145,73 +180,102 @@ function AdminOrders() {
         <div className="row mb-4">
 
           <div className="col-md-3 mb-3">
+
             <div className="card shadow border-0 text-center p-4">
+
               <h5>Total Orders</h5>
+
               <h2 className="text-primary">
                 {filteredOrders.length}
               </h2>
+
             </div>
+
           </div>
 
           <div className="col-md-3 mb-3">
+
             <div className="card shadow border-0 text-center p-4">
+
               <h5>Total Revenue</h5>
+
               <h2 className="text-success">
                 ₹{totalRevenue}
               </h2>
+
             </div>
+
           </div>
 
           <div className="col-md-3 mb-3">
+
             <div className="card shadow border-0 text-center p-4">
+
               <h5>Delivered</h5>
+
               <h2 className="text-success">
                 {deliveredOrders}
               </h2>
+
             </div>
+
           </div>
 
           <div className="col-md-3 mb-3">
+
             <div className="card shadow border-0 text-center p-4">
+
               <h5>Pending</h5>
+
               <h2 className="text-warning">
-                {filteredOrders.length - deliveredOrders}
+                {
+                  filteredOrders.length -
+                  deliveredOrders
+                }
               </h2>
+
             </div>
+
           </div>
 
         </div>
 
         <div className="row mb-4">
 
-          <div className="col-md-6 mb-2">
+          <div className="col-md-6">
 
             <input
               type="text"
               className="form-control"
-              placeholder="🔍 Search Customer"
+              placeholder="Search Customer"
               value={search}
               onChange={(e) =>
-                setSearch(e.target.value)
+                setSearch(
+                  e.target.value
+                )
               }
             />
 
           </div>
 
-          <div className="col-md-4 mb-2">
+          <div className="col-md-4">
 
             <select
               className="form-control"
               value={statusFilter}
               onChange={(e) =>
-                setStatusFilter(e.target.value)
+                setStatusFilter(
+                  e.target.value
+                )
               }
             >
+
               <option>All</option>
               <option>Preparing</option>
               <option>Cooking</option>
               <option>Out For Delivery</option>
               <option>Delivered</option>
+
             </select>
 
           </div>
@@ -240,7 +304,7 @@ function AdminOrders() {
 
                 <div className="d-flex justify-content-between">
 
-                  <h3 className="fw-bold">
+                  <h3>
                     👤 {order.customerName}
                   </h3>
 
@@ -248,10 +312,6 @@ function AdminOrders() {
                     className={`badge bg-${getBadgeColor(
                       order.status
                     )}`}
-                    style={{
-                      fontSize: "14px",
-                      padding: "10px"
-                    }}
                   >
                     {order.status}
                   </span>
@@ -259,14 +319,19 @@ function AdminOrders() {
                 </div>
 
                 <div className="progress mt-3 mb-4">
+
                   <div
                     className={`progress-bar bg-${getBadgeColor(
                       order.status
                     )}`}
                     style={{
-                      width: `${getProgress(order.status)}%`
+                      width:
+                        `${getProgress(
+                          order.status
+                        )}%`
                     }}
                   ></div>
+
                 </div>
 
                 <div className="row">
@@ -274,21 +339,27 @@ function AdminOrders() {
                   <div className="col-md-6">
 
                     <p>
-                      <strong>Email:</strong>
-                      {" "}
+                      <strong>Email:</strong>{" "}
                       {order.email}
                     </p>
 
                     <p>
-                      <strong>Phone:</strong>
-                      {" "}
+                      <strong>Phone:</strong>{" "}
                       {order.phone || "N/A"}
                     </p>
 
                     <p>
-                      <strong>Address:</strong>
-                      {" "}
+                      <strong>Address:</strong>{" "}
                       {order.address || "N/A"}
+                    </p>
+
+                    <p>
+                      <strong>Order Date:</strong>{" "}
+                      {order.orderDate
+                        ? new Date(
+                            order.orderDate
+                          ).toLocaleString()
+                        : "N/A"}
                     </p>
 
                   </div>
@@ -296,20 +367,18 @@ function AdminOrders() {
                   <div className="col-md-6">
 
                     <p>
-                      <strong>Payment:</strong>
-                      {" "}
-                      {order.paymentMethod || "COD"}
+                      <strong>Payment:</strong>{" "}
+                      {order.paymentMethod ||
+                        "COD"}
                     </p>
 
                     <p>
-                      <strong>Food:</strong>
-                      {" "}
+                      <strong>Food:</strong>{" "}
                       {order.foodName}
                     </p>
 
                     <p>
-                      <strong>Quantity:</strong>
-                      {" "}
+                      <strong>Quantity:</strong>{" "}
                       {order.quantity}
                     </p>
 
@@ -323,10 +392,12 @@ function AdminOrders() {
                 </div>
 
                 <div
-                  className="mt-3 p-3"
+                  className="p-3 mt-3"
                   style={{
-                    background: "#ecfdf5",
-                    borderRadius: "12px"
+                    background:
+                      "#ecfdf5",
+                    borderRadius:
+                      "12px"
                   }}
                 >
 
@@ -340,6 +411,10 @@ function AdminOrders() {
 
                   <button
                     className="btn btn-warning me-2"
+                    disabled={
+                      order.status ===
+                      "Delivered"
+                    }
                     onClick={() =>
                       updateStatus(
                         order.id,
@@ -352,6 +427,10 @@ function AdminOrders() {
 
                   <button
                     className="btn btn-primary me-2"
+                    disabled={
+                      order.status ===
+                      "Delivered"
+                    }
                     onClick={() =>
                       updateStatus(
                         order.id,
@@ -363,7 +442,7 @@ function AdminOrders() {
                   </button>
 
                   <button
-                    className="btn btn-success"
+                    className="btn btn-success me-2"
                     onClick={() =>
                       updateStatus(
                         order.id,
@@ -372,6 +451,17 @@ function AdminOrders() {
                     }
                   >
                     Delivered
+                  </button>
+
+                  <button
+                    className="btn btn-danger"
+                    onClick={() =>
+                      deleteOrder(
+                        order.id
+                      )
+                    }
+                  >
+                    Delete
                   </button>
 
                 </div>

@@ -1,14 +1,9 @@
-import React, {
-  useEffect,
-  useState
-} from "react";
-
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 
 function AdminCustomers() {
 
-  const [orders, setOrders] =
-    useState([]);
+  const [orders, setOrders] = useState([]);
 
   useEffect(() => {
 
@@ -17,14 +12,10 @@ function AdminCustomers() {
         "https://restaurant-backend-ca51.onrender.com/api/orders"
       )
       .then((response) => {
-
         setOrders(response.data);
-
       })
       .catch((error) => {
-
         console.error(error);
-
       });
 
   }, []);
@@ -36,32 +27,18 @@ function AdminCustomers() {
     if (!customers[order.email]) {
 
       customers[order.email] = {
-
-        name:
-          order.customerName,
-
-        email:
-          order.email,
-
-        phone:
-          order.phone,
-
-        orders: 0,
-
-        spent: 0
-
+        name: order.customerName,
+        email: order.email,
+        phone: order.phone || "N/A",
+        totalOrders: 0,
+        totalSpent: 0
       };
 
     }
 
-    customers[
-      order.email
-    ].orders++;
-
-    customers[
-      order.email
-    ].spent +=
-      order.total;
+    customers[order.email].totalOrders++;
+    customers[order.email].totalSpent +=
+      order.total || 0;
 
   });
 
@@ -70,89 +47,133 @@ function AdminCustomers() {
 
   return (
 
-    <div className="container py-5">
+    <div
+      style={{
+        minHeight: "100vh",
+        background:
+          "linear-gradient(135deg,#eef2ff,#f8fafc)"
+      }}
+    >
 
-      <h1 className="mb-5 fw-bold">
+      <div className="container py-5">
 
-        👥 Customer Management
+        <h1 className="fw-bold mb-4">
+          👥 Customer Management
+        </h1>
 
-      </h1>
+        <div className="row mb-4">
 
-      <div className="card shadow border-0">
+          <div className="col-md-4">
 
-        <div className="card-body">
+            <div className="card shadow border-0 text-center p-4">
 
-          <table className="table table-striped">
+              <h5>Total Customers</h5>
 
-            <thead>
+              <h1 className="text-primary">
+                {customerList.length}
+              </h1>
 
-              <tr>
+            </div>
 
-                <th>Name</th>
+          </div>
 
-                <th>Email</th>
+          <div className="col-md-4">
 
-                <th>Phone</th>
+            <div className="card shadow border-0 text-center p-4">
 
-                <th>Orders</th>
+              <h5>Total Orders</h5>
 
-                <th>Total Spent</th>
+              <h1 className="text-success">
+                {orders.length}
+              </h1>
 
-              </tr>
+            </div>
 
-            </thead>
+          </div>
 
-            <tbody>
+          <div className="col-md-4">
 
-              {customerList.map(
-                (
-                  customer,
-                  index
-                ) => (
+            <div className="card shadow border-0 text-center p-4">
 
-                  <tr
-                    key={index}
-                  >
+              <h5>Total Revenue</h5>
 
-                    <td>
-                      {
-                        customer.name
-                      }
-                    </td>
+              <h1 className="text-warning">
+                ₹
+                {orders.reduce(
+                  (sum, order) =>
+                    sum + (order.total || 0),
+                  0
+                )}
+              </h1>
 
-                    <td>
-                      {
-                        customer.email
-                      }
-                    </td>
+            </div>
 
-                    <td>
-                      {
-                        customer.phone
-                      }
-                    </td>
+          </div>
 
-                    <td>
-                      {
-                        customer.orders
-                      }
-                    </td>
+        </div>
 
-                    <td>
-                      ₹
-                      {
-                        customer.spent
-                      }
-                    </td>
+        <div className="card shadow border-0">
 
-                  </tr>
+          <div className="card-body">
 
-                )
-              )}
+            <table className="table table-hover">
 
-            </tbody>
+              <thead>
 
-          </table>
+                <tr>
+
+                  <th>Name</th>
+
+                  <th>Email</th>
+
+                  <th>Phone</th>
+
+                  <th>Orders</th>
+
+                  <th>Total Spent</th>
+
+                </tr>
+
+              </thead>
+
+              <tbody>
+
+                {customerList.map(
+                  (customer, index) => (
+
+                    <tr key={index}>
+
+                      <td>
+                        {customer.name}
+                      </td>
+
+                      <td>
+                        {customer.email}
+                      </td>
+
+                      <td>
+                        {customer.phone}
+                      </td>
+
+                      <td>
+                        {customer.totalOrders}
+                      </td>
+
+                      <td>
+                        ₹
+                        {customer.totalSpent}
+                      </td>
+
+                    </tr>
+
+                  )
+                )}
+
+              </tbody>
+
+            </table>
+
+          </div>
 
         </div>
 
