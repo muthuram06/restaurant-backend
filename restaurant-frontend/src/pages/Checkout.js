@@ -9,7 +9,7 @@ function Checkout() {
   const [phone, setPhone] = useState("");
   const [address, setAddress] = useState("");
   const [paymentMethod, setPaymentMethod] =
-    useState("Cash On Delivery");
+    useState("UPI");
 
   const [loading, setLoading] =
     useState(false);
@@ -45,97 +45,170 @@ function Checkout() {
       alert("Cart is empty");
       return;
     }
-    const paymentResponse = await axios.post(
-      "https://restaurant-backend-ca51.onrender.com/api/payment/create-order?amount=500"
-    );
 
-    const orderData = paymentResponse.data;
-
-    const options = {
-      key: "rzp_test_SxAjuJyM8WVooo",
-      amount: orderData.amount,
-      currency: orderData.currency,
-      order_id: orderData.id,
-      name: "AFNA'S GARDEN",
-      description: "Food Order",
-
-      handler: async function (response) {
-        alert(
-          "Payment Successful\nPayment ID: " +
-          response.razorpay_payment_id
-        );
-      }
-    };
-    const razor = new window.Razorpay(options);
-    razor.open();
     try {
 
       setLoading(true);
 
-      localStorage.setItem(
-        "userEmail",
-        email
+      const totalAmount = cart.reduce(
+        (sum, item) =>
+          sum +
+          (item.price * (item.quantity || 1)),
+        0
       );
-    
 
-      for (const item of cart) {
-
-        const order = {
-
-          customerName: name,
-
-          email: email,
-
-          phone: phone,
-
-          address: address,
-
-          paymentMethod: paymentMethod,
-
-          foodName: item.name,
-
-          price: item.price,
-
-          quantity: item.quantity || 1,
-
-          total:
-            item.price *
-            (item.quantity || 1),
-
-          status: "Preparing"
-        };
-
+      const paymentResponse =
         await axios.post(
-          "https://restaurant-backend-ca51.onrender.com/api/orders",
-          order
+          `https://restaurant-backend-ca51.onrender.com/api/payment/create-order?amount=${totalAmount}`
         );
-      }
 
-      localStorage.removeItem("cart");
+      const orderData =
+        paymentResponse.data;
 
-      window.dispatchEvent(
-        new Event("cartUpdated")
-      );
+      const options = {
 
-      alert(
-        "Order Placed Successfully"
-      );
+        key:
+          "rzp_test_SxAjuJyM8WVooo",
 
-      window.location.href =
-        "/orders";
+        amount:
+          orderData.amount,
+
+        currency:
+          orderData.currency,
+
+        order_id:
+          orderData.id,
+
+        name:
+          "AFNA'S GARDEN",
+
+        description:
+          "Food Order",
+
+        handler:
+          async function (
+            response
+          ) {
+
+            try {
+
+              localStorage.setItem(
+                "userEmail",
+                email
+              );
+
+              for (
+                const item of cart
+              ) {
+
+                const order = {
+
+                  customerName:
+                    name,
+
+                  email:
+                    email,
+
+                  phone:
+                    phone,
+
+                  address:
+                    address,
+
+                  paymentMethod:
+                    "Razorpay",
+
+                  foodName:
+                    item.name,
+
+                  price:
+                    item.price,
+
+                  quantity:
+                    item.quantity || 1,
+
+                  total:
+                    item.price *
+                    (item.quantity || 1),
+
+                  status:
+                    "Preparing",
+
+                  paymentId:
+                    response.razorpay_payment_id
+                };
+
+                await axios.post(
+                  "https://restaurant-backend-ca51.onrender.com/api/orders",
+                  order
+                );
+              }
+
+              localStorage.removeItem(
+                "cart"
+              );
+
+              window.dispatchEvent(
+                new Event(
+                  "cartUpdated"
+                )
+              );
+
+              alert(
+                "Payment Successful & Order Placed"
+              );
+
+              window.location.href =
+                "/orders";
+
+            } catch (error) {
+
+              console.error(
+                error
+              );
+
+              alert(
+                "Payment successful but order save failed"
+              );
+            }
+          },
+
+        prefill: {
+
+          name:
+            name,
+
+          email:
+            email,
+
+          contact:
+            phone
+        },
+
+        theme: {
+          color:
+            "#28a745"
+        }
+      };
+
+      const razor =
+        new window.Razorpay(
+          options
+        );
+
+      razor.open();
 
     } catch (error) {
 
       console.error(error);
 
       alert(
-        "Failed to place order"
+        "Payment failed"
       );
 
     } finally {
 
       setLoading(false);
-
     }
   };
 
@@ -154,7 +227,8 @@ function Checkout() {
         <div
           className="card shadow-lg p-4 border-0"
           style={{
-            borderRadius: "20px"
+            borderRadius:
+              "20px"
           }}
         >
 
@@ -164,7 +238,9 @@ function Checkout() {
             placeholder="Customer Name"
             value={name}
             onChange={(e) =>
-              setName(e.target.value)
+              setName(
+                e.target.value
+              )
             }
           />
 
@@ -174,7 +250,9 @@ function Checkout() {
             placeholder="Email Address"
             value={email}
             onChange={(e) =>
-              setEmail(e.target.value)
+              setEmail(
+                e.target.value
+              )
             }
           />
 
@@ -184,7 +262,9 @@ function Checkout() {
             placeholder="Phone Number"
             value={phone}
             onChange={(e) =>
-              setPhone(e.target.value)
+              setPhone(
+                e.target.value
+              )
             }
           />
 
@@ -194,44 +274,24 @@ function Checkout() {
             placeholder="Delivery Address"
             value={address}
             onChange={(e) =>
-              setAddress(e.target.value)
-            }
-          />
-
-          <select
-            className="form-control mb-4"
-            value={paymentMethod}
-            onChange={(e) =>
-              setPaymentMethod(
+              setAddress(
                 e.target.value
               )
             }
-          >
-            <option>
-              Cash On Delivery
-            </option>
-
-            <option>
-              UPI
-            </option>
-
-            <option>
-              Credit Card
-            </option>
-
-            <option>
-              Debit Card
-            </option>
-          </select>
+          />
 
           <button
             className="btn btn-success btn-lg"
-            onClick={handlePayment}
-            disabled={loading}
+            onClick={
+              handlePayment
+            }
+            disabled={
+              loading
+            }
           >
             {loading
-              ? "Placing Order..."
-              : "Place Order"}
+              ? "Processing..."
+              : "Pay Now"}
           </button>
 
         </div>
