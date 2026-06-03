@@ -66,6 +66,8 @@ function Checkout() {
         );
       }
     };
+    const razor = new window.Razorpay(options);
+    razor.open();
     try {
 
       setLoading(true);
