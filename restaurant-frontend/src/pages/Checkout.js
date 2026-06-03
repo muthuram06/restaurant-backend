@@ -14,6 +14,18 @@ function Checkout() {
   const [loading, setLoading] =
     useState(false);
 
+  const options = {
+
+    key: "rzp_test_SxAjuJyM8WVooo",
+
+    amount: order.amount,
+
+    currency: "INR",
+
+    order_id: order.id
+
+  };
+
   const handlePayment = async () => {
 
     const cart =
