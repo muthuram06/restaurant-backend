@@ -16,6 +16,37 @@ function Checkout() {
 
   const handlePayment = async () => {
 
+    const paymentResponse = await axios.post(
+      "https://restaurant-backend-ca51.onrender.com/api/payment/create-order?amount=500"
+    );
+
+    const orderData = paymentResponse.data;
+
+
+    const options = {
+      key: "YOUR_RAZORPAY_KEY_ID",
+      amount: orderData.amount,
+      currency: orderData.currency,
+      order_id: orderData.id,
+
+      name: "AFNA'S GARDEN",
+
+      description: "Food Order",
+
+      handler: async function (response) {
+
+        alert(
+          "Payment Successful\nPayment ID: " +
+          response.razorpay_payment_id
+        );
+
+      }
+    };
+
+    const razor = new window.Razorpay(options);
+
+    razor.open();
+
     const cart =
       JSON.parse(
         localStorage.getItem("cart")
@@ -54,6 +85,7 @@ function Checkout() {
         "userEmail",
         email
       );
+    
 
       for (const item of cart) {
 
