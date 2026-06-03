@@ -8,9 +8,6 @@ function Checkout() {
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [address, setAddress] = useState("");
-  const [paymentMethod, setPaymentMethod] =
-    useState("UPI");
-
   const [loading, setLoading] =
     useState(false);
 
