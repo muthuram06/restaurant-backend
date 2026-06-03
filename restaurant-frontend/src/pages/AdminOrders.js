@@ -144,11 +144,44 @@ function AdminOrders() {
       0
     );
 
-  const deliveredOrders =
-    filteredOrders.filter(
-      (o) =>
-        o.status === "Delivered"
-    ).length;
+    const deliveredOrders =
+  filteredOrders.filter(
+    (o) => o.status === "Delivered"
+  ).length;
+
+    const pendingOrders =
+  filteredOrders.filter(
+    (o) => o.status !== "Delivered"
+  ).length;
+
+const uniqueCustomers =
+  new Set(
+    filteredOrders.map(
+      (o) => o.email
+    )
+  ).size;
+
+const todayRevenue =
+  filteredOrders
+    .filter((o) => {
+
+      if (!o.orderDate) return false;
+
+      const today =
+        new Date().toDateString();
+
+      return (
+        new Date(
+          o.orderDate
+        ).toDateString() === today
+      );
+
+    })
+    .reduce(
+      (sum, order) =>
+        sum + (order.total || 0),
+      0
+    );
 
   return (
 
@@ -238,6 +271,33 @@ function AdminOrders() {
 
           </div>
 
+        </div>
+
+        <div className="col-md-3 mb-3">
+          <div className="card shadow border-0 text-center p-4">
+            <h5>Pending Orders</h5>
+            <h2 className="text-warning">
+              {pendingOrders}
+            </h2>
+          </div>
+        </div>
+
+        <div className="col-md-3 mb-3">
+          <div className="card shadow border-0 text-center p-4">
+            <h5>Customers</h5>
+            <h2 className="text-info">
+              {uniqueCustomers}
+            </h2>
+          </div>
+        </div>
+
+        <div className="col-md-3 mb-3">
+          <div className="card shadow border-0 text-center p-4">
+            <h5>Today's Revenue</h5>
+            <h2 className="text-success">
+              ₹{todayRevenue}
+            </h2>
+          </div>
         </div>
 
         <div className="row mb-4">
