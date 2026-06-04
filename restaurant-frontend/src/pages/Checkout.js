@@ -65,7 +65,7 @@ function Checkout() {
       const options = {
 
         key:
-          "rzp_test_SxAjuJyM8WVooo",
+          "rzp_test_Sxd6Vak2AomX9A",
 
         amount:
           orderData.amount,
@@ -188,10 +188,16 @@ function Checkout() {
         }
       };
 
-      const razor =
-        new window.Razorpay(
-          options
+      const razor = new window.Razorpay(options);
+
+      razor.on("payment.failed", function (response) {
+        console.log("Payment Error:", response.error);
+
+        alert(
+          "Payment Failed: " +
+          response.error.description
         );
+      });
 
       razor.open();
 
