@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import NavbarComponent from "../components/NavbarComponent";
+import { GoogleLogin } from "@react-oauth/google";
 
 function Login() {
 
@@ -41,8 +42,36 @@ function Login() {
         }
     };
 
-    return (
+    const handleGoogleSuccess = (credentialResponse) => {
 
+        console.log("Google Login Success", credentialResponse);
+
+        const googleUser = {
+            name: "Google User",
+            email: "googleuser@gmail.com"
+        };
+
+        localStorage.setItem(
+            "isUserLoggedIn",
+            "true"
+        );
+
+        localStorage.setItem(
+            "loggedInUser",
+            JSON.stringify(googleUser)
+        );
+
+        alert("Google Login Successful");
+
+        window.location.href = "/";
+    };
+
+    const handleGoogleError = () => {
+
+        alert("Google Login Failed");
+    };
+
+    return (
         <div>
 
             <NavbarComponent />
@@ -82,6 +111,17 @@ function Login() {
                         Login
                     </button>
 
+                    <div className="text-center mt-4">
+
+                        <h5>OR</h5>
+
+                        <GoogleLogin
+                            onSuccess={handleGoogleSuccess}
+                            onError={handleGoogleError}
+                        />
+
+                    </div>
+
                     <div className="text-center mt-3">
 
                         <p>
@@ -96,8 +136,11 @@ function Login() {
                         </Link>
 
                     </div>
+
                 </div>
+
             </div>
+
         </div>
     );
 }
