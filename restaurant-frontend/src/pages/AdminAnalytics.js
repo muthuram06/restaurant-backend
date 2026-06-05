@@ -83,108 +83,271 @@ function AdminAnalytics() {
   ];
 
   const COLORS = [
-    "#ffc107",
-    "#0dcaf0",
-    "#fd7e14",
-    "#198754"
+    "#f59e0b",
+    "#06b6d4",
+    "#3b82f6",
+    "#22c55e"
   ];
 
   return (
 
-    <div className="container mt-5">
+    <div
+      style={{
+        minHeight: "100vh",
+        background:
+          "linear-gradient(135deg,#f5f7fa,#c3cfe2)"
+      }}
+    >
 
-      <h1 className="text-center fw-bold mb-5">
-        📊 Admin Analytics Dashboard
-      </h1>
+      <div className="container py-5">
 
-      <div className="row g-4">
-
-        <div className="col-md-3">
-          <div className="card shadow border-0 text-center p-4">
-            <h5>Total Orders</h5>
-            <h1 className="text-primary">
-              {orders.length}
-            </h1>
-          </div>
-        </div>
-
-        <div className="col-md-3">
-          <div className="card shadow border-0 text-center p-4">
-            <h5>Total Revenue</h5>
-            <h1 className="text-success">
-              ₹{totalRevenue}
-            </h1>
-          </div>
-        </div>
-
-        <div className="col-md-3">
-          <div className="card shadow border-0 text-center p-4">
-            <h5>Customers</h5>
-            <h1 className="text-info">
-              {totalCustomers}
-            </h1>
-          </div>
-        </div>
-
-        <div className="col-md-3">
-          <div className="card shadow border-0 text-center p-4">
-            <h5>Delivered</h5>
-            <h1 className="text-success">
-              {deliveredOrders}
-            </h1>
-          </div>
-        </div>
-
-      </div>
-
-      <div className="card shadow border-0 mt-5 p-4">
-
-        <h3 className="text-center mb-4">
-          Order Status Analytics
-        </h3>
-
-        <ResponsiveContainer
-          width="100%"
-          height={400}
+        <h1
+          className="text-center fw-bold mb-5"
+          style={{
+            color: "#1e293b"
+          }}
         >
+          📊 Admin Analytics Dashboard
+        </h1>
 
-          <PieChart>
+        <div className="row g-4">
 
-            <Pie
-              data={chartData}
-              dataKey="value"
-              nameKey="name"
-              outerRadius={140}
-              label
+          <div className="col-md-3">
+
+            <div
+              className="shadow-lg p-4 text-white"
+              style={{
+                borderRadius: "25px",
+                background:
+                  "linear-gradient(135deg,#667eea,#764ba2)"
+              }}
             >
 
-              {chartData.map(
-                (entry, index) => (
-                  <Cell
-                    key={index}
-                    fill={
-                      COLORS[
-                        index %
-                        COLORS.length
-                      ]
-                    }
-                  />
-                )
-              )}
+              <h5>📦 Total Orders</h5>
 
-            </Pie>
+              <h1 className="fw-bold">
+                {orders.length}
+              </h1>
 
-            <Tooltip />
+            </div>
 
-            <Legend />
+          </div>
 
-          </PieChart>
+          <div className="col-md-3">
 
-        </ResponsiveContainer>
+            <div
+              className="shadow-lg p-4 text-white"
+              style={{
+                borderRadius: "25px",
+                background:
+                  "linear-gradient(135deg,#11998e,#38ef7d)"
+              }}
+            >
+
+              <h5>💰 Revenue</h5>
+
+              <h1 className="fw-bold">
+                ₹{totalRevenue}
+              </h1>
+
+            </div>
+
+          </div>
+
+          <div className="col-md-3">
+
+            <div
+              className="shadow-lg p-4 text-white"
+              style={{
+                borderRadius: "25px",
+                background:
+                  "linear-gradient(135deg,#fc4a1a,#f7b733)"
+              }}
+            >
+
+              <h5>👥 Customers</h5>
+
+              <h1 className="fw-bold">
+                {totalCustomers}
+              </h1>
+
+            </div>
+
+          </div>
+
+          <div className="col-md-3">
+
+            <div
+              className="shadow-lg p-4 text-white"
+              style={{
+                borderRadius: "25px",
+                background:
+                  "linear-gradient(135deg,#00b09b,#96c93d)"
+              }}
+            >
+
+              <h5>✅ Delivered</h5>
+
+              <h1 className="fw-bold">
+                {deliveredOrders}
+              </h1>
+
+            </div>
+
+          </div>
+
+        </div>
+
+        <div
+          className="card border-0 shadow-lg mt-5"
+          style={{
+            borderRadius: "30px"
+          }}
+        >
+
+          <div className="card-body p-5">
+
+            <h3
+              className="text-center fw-bold mb-4"
+            >
+              📈 Order Status Analytics
+            </h3>
+
+            <ResponsiveContainer
+              width="100%"
+              height={450}
+            >
+
+              <PieChart>
+
+                <Pie
+                  data={chartData}
+                  dataKey="value"
+                  nameKey="name"
+                  outerRadius={160}
+                  label
+                >
+
+                  {chartData.map(
+                    (entry, index) => (
+                      <Cell
+                        key={index}
+                        fill={
+                          COLORS[
+                            index %
+                            COLORS.length
+                          ]
+                        }
+                      />
+                    )
+                  )}
+
+                </Pie>
+
+                <Tooltip />
+
+                <Legend />
+
+              </PieChart>
+
+            </ResponsiveContainer>
+
+          </div>
+
+        </div>
+
+        <div className="row mt-5">
+
+          <div className="col-md-3 mb-3">
+
+            <div
+              className="card border-0 shadow text-center p-4"
+              style={{
+                borderRadius: "20px"
+              }}
+            >
+
+              <h5>
+                🥗 Preparing
+              </h5>
+
+              <h2 className="text-warning">
+                {preparingOrders}
+              </h2>
+
+            </div>
+
+          </div>
+
+          <div className="col-md-3 mb-3">
+
+            <div
+              className="card border-0 shadow text-center p-4"
+              style={{
+                borderRadius: "20px"
+              }}
+            >
+
+              <h5>
+                👨‍🍳 Cooking
+              </h5>
+
+              <h2 className="text-info">
+                {cookingOrders}
+              </h2>
+
+            </div>
+
+          </div>
+
+          <div className="col-md-3 mb-3">
+
+            <div
+              className="card border-0 shadow text-center p-4"
+              style={{
+                borderRadius: "20px"
+              }}
+            >
+
+              <h5>
+                🚚 Delivery
+              </h5>
+
+              <h2 className="text-primary">
+                {deliveryOrders}
+              </h2>
+
+            </div>
+
+          </div>
+
+          <div className="col-md-3 mb-3">
+
+            <div
+              className="card border-0 shadow text-center p-4"
+              style={{
+                borderRadius: "20px"
+              }}
+            >
+
+              <h5>
+                🎉 Delivered
+              </h5>
+
+              <h2 className="text-success">
+                {deliveredOrders}
+              </h2>
+
+            </div>
+
+          </div>
+
+        </div>
 
       </div>
 
     </div>
+
   );
 }
 

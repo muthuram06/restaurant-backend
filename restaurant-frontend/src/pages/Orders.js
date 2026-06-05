@@ -194,7 +194,7 @@ function Orders() {
         <h1
           className="text-center fw-bold mb-5"
         >
-          📦 My Orders
+          📦 My Orders Dashboard
         </h1>
 
         {!loading &&
@@ -204,7 +204,10 @@ function Orders() {
 
             <div className="col-md-4 mb-3">
 
-              <div className="card shadow border-0 text-center p-4">
+              <div  className="card border-0 shadow-lg text-center p-4"
+                    style={{
+                      borderRadius: "20px"
+                    }}>
 
                 <h5>
                   Total Orders
@@ -282,7 +285,8 @@ function Orders() {
               key={order.id}
               className="card shadow-lg border-0 mb-4"
               style={{
-                borderRadius: "25px"
+                borderRadius: "25px",
+                overflow: "hidden"
               }}
             >
 
@@ -290,9 +294,27 @@ function Orders() {
 
                 <div className="d-flex justify-content-between align-items-center">
 
+                  <img
+                    src={
+                      order.foodImage ||
+                      "https://via.placeholder.com/600x250?text=AFNA'S+GARDEN"
+                    }
+                    alt={order.foodName}
+                    className="img-fluid rounded mb-3"
+                    style={{
+                      width: "100%",
+                      height: "220px",
+                      objectFit: "cover"
+                    }}
+                  />
+
                   <h3 className="fw-bold">
                     🍽 {order.foodName}
                   </h3>
+
+                  <p className="text-muted mb-0">
+                    Order ID: #{order.id}
+                  </p>
 
                   <span
                     className={`badge bg-${getStatusColor(
@@ -308,7 +330,16 @@ function Orders() {
 
                 </div>
 
-                <div className="progress mt-3 mb-4">
+                <div className="progress mt-3 mb-2">
+
+                  <div
+                    className={`progress-bar bg-${getStatusColor(
+                      order.status
+                    )}`}
+                    style={{
+                      width: `${getProgress(order.status)}%`
+                    }}
+                  ></div>
 
                   <div
                     className={`progress-bar bg-${getStatusColor(
@@ -379,14 +410,20 @@ function Orders() {
                   }}
                 >
 
-                  <h2 className="text-success fw-bold mb-0">
+                  <div className="d-flex justify-content-between align-items-center">
 
-                    Total : ₹{order.total}
+                    <h4 className="fw-bold text-success">
+                      Total Amount
+                    </h4>
 
-                  </h2>
+                    <h2 className="fw-bold text-success">
+                      ₹{order.total}
+                    </h2>
+
+                  </div>
 
                   <button
-                    className="btn btn-danger mt-3"
+                    className="btn btn-success mt-3"
                     onClick={() =>
                       downloadInvoice(
                         order
@@ -394,6 +431,12 @@ function Orders() {
                     }
                   >
                     📄 Download Invoice
+                  </button>
+
+                  <button
+                    className="btn btn-outline-primary mt-3 ms-2"
+                  >
+                    🔁 Reorder
                   </button>
 
                 </div>
