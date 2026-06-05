@@ -19,52 +19,44 @@ public class RazorpayController {
     private String keySecret;
 
     @PostMapping("/create-order")
-    public ResponseEntity<?> createOrder(
-            @RequestParam int amount) {
+    public ResponseEntity<?> createOrder(@RequestParam int amount) {
 
         try {
 
-            System.out.println("========== RAZORPAY DEBUG ==========");
-            System.out.println("KEY ID: " + keyId);
-            System.out.println("KEY SECRET: " + keySecret);
-            System.out.println("AMOUNT: " + amount);
-            System.out.println("===================================");
+            System.out.println("=================================");
+            System.out.println("PAYMENT API CALLED");
+            System.out.println("Amount = " + amount);
+            System.out.println("Key ID = " + keyId);
+            System.out.println("=================================");
 
             if (amount <= 0) {
-                return ResponseEntity
-                        .badRequest()
-                        .body("Amount must be greater than 0");
+                return ResponseEntity.badRequest()
+                        .body("Invalid amount");
             }
 
-            RazorpayClient razorpayClient =
-                    new RazorpayClient(
-                            keyId,
-                            keySecret
-                    );
+            RazorpayClient client =
+                    new RazorpayClient(keyId, keySecret);
 
-            JSONObject options =
+            JSONObject orderRequest =
                     new JSONObject();
 
-            options.put(
+            orderRequest.put(
                     "amount",
                     amount * 100
             );
 
-            options.put(
+            orderRequest.put(
                     "currency",
                     "INR"
             );
 
-            options.put(
+            orderRequest.put(
                     "receipt",
-                    "receipt_" +
-                            System.currentTimeMillis()
+                    "receipt_" + System.currentTimeMillis()
             );
 
             Order order =
-                    razorpayClient.orders.create(
-                            options
-                    );
+                    client.orders.create(orderRequest);
 
             return ResponseEntity.ok(
                     new JSONObject(order.toString()).toMap()
@@ -72,14 +64,11 @@ public class RazorpayController {
 
         } catch (Exception e) {
 
+            System.out.println("ERROR OCCURRED");
             e.printStackTrace();
 
-            return ResponseEntity
-                    .internalServerError()
-                    .body(
-                            "Razorpay Error: "
-                                    + e.getMessage()
-                    );
+            return ResponseEntity.internalServerError()
+                    .body("Razorpay Error : " + e.getMessage());
         }
     }
 }

@@ -197,13 +197,22 @@ function Checkout() {
       const razor = new window.Razorpay(options);
 
       razor.on("payment.failed", function (response) {
-        console.log("Payment Error:", response.error);
 
-        alert(
-          "Payment Failed: " +
-          response.error.description
-        );
-      });
+  console.log("FULL ERROR", response);
+
+  alert(
+    "Code: " +
+    response.error.code +
+    "\nDescription: " +
+    response.error.description +
+    "\nSource: " +
+    response.error.source +
+    "\nStep: " +
+    response.error.step +
+    "\nReason: " +
+    response.error.reason
+  );
+});
 
       razor.open();
 
