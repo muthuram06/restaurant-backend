@@ -62,6 +62,8 @@ function Checkout() {
       const orderData =
         paymentResponse.data;
 
+      console.log("ORDER DATA:", orderData);
+
       const options = {
 
         key:
