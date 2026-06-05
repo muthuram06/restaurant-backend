@@ -2,147 +2,197 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import NavbarComponent from "../components/NavbarComponent";
 import { GoogleLogin } from "@react-oauth/google";
+import { jwtDecode } from "jwt-decode";
 
 function Login() {
 
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
-    const loginUser = () => {
+  const loginUser = () => {
 
-        let users =
-            JSON.parse(localStorage.getItem("users"))
-            || [];
+    let users =
+      JSON.parse(
+        localStorage.getItem("users")
+      ) || [];
 
-        const validUser = users.find(
-            (user) =>
-                user.email === email &&
-                user.password === password
-        );
+    const validUser =
+      users.find(
+        (user) =>
+          user.email === email &&
+          user.password === password
+      );
 
-        if (validUser) {
+    if (validUser) {
 
-            localStorage.setItem(
-                "isUserLoggedIn",
-                "true"
-            );
+      localStorage.setItem(
+        "isUserLoggedIn",
+        "true"
+      );
 
-            localStorage.setItem(
-                "loggedInUser",
-                JSON.stringify(validUser)
-            );
+      localStorage.setItem(
+        "userEmail",
+        validUser.email
+      );
 
-            alert("Login Successful");
+      localStorage.setItem(
+        "userName",
+        validUser.name || validUser.email
+      );
 
-            window.location.href = "/";
+      localStorage.setItem(
+        "loggedInUser",
+        JSON.stringify(validUser)
+      );
 
-        } else {
+      alert("Login Successful");
 
-            alert("Invalid Email or Password");
-        }
-    };
+      window.location.href = "/";
 
-    const handleGoogleSuccess = (credentialResponse) => {
+    } else {
 
-        console.log("Google Login Success", credentialResponse);
+      alert(
+        "Invalid Email or Password"
+      );
 
-        const googleUser = {
-            name: "Google User",
-            email: "googleuser@gmail.com"
-        };
+    }
 
-        localStorage.setItem(
-            "isUserLoggedIn",
-            "true"
-        );
+  };
 
-        localStorage.setItem(
-            "loggedInUser",
-            JSON.stringify(googleUser)
-        );
+  const handleGoogleSuccess = (
+    credentialResponse
+  ) => {
 
-        alert("Google Login Successful");
+    const user =
+      jwtDecode(
+        credentialResponse.credential
+      );
 
-        window.location.href = "/";
-    };
+    localStorage.setItem(
+      "isUserLoggedIn",
+      "true"
+    );
 
-    const handleGoogleError = () => {
+    localStorage.setItem(
+      "userEmail",
+      user.email
+    );
 
-        alert("Google Login Failed");
-    };
+    localStorage.setItem(
+      "userName",
+      user.name
+    );
 
-    return (
-        <div>
+    localStorage.setItem(
+      "userPicture",
+      user.picture
+    );
 
-            <NavbarComponent />
+    localStorage.setItem(
+      "loggedInUser",
+      JSON.stringify(user)
+    );
 
-            <div className="container mt-5">
+    alert(
+      `Welcome ${user.name}`
+    );
 
-                <div className="card shadow p-4">
+    window.location.href = "/";
 
-                    <h1 className="text-center mb-4">
-                        User Login
-                    </h1>
+  };
 
-                    <input
-                        type="email"
-                        className="form-control mb-3"
-                        placeholder="Enter Email"
-                        value={email}
-                        onChange={(e) =>
-                            setEmail(e.target.value)
-                        }
-                    />
+  const handleGoogleError = () => {
 
-                    <input
-                        type="password"
-                        className="form-control mb-3"
-                        placeholder="Enter Password"
-                        value={password}
-                        onChange={(e) =>
-                            setPassword(e.target.value)
-                        }
-                    />
+    alert(
+      "Google Login Failed"
+    );
 
-                    <button
-                        className="btn btn-primary w-100"
-                        onClick={loginUser}
-                    >
-                        Login
-                    </button>
+  };
 
-                    <div className="text-center mt-4">
+  return (
 
-                        <h5>OR</h5>
+    <div>
 
-                        <GoogleLogin
-                            onSuccess={handleGoogleSuccess}
-                            onError={handleGoogleError}
-                        />
+      <NavbarComponent />
 
-                    </div>
+      <div className="container mt-5">
 
-                    <div className="text-center mt-3">
+        <div
+          className="card shadow-lg border-0 p-4 mx-auto"
+          style={{
+            maxWidth: "500px",
+            borderRadius: "20px"
+          }}
+        >
 
-                        <p>
-                            Don't have an account?
-                        </p>
+          <h1 className="text-center mb-4">
+            User Login
+          </h1>
 
-                        <Link
-                            to="/register"
-                            className="btn btn-success"
-                        >
-                            Register Here
-                        </Link>
+          <input
+            type="email"
+            className="form-control mb-3"
+            placeholder="Enter Email"
+            value={email}
+            onChange={(e) =>
+              setEmail(e.target.value)
+            }
+          />
 
-                    </div>
+          <input
+            type="password"
+            className="form-control mb-3"
+            placeholder="Enter Password"
+            value={password}
+            onChange={(e) =>
+              setPassword(e.target.value)
+            }
+          />
 
-                </div>
+          <button
+            className="btn btn-primary w-100"
+            onClick={loginUser}
+          >
+            Login
+          </button>
 
-            </div>
+          <div className="text-center mt-4">
+
+            <h5>OR</h5>
+
+            <GoogleLogin
+              onSuccess={
+                handleGoogleSuccess
+              }
+              onError={
+                handleGoogleError
+              }
+            />
+
+          </div>
+
+          <div className="text-center mt-4">
+
+            <p>
+              Don't have an account?
+            </p>
+
+            <Link
+              to="/register"
+              className="btn btn-success"
+            >
+              Register Here
+            </Link>
+
+          </div>
 
         </div>
-    );
+
+      </div>
+
+    </div>
+
+  );
 }
 
 export default Login;

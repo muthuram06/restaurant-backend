@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { GoogleLogin } from "@react-oauth/google";
+import { jwtDecode } from "jwt-decode";
 
 function AdminLogin() {
 
@@ -37,6 +39,40 @@ function AdminLogin() {
 
     }
 
+  };
+
+  const handleGoogleAdminLogin =
+    (credentialResponse) => {
+
+      const user =
+        jwtDecode(
+          credentialResponse.credential
+        );
+
+      if (
+        user.email ===
+        "muthuram.6565@gmail.com"
+      ) {
+
+        localStorage.setItem(
+          "isAdminLoggedIn",
+          "true"
+        );
+
+        localStorage.setItem(
+          "adminEmail",
+          user.email
+        );
+
+        navigate("/admin");
+
+      } else {
+
+        alert(
+          "Only Admin Email Allowed"
+        );
+
+      }
   };
 
   return (
@@ -108,6 +144,19 @@ function AdminLogin() {
           >
             Login To Dashboard
           </button>
+
+          <div className="text-center mt-4">
+            <h5>OR</h5>
+            <GoogleLogin
+              onSuccess={
+                handleGoogleAdminLogin
+              }
+              onError={() =>
+                alert("Google Login Failed")
+              }
+            />
+
+          </div>
 
           <div className="text-center mt-4">
 

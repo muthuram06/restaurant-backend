@@ -7,6 +7,8 @@ const getAllFoods = () => {
   return axios.get(`${API_URL}/all`);
 };
 
-export default {
+const FoodService = {
   getAllFoods
 };
+
+export default FoodService;
