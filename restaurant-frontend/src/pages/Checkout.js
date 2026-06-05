@@ -65,7 +65,7 @@ function Checkout() {
       const options = {
 
         key:
-          "rzp_test_Sxd6Vak2AomX9A",
+          "rzp_test_Sxd7xlG2R5j2dF",
 
         amount:
           orderData.amount,
