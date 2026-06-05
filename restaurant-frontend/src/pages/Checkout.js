@@ -64,10 +64,14 @@ function Checkout() {
 
       console.log("ORDER DATA:", orderData);
 
+      console.log("ORDER ID:", orderData.id);
+      console.log("AMOUNT:", orderData.amount);
+      console.log("CURRENCY:", orderData.currency);
+
       const options = {
 
         key:
-          "rzp_test_Sxd7xlG2R5j2dF",
+          "rzp_test_SxrcvWDmMk0mqT",
 
         amount:
           orderData.amount,
