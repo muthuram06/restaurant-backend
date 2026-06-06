@@ -6,31 +6,20 @@ import Reviews from "./Reviews";
 function FoodDetails() {
 
   const location = useLocation();
-
   const food = location.state;
 
   if (!food) {
-
     return (
-
       <div className="container mt-5">
-
-        <h2>
-          Food Details Not Found
-        </h2>
-
+        <h2>Food Details Not Found</h2>
       </div>
-
     );
-
   }
 
   const addToCart = () => {
 
     const existingCart =
-      JSON.parse(
-        localStorage.getItem("cart")
-      ) || [];
+      JSON.parse(localStorage.getItem("cart")) || [];
 
     const existingItem =
       existingCart.find(
@@ -60,102 +49,147 @@ function FoodDetails() {
       new Event("cartUpdated")
     );
 
-    alert(
-      "Food Added To Cart"
-    );
+    alert("Food Added To Cart");
 
   };
 
   return (
 
-    <div>
+    <div
+      style={{
+        background:"#f8fafc",
+        minHeight:"100vh"
+      }}
+    >
 
       <NavbarComponent />
 
-      <div className="container mt-5">
+      <div className="container py-5">
 
-        <div className="row">
+        <div className="card shadow-lg border-0 p-4">
 
-          <div className="col-md-6">
+          <div className="row">
 
-            <img
-              src={food.imageUrl}
-              alt={food.name}
-              className="img-fluid rounded shadow"
-              style={{
-                height: "450px",
-                width: "100%",
-                objectFit: "cover"
-              }}
-            />
+            <div className="col-lg-6">
 
-          </div>
-
-          <div className="col-md-6">
-
-            <h1 className="fw-bold">
-              {food.name}
-            </h1>
-
-            <span className="badge bg-success fs-6 mb-3">
-              PURE VEG
-            </span>
-
-            <h3 className="text-success mb-3">
-              ₹ {food.price}
-            </h3>
-
-            <h5 className="text-secondary mb-3">
-              Category : {food.category}
-            </h5>
-
-            <p
-              className="mt-4"
-              style={{
-                fontSize: "18px"
-              }}
-            >
-              {food.description}
-            </p>
-
-            <div className="mt-4">
-
-              <h5>
-                ⭐ Premium Restaurant Item
-              </h5>
-
-              <p>
-                Freshly prepared using
-                quality ingredients.
-              </p>
+              <img
+                src={food.imageUrl}
+                alt={food.name}
+                className="img-fluid rounded"
+                style={{
+                  width:"100%",
+                  height:"500px",
+                  objectFit:"cover"
+                }}
+              />
 
             </div>
 
-            <button
-              className="btn btn-success btn-lg mt-4 w-100"
-              onClick={addToCart}
-            >
-              🛒 Add To Cart
-            </button>
+            <div className="col-lg-6">
+
+              <span className="badge bg-danger mb-3">
+                🔥 Bestseller
+              </span>
+
+              <h1 className="fw-bold">
+                {food.name}
+              </h1>
+
+              <span className="badge bg-success fs-6 mb-3">
+                🌱 Pure Veg
+              </span>
+
+              <h2 className="text-success fw-bold">
+                ₹ {food.price}
+              </h2>
+
+              <h5 className="text-secondary mt-3">
+                Category : {food.category}
+              </h5>
+
+              <p
+                className="mt-4"
+                style={{
+                  fontSize:"18px"
+                }}
+              >
+                {food.description}
+              </p>
+
+              <div className="row mt-4">
+
+                <div className="col-4">
+
+                  <div className="card text-center p-3">
+
+                    <h6>⭐ Rating</h6>
+
+                    <h4 className="text-warning">
+                      4.8
+                    </h4>
+
+                  </div>
+
+                </div>
+
+                <div className="col-4">
+
+                  <div className="card text-center p-3">
+
+                    <h6>⏱ Time</h6>
+
+                    <h4>
+                      25 Min
+                    </h4>
+
+                  </div>
+
+                </div>
+
+                <div className="col-4">
+
+                  <div className="card text-center p-3">
+
+                    <h6>🔥 Calories</h6>
+
+                    <h4>
+                      320
+                    </h4>
+
+                  </div>
+
+                </div>
+
+              </div>
+
+              <div
+                className="alert alert-success mt-4"
+              >
+                🎉 Flat 20% OFF Today
+              </div>
+
+              <button
+                className="btn btn-success btn-lg w-100 mt-3"
+                onClick={addToCart}
+              >
+                🛒 Add To Cart
+              </button>
+
+            </div>
 
           </div>
 
         </div>
 
-        <div className="mt-5">
-
-          <Reviews
-            foodName={food.name}
-          />
-
-        </div>
+        <Reviews
+          foodName={food.name}
+        />
 
       </div>
 
     </div>
 
   );
-
 }
 
 export default FoodDetails;

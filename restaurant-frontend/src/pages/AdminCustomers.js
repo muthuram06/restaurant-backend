@@ -4,6 +4,7 @@ import axios from "axios";
 function AdminCustomers() {
 
   const [orders, setOrders] = useState([]);
+  const [search, setSearch] = useState("");
 
   useEffect(() => {
 
@@ -43,7 +44,38 @@ function AdminCustomers() {
   });
 
   const customerList =
-    Object.values(customers);
+    Object.values(customers)
+      .sort(
+        (a, b) =>
+          b.totalSpent - a.totalSpent
+      );
+
+  const filteredCustomers =
+    customerList.filter(
+      (customer) =>
+        customer.name
+          ?.toLowerCase()
+          .includes(
+            search.toLowerCase()
+          ) ||
+        customer.email
+          ?.toLowerCase()
+          .includes(
+            search.toLowerCase()
+          )
+    );
+
+  const totalRevenue =
+    orders.reduce(
+      (sum, order) =>
+        sum + (order.total || 0),
+      0
+    );
+
+  const topCustomer =
+    customerList.length > 0
+      ? customerList[0]
+      : null;
 
   return (
 
@@ -63,7 +95,7 @@ function AdminCustomers() {
 
         <div className="row mb-4">
 
-          <div className="col-md-4">
+          <div className="col-md-3 mb-3">
 
             <div className="card shadow border-0 text-center p-4">
 
@@ -77,7 +109,7 @@ function AdminCustomers() {
 
           </div>
 
-          <div className="col-md-4">
+          <div className="col-md-3 mb-3">
 
             <div className="card shadow border-0 text-center p-4">
 
@@ -91,20 +123,31 @@ function AdminCustomers() {
 
           </div>
 
-          <div className="col-md-4">
+          <div className="col-md-3 mb-3">
 
             <div className="card shadow border-0 text-center p-4">
 
               <h5>Total Revenue</h5>
 
               <h1 className="text-warning">
-                ₹
-                {orders.reduce(
-                  (sum, order) =>
-                    sum + (order.total || 0),
-                  0
-                )}
+                ₹{totalRevenue}
               </h1>
+
+            </div>
+
+          </div>
+
+          <div className="col-md-3 mb-3">
+
+            <div className="card shadow border-0 text-center p-4">
+
+              <h5>Top Customer</h5>
+
+              <h6 className="text-danger">
+                {topCustomer
+                  ? topCustomer.name
+                  : "N/A"}
+              </h6>
 
             </div>
 
@@ -112,24 +155,41 @@ function AdminCustomers() {
 
         </div>
 
-        <div className="card shadow border-0">
+        <div className="card shadow border-0 mb-4">
 
           <div className="card-body">
 
+            <input
+              type="text"
+              className="form-control"
+              placeholder="Search Customer..."
+              value={search}
+              onChange={(e) =>
+                setSearch(
+                  e.target.value
+                )
+              }
+            />
+
+          </div>
+
+        </div>
+
+        <div className="card shadow border-0">
+
+          <div className="card-body table-responsive">
+
             <table className="table table-hover">
 
-              <thead>
+              <thead className="table-dark">
 
                 <tr>
 
+                  <th>Rank</th>
                   <th>Name</th>
-
                   <th>Email</th>
-
                   <th>Phone</th>
-
                   <th>Orders</th>
-
                   <th>Total Spent</th>
 
                 </tr>
@@ -138,10 +198,17 @@ function AdminCustomers() {
 
               <tbody>
 
-                {customerList.map(
-                  (customer, index) => (
+                {filteredCustomers.map(
+                  (
+                    customer,
+                    index
+                  ) => (
 
                     <tr key={index}>
+
+                      <td>
+                        🏆 {index + 1}
+                      </td>
 
                       <td>
                         {customer.name}
@@ -159,7 +226,7 @@ function AdminCustomers() {
                         {customer.totalOrders}
                       </td>
 
-                      <td>
+                      <td className="fw-bold text-success">
                         ₹
                         {customer.totalSpent}
                       </td>

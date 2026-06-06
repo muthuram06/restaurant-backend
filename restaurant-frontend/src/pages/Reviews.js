@@ -1,49 +1,32 @@
-import React, {
-  useState,
-  useEffect
-} from "react";
-
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 
 function Reviews({ foodName }) {
 
-  const [reviews, setReviews] =
-    useState([]);
-
-  const [customerName,
-    setCustomerName] =
-    useState("");
-
-  const [rating,
-    setRating] =
-    useState(5);
-
-  const [comment,
-    setComment] =
-    useState("");
+  const [reviews, setReviews] = useState([]);
+  const [customerName, setCustomerName] = useState("");
+  const [rating, setRating] = useState(5);
+  const [comment, setComment] = useState("");
 
   const API_URL =
     "https://restaurant-backend-ca51.onrender.com/api/reviews";
 
-  const loadReviews = () => {
+  const loadReviews = async () => {
 
-    axios
-      .get(
-        `${API_URL}/${foodName}`
-      )
-      .then((response) => {
+    try {
 
-        setReviews(
-          response.data
+      const response =
+        await axios.get(
+          `${API_URL}/${foodName}`
         );
 
-      })
-      .catch((error) => {
+      setReviews(response.data || []);
 
-        console.error(error);
+    } catch (error) {
 
-      });
+      console.error(error);
 
+    }
   };
 
   useEffect(() => {
@@ -54,178 +37,203 @@ function Reviews({ foodName }) {
 
     }
 
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [foodName]);
 
-  const submitReview = () => {
+  const submitReview = async () => {
 
     if (!customerName.trim()) {
 
-      alert(
-        "Please enter your name"
-      );
+      alert("Please enter your name");
 
       return;
     }
 
     if (!comment.trim()) {
 
-      alert(
-        "Please enter review"
-      );
+      alert("Please enter review");
 
       return;
     }
 
-    axios
-      .post(API_URL, {
+    try {
+
+      await axios.post(API_URL, {
 
         foodName,
-
         customerName,
-
         rating: Number(rating),
-
         comment
-
-      })
-      .then(() => {
-
-        setCustomerName("");
-        setComment("");
-        setRating(5);
-
-        loadReviews();
-
-        alert(
-          "Review Submitted Successfully"
-        );
-
-      })
-      .catch((error) => {
-
-        console.error(error);
-
-        alert(
-          "Failed to submit review"
-        );
 
       });
 
+      setCustomerName("");
+      setComment("");
+      setRating(5);
+
+      loadReviews();
+
+      alert(
+        "Review Submitted Successfully"
+      );
+
+    } catch (error) {
+
+      console.error(error);
+
+      alert(
+        "Failed To Submit Review"
+      );
+
+    }
   };
+
+  const averageRating =
+    reviews.length > 0
+      ? (
+          reviews.reduce(
+            (sum, review) =>
+              sum + review.rating,
+            0
+          ) / reviews.length
+        ).toFixed(1)
+      : 0;
 
   return (
 
     <div
-      className="card shadow-lg border-0 p-4 mt-5"
+      className="card border-0 shadow-lg mt-5"
       style={{
-        borderRadius: "20px"
+        borderRadius: "25px"
       }}
     >
 
-      <h3 className="fw-bold mb-4">
-        ⭐ Customer Reviews
-      </h3>
-
-      <input
-        type="text"
-        className="form-control mb-3"
-        placeholder="Enter Your Name"
-        value={customerName}
-        onChange={(e) =>
-          setCustomerName(
-            e.target.value
-          )
-        }
-      />
-
-      <select
-        className="form-control mb-3"
-        value={rating}
-        onChange={(e) =>
-          setRating(
-            e.target.value
-          )
-        }
+      <div
+        className="text-white p-4"
+        style={{
+          background:
+            "linear-gradient(135deg,#16a34a,#22c55e)"
+        }}
       >
 
-        <option value="5">
-          ⭐⭐⭐⭐⭐ (5)
-        </option>
+        <h2 className="fw-bold">
+          ⭐ Customer Reviews
+        </h2>
 
-        <option value="4">
-          ⭐⭐⭐⭐ (4)
-        </option>
+        <h5>
+          Average Rating :
+          {averageRating} ⭐
+        </h5>
 
-        <option value="3">
-          ⭐⭐⭐ (3)
-        </option>
+        <p>
+          {reviews.length} Reviews
+        </p>
 
-        <option value="2">
-          ⭐⭐ (2)
-        </option>
+      </div>
 
-        <option value="1">
-          ⭐ (1)
-        </option>
+      <div className="p-4">
 
-      </select>
+        <input
+          type="text"
+          className="form-control mb-3"
+          placeholder="Enter Your Name"
+          value={customerName}
+          onChange={(e) =>
+            setCustomerName(e.target.value)
+          }
+        />
 
-      <textarea
-        className="form-control mb-3"
-        rows="3"
-        placeholder="Write Your Review"
-        value={comment}
-        onChange={(e) =>
-          setComment(
-            e.target.value
-          )
-        }
-      />
+        <select
+          className="form-control mb-3"
+          value={rating}
+          onChange={(e) =>
+            setRating(e.target.value)
+          }
+        >
+          <option value="5">
+            ⭐⭐⭐⭐⭐ Excellent
+          </option>
 
-      <button
-        className="btn btn-success"
-        onClick={submitReview}
-      >
-        Submit Review
-      </button>
+          <option value="4">
+            ⭐⭐⭐⭐ Good
+          </option>
 
-      <hr />
+          <option value="3">
+            ⭐⭐⭐ Average
+          </option>
 
-      {reviews.length === 0 ? (
+          <option value="2">
+            ⭐⭐ Poor
+          </option>
 
-        <div className="alert alert-info">
-          No Reviews Yet
-        </div>
+          <option value="1">
+            ⭐ Bad
+          </option>
 
-      ) : (
+        </select>
 
-        reviews.map((review) => (
+        <textarea
+          rows="4"
+          className="form-control mb-3"
+          placeholder="Write your review..."
+          value={comment}
+          onChange={(e) =>
+            setComment(e.target.value)
+          }
+        />
 
-          <div
-            key={review.id}
-            className="card border-0 shadow-sm p-3 mb-3"
-          >
+        <button
+          className="btn btn-success w-100"
+          onClick={submitReview}
+        >
+          Submit Review
+        </button>
 
-            <h5 className="fw-bold">
-              👤 {review.customerName}
-            </h5>
+        <hr />
 
-            <p className="text-warning fs-5 mb-1">
-              {"⭐".repeat(
-                review.rating
-              )}
-            </p>
+        {reviews.length === 0 ? (
 
-            <p className="mb-0">
-              {review.comment}
-            </p>
+          <div className="text-center">
+
+            <h5>No Reviews Yet</h5>
 
           </div>
 
-        ))
+        ) : (
 
-      )}
+          reviews.map((review, index) => (
+
+            <div
+              key={index}
+              className="card border-0 shadow-sm mb-3"
+            >
+
+              <div className="card-body">
+
+                <h5>
+                  👤 {review.customerName}
+                </h5>
+
+                <p className="text-warning">
+
+                  {"⭐".repeat(
+                    review.rating
+                  )}
+
+                </p>
+
+                <p>
+                  {review.comment}
+                </p>
+
+              </div>
+
+            </div>
+
+          ))
+
+        )}
+
+      </div>
 
     </div>
 

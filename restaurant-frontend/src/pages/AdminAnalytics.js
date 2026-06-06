@@ -6,7 +6,12 @@ import {
   Cell,
   Tooltip,
   ResponsiveContainer,
-  Legend
+  Legend,
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid
 } from "recharts";
 
 function AdminAnalytics() {
@@ -64,23 +69,38 @@ function AdminAnalytics() {
     ).length;
 
   const chartData = [
-    {
-      name: "Preparing",
-      value: preparingOrders
-    },
-    {
-      name: "Cooking",
-      value: cookingOrders
-    },
-    {
-      name: "Out For Delivery",
-      value: deliveryOrders
-    },
-    {
-      name: "Delivered",
-      value: deliveredOrders
-    }
-  ];
+  {
+    name: "Preparing",
+    value: preparingOrders
+  },
+  {
+    name: "Cooking",
+    value: cookingOrders
+  },
+  {
+    name: "Out For Delivery",
+    value: deliveryOrders
+  },
+  {
+    name: "Delivered",
+    value: deliveredOrders
+  }
+];
+
+const revenueData = [
+  {
+    name: "Orders",
+    value: orders.length
+  },
+  {
+    name: "Revenue",
+    value: totalRevenue
+  },
+  {
+    name: "Customers",
+    value: totalCustomers
+  }
+];
 
   const COLORS = [
     "#f59e0b",
@@ -214,41 +234,83 @@ function AdminAnalytics() {
             </h3>
 
             <ResponsiveContainer
+  width="100%"
+  height={450}
+>
+  <PieChart>
+
+    <Pie
+      data={chartData}
+      dataKey="value"
+      nameKey="name"
+      outerRadius={160}
+      label
+    >
+
+      {chartData.map(
+        (entry, index) => (
+          <Cell
+            key={index}
+            fill={
+              COLORS[
+                index %
+                COLORS.length
+              ]
+            }
+          />
+        )
+      )}
+
+    </Pie>
+
+    <Tooltip />
+
+    <Legend />
+
+  </PieChart>
+
+</ResponsiveContainer>
+
+          </div>
+
+        </div>
+
+        <div
+          className="card border-0 shadow-lg mt-5"
+          style={{
+            borderRadius: "30px"
+          }}
+        >
+
+          <div className="card-body p-5">
+
+            <h3 className="text-center mb-4">
+              📊 Business Performance
+            </h3>
+
+            <ResponsiveContainer
               width="100%"
-              height={450}
+              height={400}
             >
 
-              <PieChart>
+              <BarChart
+                data={revenueData}
+              >
 
-                <Pie
-                  data={chartData}
-                  dataKey="value"
-                  nameKey="name"
-                  outerRadius={160}
-                  label
-                >
+                <CartesianGrid strokeDasharray="3 3" />
 
-                  {chartData.map(
-                    (entry, index) => (
-                      <Cell
-                        key={index}
-                        fill={
-                          COLORS[
-                            index %
-                            COLORS.length
-                          ]
-                        }
-                      />
-                    )
-                  )}
+                <XAxis dataKey="name" />
 
-                </Pie>
+                <YAxis />
 
                 <Tooltip />
 
-                <Legend />
+                <Bar
+                  dataKey="value"
+                  fill="#22c55e"
+                />
 
-              </PieChart>
+              </BarChart>
 
             </ResponsiveContainer>
 

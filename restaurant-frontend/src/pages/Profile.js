@@ -1,10 +1,15 @@
-import React, { useEffect, useState } from "react";
+import React, {
+  useEffect,
+  useState
+} from "react";
+
 import NavbarComponent from "../components/NavbarComponent";
 import axios from "axios";
 
 function Profile() {
 
-  const [orders, setOrders] = useState([]);
+  const [orders, setOrders] =
+    useState([]);
 
   const email =
     localStorage.getItem("userEmail");
@@ -18,10 +23,14 @@ function Profile() {
           `https://restaurant-backend-ca51.onrender.com/api/orders/user/${email}`
         )
         .then((response) => {
+
           setOrders(response.data);
+
         })
         .catch((error) => {
+
           console.error(error);
+
         });
 
     }
@@ -37,7 +46,8 @@ function Profile() {
 
   const deliveredOrders =
     orders.filter(
-      (o) => o.status === "Delivered"
+      (order) =>
+        order.status === "Delivered"
     ).length;
 
   const user =
@@ -45,13 +55,29 @@ function Profile() {
       ? orders[0]
       : {};
 
+  const successRate =
+    orders.length > 0
+      ? (
+          (deliveredOrders /
+            orders.length) *
+          100
+        ).toFixed(0)
+      : 0;
+
+  const membership =
+    totalSpent > 10000
+      ? "👑 Platinum"
+      : totalSpent > 5000
+      ? "🥇 Gold"
+      : "🥈 Silver";
+
   return (
 
     <div
       style={{
         minHeight: "100vh",
         background:
-          "linear-gradient(135deg,#e0f7fa,#80deea)"
+          "linear-gradient(135deg,#dbeafe,#f0fdf4)"
       }}
     >
 
@@ -66,31 +92,59 @@ function Profile() {
           }}
         >
 
-          <div className="card-body p-5">
+          <div
+            className="card-body p-5"
+          >
 
             <div className="text-center">
 
               <div
+                className="mx-auto d-flex align-items-center justify-content-center text-white fw-bold"
                 style={{
-                  fontSize: "90px"
+                  width: "120px",
+                  height: "120px",
+                  borderRadius: "50%",
+                  background:
+                    "linear-gradient(135deg,#22c55e,#16a34a)",
+                  fontSize: "48px"
                 }}
               >
-                👤
+
+                {
+                  user.customerName
+                    ?.charAt(0)
+                    ?.toUpperCase() || "U"
+                }
+
               </div>
 
-              <h2 className="fw-bold">
-                {user.customerName || "Customer"}
+              <h2 className="fw-bold mt-3">
+
+                {
+                  user.customerName ||
+                  "Customer"
+                }
+
               </h2>
 
               <p className="text-muted">
-                Welcome to AFNA'S GARDEN
+
+                Welcome Back To
+                AFNA'S GARDEN
+
               </p>
+
+              <span className="badge bg-warning text-dark fs-6">
+
+                {membership}
+
+              </span>
 
             </div>
 
-            <hr />
+            <hr className="my-4" />
 
-            <div className="row mt-4">
+            <div className="row">
 
               <div className="col-md-6">
 
@@ -117,20 +171,20 @@ function Profile() {
                 </h5>
 
                 <h5>
-                  ⭐ Member :
-                  Regular Customer
+                  ⭐ Status :
+                  Active Customer
                 </h5>
 
               </div>
 
             </div>
 
-            <div className="row text-center mt-5">
+            <div className="row mt-5">
 
-              <div className="col-md-4 mb-3">
+              <div className="col-lg-3 col-md-6 mb-4">
 
                 <div
-                  className="card border-0 shadow p-4"
+                  className="card border-0 shadow text-center p-4"
                   style={{
                     borderRadius: "20px"
                   }}
@@ -141,38 +195,42 @@ function Profile() {
                   </h5>
 
                   <h1 className="text-primary">
+
                     {orders.length}
+
                   </h1>
 
                 </div>
 
               </div>
 
-              <div className="col-md-4 mb-3">
+              <div className="col-lg-3 col-md-6 mb-4">
 
                 <div
-                  className="card border-0 shadow p-4"
+                  className="card border-0 shadow text-center p-4"
                   style={{
                     borderRadius: "20px"
                   }}
                 >
 
                   <h5>
-                    💰 Total Spent
+                    💰 Spent
                   </h5>
 
                   <h1 className="text-success">
+
                     ₹{totalSpent}
+
                   </h1>
 
                 </div>
 
               </div>
 
-              <div className="col-md-4 mb-3">
+              <div className="col-lg-3 col-md-6 mb-4">
 
                 <div
-                  className="card border-0 shadow p-4"
+                  className="card border-0 shadow text-center p-4"
                   style={{
                     borderRadius: "20px"
                   }}
@@ -183,7 +241,32 @@ function Profile() {
                   </h5>
 
                   <h1 className="text-warning">
+
                     {deliveredOrders}
+
+                  </h1>
+
+                </div>
+
+              </div>
+
+              <div className="col-lg-3 col-md-6 mb-4">
+
+                <div
+                  className="card border-0 shadow text-center p-4"
+                  style={{
+                    borderRadius: "20px"
+                  }}
+                >
+
+                  <h5>
+                    📈 Success
+                  </h5>
+
+                  <h1 className="text-info">
+
+                    {successRate}%
+
                   </h1>
 
                 </div>
@@ -192,13 +275,60 @@ function Profile() {
 
             </div>
 
-            <div className="text-center mt-4">
+            {orders.length > 0 && (
 
-              <button className="btn btn-primary btn-lg">
-                Edit Profile
-              </button>
+              <div
+                className="card border-0 shadow mt-4"
+              >
 
-            </div>
+                <div className="card-body">
+
+                  <h4 className="fw-bold">
+
+                    🕒 Latest Order
+
+                  </h4>
+
+                  <hr />
+
+                  <h5>
+
+                    🍽 {
+                      orders[
+                        orders.length - 1
+                      ].foodName
+                    }
+
+                  </h5>
+
+                  <p>
+
+                    Status :
+                    {" "}
+                    {
+                      orders[
+                        orders.length - 1
+                      ].status
+                    }
+
+                  </p>
+
+                  <h5 className="text-success">
+
+                    ₹
+                    {
+                      orders[
+                        orders.length - 1
+                      ].total
+                    }
+
+                  </h5>
+
+                </div>
+
+              </div>
+
+            )}
 
           </div>
 
@@ -209,6 +339,7 @@ function Profile() {
     </div>
 
   );
+
 }
 
 export default Profile;

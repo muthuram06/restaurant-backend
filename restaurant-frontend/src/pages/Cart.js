@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-
 import NavbarComponent from "../components/NavbarComponent";
 
 function Cart() {
@@ -15,11 +14,7 @@ function Cart() {
 
   }, []);
 
-  const increaseQuantity = (index) => {
-
-    const updatedCart = [...cart];
-
-    updatedCart[index].quantity += 1;
+  const updateCart = (updatedCart) => {
 
     setCart(updatedCart);
 
@@ -27,6 +22,21 @@ function Cart() {
       "cart",
       JSON.stringify(updatedCart)
     );
+
+    window.dispatchEvent(
+      new Event("cartUpdated")
+    );
+
+  };
+
+  const increaseQuantity = (index) => {
+
+    const updatedCart = [...cart];
+
+    updatedCart[index].quantity += 1;
+
+    updateCart(updatedCart);
+
   };
 
   const decreaseQuantity = (index) => {
@@ -43,12 +53,8 @@ function Cart() {
 
     }
 
-    setCart(updatedCart);
+    updateCart(updatedCart);
 
-    localStorage.setItem(
-      "cart",
-      JSON.stringify(updatedCart)
-    );
   };
 
   const removeFood = (index) => {
@@ -57,29 +63,36 @@ function Cart() {
 
     updatedCart.splice(index, 1);
 
-    setCart(updatedCart);
+    updateCart(updatedCart);
 
-    localStorage.setItem(
-      "cart",
-      JSON.stringify(updatedCart)
-    );
   };
 
-  const subtotal = cart.reduce(
-
-    (total, item) =>
-
-      total + item.price * item.quantity,
-
-    0
-  );
-
-  const deliveryFee = 40;
+  const subtotal =
+    cart.reduce(
+      (sum, item) =>
+        sum + item.price * item.quantity,
+      0
+    );
 
   const gst = subtotal * 0.05;
 
+  const deliveryFee =
+    subtotal >= 199 ? 0 : 40;
+
   const grandTotal =
-    subtotal + deliveryFee + gst;
+    subtotal + gst + deliveryFee;
+
+  const clearCart = () => {
+
+    localStorage.removeItem("cart");
+
+    setCart([]);
+
+    window.dispatchEvent(
+      new Event("cartUpdated")
+    );
+
+  };
 
   const proceedToCheckout = () => {
 
@@ -88,38 +101,58 @@ function Cart() {
       grandTotal
     );
 
-    window.location.href = "/checkout";
+    window.location.href =
+      "/checkout";
   };
 
   return (
 
-    <div>
+    <div
+      style={{
+        background:
+          "#f8fafc",
+        minHeight:
+          "100vh"
+      }}
+    >
 
       <NavbarComponent />
 
-      <div className="container mt-5">
+      <div className="container py-5">
 
-        <h1 className="mb-4">
-          My Cart
+        <h1 className="fw-bold mb-4">
+          🛒 My Cart ({cart.length} Items)
         </h1>
 
         {cart.length === 0 ? (
 
-          <h3 className="text-danger">
-            Cart Is Empty
-          </h3>
+          <div className="text-center">
+
+            <h2>
+              Cart Is Empty
+            </h2>
+
+            <p>
+              Add some delicious food
+            </p>
+
+          </div>
 
         ) : (
 
           <div className="row">
 
-            <div className="col-md-8">
+            <div className="col-lg-8">
 
               {cart.map((food, index) => (
 
                 <div
-                  className="card mb-4 shadow"
                   key={index}
+                  className="card border-0 shadow mb-4"
+                  style={{
+                    borderRadius:
+                      "20px"
+                  }}
                 >
 
                   <div className="row g-0">
@@ -129,10 +162,10 @@ function Cart() {
                       <img
                         src={food.imageUrl}
                         alt={food.name}
-                        className="img-fluid rounded-start"
+                        className="img-fluid h-100 w-100"
                         style={{
-                          height: "100%",
-                          objectFit: "cover",
+                          objectFit:
+                            "cover"
                         }}
                       />
 
@@ -142,12 +175,16 @@ function Cart() {
 
                       <div className="card-body">
 
-                        <h3>{food.name}</h3>
+                        <h3>
+                          {food.name}
+                        </h3>
 
-                        <p>{food.description}</p>
+                        <p>
+                          {food.description}
+                        </p>
 
                         <h4 className="text-success">
-                          ₹ {food.price}
+                          ₹{food.price}
                         </h4>
 
                         <div className="d-flex align-items-center mt-3">
@@ -161,9 +198,9 @@ function Cart() {
                             -
                           </button>
 
-                          <h5 className="mx-3 mt-2">
+                          <span className="mx-4 fw-bold">
                             {food.quantity}
-                          </h5>
+                          </span>
 
                           <button
                             className="btn btn-success"
@@ -177,17 +214,14 @@ function Cart() {
                         </div>
 
                         <h5 className="mt-3">
-
                           Total :
-                          ₹ {
-                            food.price *
-                            food.quantity
-                          }
-
+                          ₹
+                          {food.price *
+                            food.quantity}
                         </h5>
 
                         <button
-                          className="btn btn-dark mt-3"
+                          className="btn btn-outline-danger mt-3"
                           onClick={() =>
                             removeFood(index)
                           }
@@ -207,43 +241,67 @@ function Cart() {
 
             </div>
 
-            <div className="col-md-4">
+            <div className="col-lg-4">
 
-              <div className="card shadow p-4">
+              <div
+                className="card border-0 shadow-lg p-4"
+                style={{
+                  borderRadius:
+                    "20px"
+                }}
+              >
 
-                <h2>Bill Details</h2>
+                <h3>
+                  Order Summary
+                </h3>
 
                 <hr />
 
-                <h5>
+                <h6>
                   Subtotal :
-                  ₹ {subtotal.toFixed(2)}
-                </h5>
+                  ₹{subtotal.toFixed(2)}
+                </h6>
 
-                <h5>
-                  GST (5%) :
-                  ₹ {gst.toFixed(2)}
-                </h5>
+                <h6>
+                  GST :
+                  ₹{gst.toFixed(2)}
+                </h6>
 
-                <h5>
-                  Delivery Fee :
-                  ₹ {deliveryFee}
-                </h5>
+                <h6>
+                  Delivery :
+                  ₹{deliveryFee}
+                </h6>
 
                 <hr />
 
                 <h3 className="text-success">
-
-                  Grand Total :
-                  ₹ {grandTotal.toFixed(2)}
-
+                  ₹{grandTotal.toFixed(2)}
                 </h3>
 
+                {subtotal < 199 && (
+
+                  <div className="alert alert-warning mt-3">
+
+                    Add ₹
+                    {(199 - subtotal).toFixed(0)}
+                    more for FREE Delivery!
+
+                  </div>
+
+                )}
+
                 <button
-                  className="btn btn-primary w-100 mt-4"
+                  className="btn btn-success w-100 mt-3"
                   onClick={proceedToCheckout}
                 >
                   Proceed To Checkout
+                </button>
+
+                <button
+                  className="btn btn-outline-danger w-100 mt-2"
+                  onClick={clearCart}
+                >
+                  Clear Cart
                 </button>
 
               </div>
@@ -257,7 +315,9 @@ function Cart() {
       </div>
 
     </div>
+
   );
+
 }
 
 export default Cart;

@@ -273,32 +273,51 @@ const todayRevenue =
 
         </div>
 
-        <div className="col-md-3 mb-3">
-          <div className="card shadow border-0 text-center p-4">
-            <h5>Pending Orders</h5>
-            <h2 className="text-warning">
-              {pendingOrders}
-            </h2>
-          </div>
-        </div>
+        <div className="row mb-4">
 
-        <div className="col-md-3 mb-3">
-          <div className="card shadow border-0 text-center p-4">
-            <h5>Customers</h5>
-            <h2 className="text-info">
-              {uniqueCustomers}
-            </h2>
-          </div>
-        </div>
+  <div className="col-md-4 mb-3">
 
-        <div className="col-md-3 mb-3">
-          <div className="card shadow border-0 text-center p-4">
-            <h5>Today's Revenue</h5>
-            <h2 className="text-success">
-              ₹{todayRevenue}
-            </h2>
-          </div>
-        </div>
+    <div className="card shadow border-0 text-center p-4">
+
+      <h5>Pending Orders</h5>
+
+      <h2 className="text-warning">
+        {pendingOrders}
+      </h2>
+
+    </div>
+
+  </div>
+
+  <div className="col-md-4 mb-3">
+
+    <div className="card shadow border-0 text-center p-4">
+
+      <h5>Customers</h5>
+
+      <h2 className="text-info">
+        {uniqueCustomers}
+      </h2>
+
+    </div>
+
+  </div>
+
+  <div className="col-md-4 mb-3">
+
+    <div className="card shadow border-0 text-center p-4">
+
+      <h5>Today's Revenue</h5>
+
+      <h2 className="text-success">
+        ₹{todayRevenue}
+      </h2>
+
+    </div>
+
+  </div>
+
+  </div>
 
         <div className="row mb-4">
 

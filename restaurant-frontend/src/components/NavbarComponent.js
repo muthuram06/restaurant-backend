@@ -1,12 +1,5 @@
-import React, {
-  useEffect,
-  useState
-} from "react";
-
-import {
-  Link,
-  useNavigate
-} from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 
 function NavbarComponent() {
 
@@ -20,6 +13,16 @@ function NavbarComponent() {
       "isUserLoggedIn"
     ) === "true";
 
+  const userEmail =
+    localStorage.getItem(
+      "userEmail"
+    );
+
+  const userName =
+  localStorage.getItem(
+    "userName"
+  );
+
   useEffect(() => {
 
     const updateCartCount = () => {
@@ -32,11 +35,13 @@ function NavbarComponent() {
       const totalItems =
         cart.reduce(
           (sum, item) =>
-            sum + (item.quantity || 1),
+            sum +
+            (item.quantity || 1),
           0
         );
 
       setCartCount(totalItems);
+
     };
 
     updateCartCount();
@@ -68,15 +73,20 @@ function NavbarComponent() {
     );
 
     navigate("/login");
+
   };
 
   return (
 
     <nav
-      className="navbar navbar-expand-lg navbar-dark shadow"
+      className="navbar navbar-expand-lg sticky-top"
       style={{
         background:
-          "linear-gradient(90deg,#111827,#1f2937)"
+          "rgba(15,23,42,0.95)",
+        backdropFilter:
+          "blur(15px)",
+        boxShadow:
+          "0 4px 20px rgba(0,0,0,0.2)"
       }}
     >
 
@@ -84,84 +94,163 @@ function NavbarComponent() {
 
         <Link
           to="/"
-          className="navbar-brand fw-bold fs-3"
+          className="navbar-brand fw-bold"
           style={{
+            color: "#fff",
+            fontSize: "1.8rem",
             textDecoration: "none"
           }}
         >
           🌱 AFNA'S GARDEN
         </Link>
 
-        <div className="d-flex flex-wrap gap-2">
+        <button
+          className="navbar-toggler bg-light"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarContent"
+        >
+          <span className="navbar-toggler-icon"></span>
+        </button>
 
-          <Link
-            to="/"
-            className="btn btn-warning"
-          >
-            Home
-          </Link>
+        <div
+          className="collapse navbar-collapse"
+          id="navbarContent"
+        >
 
-          <Link
-            to="/cart"
-            className="btn btn-success"
-          >
-            Cart ({cartCount})
-          </Link>
+          <ul className="navbar-nav ms-auto align-items-lg-center">
 
-          <Link
-            to="/orders"
-            className="btn btn-info"
-          >
-            Orders
-          </Link>
-
-          <Link
-            to="/favorites"
-            className="btn btn-danger"
-          >
-            Favorites
-          </Link>
-
-          <Link
-            to="/table-booking"
-            className="btn btn-primary"
-          >
-            Book Table
-          </Link>
-
-          {isLoggedIn ? (
-            <>
+            <li className="nav-item mx-1">
               <Link
-                to="/profile"
-                className="btn btn-light"
+                to="/"
+                className="nav-link text-white"
               >
-                Profile
+                🏠 Home
               </Link>
+            </li>
 
-              <button
-                className="btn btn-outline-light"
-                onClick={logout}
-              >
-                Logout
-              </button>
-            </>
-          ) : (
-            <>
+            <li className="nav-item mx-1">
               <Link
-                to="/login"
-                className="btn btn-light"
+                to="/favorites"
+                className="nav-link text-white"
               >
-                Login
+                ❤️ Favorites
               </Link>
+            </li>
+
+            <li className="nav-item mx-1">
+              <Link
+                to="/orders"
+                className="nav-link text-white"
+              >
+                📦 Orders
+              </Link>
+            </li>
+
+            <li className="nav-item mx-1">
+              <Link
+                to="/table-booking"
+                className="nav-link text-white"
+              >
+                🍽 Book Table
+              </Link>
+            </li>
+
+            <li className="nav-item mx-2">
 
               <Link
-                to="/register"
-                className="btn btn-outline-light"
+                to="/cart"
+                className="btn btn-success position-relative"
               >
-                Register
+                🛒 Cart
+
+                {cartCount > 0 && (
+
+                  <span
+                    className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
+                  >
+                    {cartCount}
+                  </span>
+
+                )}
+
               </Link>
-            </>
-          )}
+
+            </li>
+
+            {isLoggedIn ? (
+
+              <>
+
+                <li className="nav-item mx-2">
+
+                  <span
+                    className="text-white small"
+                  >
+                    👋 Welcome
+                    <br />
+                    {
+                      userName || userEmail?.split("@")[0]
+                    }
+                  </span>
+
+                </li>
+
+                <li className="nav-item mx-1">
+
+                  <Link
+                    to="/profile"
+                    className="btn btn-light"
+                  >
+                    👤 Profile
+                  </Link>
+
+                </li>
+
+                <li className="nav-item mx-1">
+
+                  <button
+                    className="btn btn-danger"
+                    onClick={logout}
+                  >
+                    🚪 Logout
+                  </button>
+
+                </li>
+
+              </>
+
+            ) : (
+
+              <>
+
+                <li className="nav-item mx-1">
+
+                  <Link
+                    to="/login"
+                    className="btn btn-light"
+                  >
+                    Login
+                  </Link>
+
+                </li>
+
+                <li className="nav-item mx-1">
+
+                  <Link
+                    to="/register"
+                    className="btn btn-warning"
+                  >
+                    Register
+                  </Link>
+
+                </li>
+
+              </>
+
+            )}
+
+          </ul>
 
         </div>
 
@@ -170,6 +259,7 @@ function NavbarComponent() {
     </nav>
 
   );
+
 }
 
 export default NavbarComponent;

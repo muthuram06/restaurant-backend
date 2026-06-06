@@ -10,6 +10,9 @@ function Home() {
   const [search, setSearch] = useState("");
   const [cart, setCart] = useState([]);
 
+  const [selectedCategory, setSelectedCategory] =
+  useState("All");
+
   useEffect(() => {
 
     fetchFoods();
@@ -112,6 +115,34 @@ function Home() {
     updateCartStorage(updatedCart);
 
   };
+  const addToFavorites = (food) => {
+
+    const favorites =
+      JSON.parse(
+        localStorage.getItem("favorites")
+      ) || [];
+
+    const exists =
+      favorites.find(
+        (item) => item.name === food.name
+      );
+
+    if (!exists) {
+
+      favorites.push(food);
+
+      localStorage.setItem(
+        "favorites",
+        JSON.stringify(favorites)
+      );
+
+      alert(
+        `${food.name} added to favorites ❤️`
+      );
+
+    }
+
+  };
 
   const getQuantity = (foodName) => {
 
@@ -123,12 +154,40 @@ function Home() {
     return item ? item.quantity : 0;
 
   };
+  const categories = [
 
-  const filteredFoods = foods.filter((food) =>
-    food.name
-      ?.toLowerCase()
-      .includes(search.toLowerCase())
-  );
+    "All",
+
+    ...new Set(
+      foods.map(
+        (food) => food.category
+      )
+    )
+
+  ];
+
+  const filteredFoods =
+    foods.filter((food) => {
+
+      const matchesSearch =
+        food.name
+          ?.toLowerCase()
+          .includes(
+            search.toLowerCase()
+          );
+
+      const matchesCategory =
+        selectedCategory === "All"
+          ? true
+          : food.category ===
+            selectedCategory;
+
+      return (
+        matchesSearch &&
+        matchesCategory
+      );
+
+    });
 
   return (
 
@@ -152,7 +211,7 @@ function Home() {
             fontSize: "60px"
           }}
         >
-          🍽 AFNA'S GARDEN
+          🌱 AFNA'S GARDEN RESTAURANT
         </h1>
 
         <h4>
@@ -174,6 +233,14 @@ function Home() {
           Paneer Butter Masala •
           Veg Biryani •
           Masala Dosa
+
+        </div>
+
+        <div className="alert alert-success text-center shadow-sm">
+
+          🎉 Free Delivery Above ₹199 |
+          100% Pure Vegetarian |
+          Fresh Daily Specials
 
         </div>
 
@@ -225,13 +292,37 @@ function Home() {
 
         <input
           type="text"
-          className="form-control mb-5"
+          className="form-control mb-4"
           placeholder="🔍 Search Foods..."
           value={search}
           onChange={(e) =>
             setSearch(e.target.value)
           }
         />
+
+        <div className="text-center mb-4">
+
+          {categories.map(
+            (category, index) => (
+
+              <button
+                key={index}
+                className={`btn m-1 ${
+                  selectedCategory === category
+                    ? "btn-success"
+                    : "btn-outline-success"
+                }`}
+                onClick={() =>
+                  setSelectedCategory(category)
+                }
+              >
+                {category}
+              </button>
+
+            )
+          )}
+
+        </div>
 
         <div className="row">
 
@@ -241,11 +332,12 @@ function Home() {
 
               <div
                 className="col-md-4 mb-4"
-                key={index}
+                key={index}  
               >
+            
 
                 <div
-                  className="card h-100 shadow-lg border-0"
+                  className="card h-100 food-card"
                   style={{
                     borderRadius: "20px"
                   }}
@@ -260,135 +352,170 @@ function Home() {
                       objectFit: "cover"
                     }}
                   />
+                  
 
-                  <div className="card-body text-center">
+                  <div className="card-body p-4">
 
-                    <div className="mb-2">
+  <div className="d-flex justify-content-between mb-3">
+    <span
+      className="badge"
+      style={{
+        background: "#ef4444",
+        fontSize: "12px"
+      }}
+    >
+      🔥 Bestseller
+    </span>
 
-                      <span className="badge bg-danger me-2">
-                        🔥 Popular
-                      </span>
+    <span
+      className="badge"
+      style={{
+        background: "#facc15",
+        color: "#000"
+      }}
+    >
+      ⭐ {food.rating || (4.2 + Math.random() * 0.8).toFixed(1)}
+    </span>
+  </div>
 
-                      <span className="badge bg-warning text-dark">
-                        ⭐ 4.8
-                      </span>
+  <h4
+    className="fw-bold mb-2"
+    style={{
+      minHeight: "60px"
+    }}
+  >
+    {food.name}
+  </h4>
 
-                    </div>
+  <div className="mb-3">
+    <span className="badge bg-success">
+      🌱 {food.category}
+    </span>
+  </div>
 
-                    <h3 className="fw-bold">
-                      {food.name}
-                    </h3>
+  <p
+    className="text-muted"
+    style={{
+      minHeight: "60px"
+    }}
+  >
+    {
+      food.description ||
+      "Freshly prepared vegetarian food with authentic taste."
+    }
+  </p>
 
-                    <p className="text-secondary">
-                      {food.category}
-                    </p>
+  <div className="d-flex justify-content-between align-items-center mb-3">
 
-                    <div className="mb-3">
+    <div>
+      <h3 className="fw-bold text-success mb-0">
+        ₹{food.price}
+      </h3>
 
-                      <span className="badge bg-info me-2">
-                        ⭐ 4.8 Rating
-                      </span>
+      <small
+        style={{
+          textDecoration: "line-through",
+          color: "#999"
+        }}
+      >
+        ₹{Math.floor(food.price * 1.25)}
+      </small>
+    </div>
 
-                      <span className="badge bg-success">
-                        📝 120 Reviews
-                      </span>
+    <span className="badge bg-danger">
+      {Math.floor(Math.random() * 25) + 10}% OFF
+    </span>
 
-                    </div>
+  </div>
 
-                    <p
-                      className="text-muted"
-                      style={{
-                        minHeight: "60px"
-                      }}
-                    >
-                      {
-                        food.description ||
-                        "Fresh vegetarian food prepared with premium ingredients."
-                      }
-                    </p>
+  <div className="d-flex justify-content-between align-items-center mb-3">
 
-                    <h2 className="text-success fw-bold">
-                      ₹{food.price}
-                    </h2>
+    <small className="text-secondary">
+      ⏱ {15 + Math.floor(Math.random() * 20)} mins
+    </small>
 
-                    <span className="badge bg-success">
-                      🌱 Veg
-                    </span>
+    <small className="text-secondary">
+      🚚 Free Delivery
+    </small>
 
-                    <div className="mt-4">
+  </div>
 
-                      {getQuantity(food.name) === 0 ? (
+  {getQuantity(food.name) === 0 ? (
 
-                        <button
-                          className="btn btn-primary w-100"
-                          onClick={() =>
-                            addToCart(food)
-                          }
-                        >
-                          🛒 Add To Cart
-                        </button>
+    <>
 
-                      ) : (
+      <button
+        className="btn btn-outline-danger w-100 mb-3"
+        onClick={() =>
+          addToFavorites(food)
+        }
+      >
+        ❤️ Add To Favorites
+      </button>
 
-                        <div className="d-flex justify-content-center align-items-center">
-
-                          <button
-                            className="btn btn-danger"
-                            onClick={() =>
-                              decreaseQuantity(food)
-                            }
-                          >
-                            -
-                          </button>
-
-                          <span className="mx-4 fw-bold fs-3">
-                            {getQuantity(food.name)}
-                          </span>
-
-                          <button
-                            className="btn btn-success"
-                            onClick={() =>
-                              addToCart(food)
-                            }
-                          >
-                            +
-                          </button>
-
-                        </div>
-
-                      )}
-
-                    </div>
-
-                  </div>
-
-                </div>
-
-              </div>
-
-            ))
-
-          ) : (
-
-            <div className="text-center">
-
-              <h3>
-                No Foods Found
-              </h3>
-
-            </div>
-
-          )}
-
-        </div>
-
-      </div>
-
-      <FooterComponent />
+      <button
+        className="btn btn-success w-100 fw-bold"
+        onClick={() => addToCart(food)}
+        style={{
+          borderRadius: "15px"
+        }}
+      >
+        🛒 Add To Cart
+      </button>
 
     </>
 
-  );
+  ) : (
+
+    <div className="d-flex justify-content-center align-items-center">
+
+      <button
+        className="btn btn-danger"
+        onClick={() => decreaseQuantity(food)}
+      >
+        -
+      </button>
+
+      <span className="mx-4 fw-bold fs-4">
+        {getQuantity(food.name)}
+      </span>
+
+      <button
+        className="btn btn-success"
+        onClick={() => addToCart(food)}
+      >
+        +
+      </button>
+
+    </div>
+
+  )}
+
+</div>
+
+</div>
+
+</div>
+
+))
+
+) : (
+
+<div className="text-center py-5">
+  <h3>No Foods Found 🍽️</h3>
+</div>
+
+)}
+
+</div>
+
+</div>
+
+<FooterComponent />
+
+</>
+
+);
 
 }
 

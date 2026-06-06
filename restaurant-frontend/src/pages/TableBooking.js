@@ -11,7 +11,7 @@ function TableBooking() {
     useState("");
 
   const [persons, setPersons] =
-    useState(1);
+    useState(2);
 
   const [date, setDate] =
     useState("");
@@ -22,8 +22,7 @@ function TableBooking() {
   const bookTable = () => {
 
     if (
-      !name ||
-      !persons ||
+      !name.trim() ||
       !date ||
       !time
     ) {
@@ -33,124 +32,295 @@ function TableBooking() {
       );
 
       return;
+
     }
 
     const bookingData = {
 
       customerName: name,
-      persons: persons,
+      persons,
       bookingDate: date,
       bookingTime: time
 
     };
 
-    const existingBookings =
+    const bookings =
       JSON.parse(
         localStorage.getItem(
           "tableBookings"
         )
       ) || [];
 
-    existingBookings.push(
+    bookings.push(
       bookingData
     );
 
     localStorage.setItem(
       "tableBookings",
       JSON.stringify(
-        existingBookings
+        bookings
       )
     );
 
     alert(
+      `✅ Table Booked Successfully
 
-      `Table Successfully Booked
-
-Customer: ${name}
-
-Persons: ${persons}
-
-Date: ${date}
-
-Time: ${time}`
-
+Customer : ${name}
+Guests : ${persons}
+Date : ${date}
+Time : ${time}`
     );
 
     setName("");
-    setPersons(1);
+    setPersons(2);
     setDate("");
     setTime("");
+
   };
 
   return (
 
-    <div>
+    <div
+      style={{
+        minHeight: "100vh",
+        background:
+          "linear-gradient(135deg,#ecfccb,#d9f99d)"
+      }}
+    >
 
       <NavbarComponent />
 
-      <div className="container mt-5">
+      <div className="container py-5">
 
-        <div className="card shadow p-4">
+        <div className="row">
 
-          <h1 className="mb-4 text-center">
+          <div className="col-lg-8">
 
-            Veg Restaurant Table Booking
+            <div
+              className="card border-0 shadow-lg p-4"
+              style={{
+                borderRadius:
+                  "25px"
+              }}
+            >
 
-          </h1>
+              <h1
+                className="text-center fw-bold mb-4"
+              >
+                🍽 Reserve Your Table
+              </h1>
 
-          <input
-            type="text"
-            className="form-control mb-3"
-            placeholder="Customer Name"
-            value={name}
-            onChange={(e) =>
-              setName(e.target.value)
-            }
-          />
+              <input
+                type="text"
+                className="form-control mb-3"
+                placeholder="Customer Name"
+                value={name}
+                onChange={(e) =>
+                  setName(
+                    e.target.value
+                  )
+                }
+              />
 
-          <input
-            type="number"
-            className="form-control mb-3"
-            placeholder="No Of Persons"
-            value={persons}
-            onChange={(e) =>
-              setPersons(e.target.value)
-            }
-          />
+              <label className="fw-bold mb-2">
+                Number Of Guests
+              </label>
 
-          <input
-            type="date"
-            className="form-control mb-3"
-            value={date}
-            onChange={(e) =>
-              setDate(e.target.value)
-            }
-          />
+              <div className="d-flex align-items-center mb-4">
 
-          <input
-            type="time"
-            className="form-control mb-4"
-            value={time}
-            onChange={(e) =>
-              setTime(e.target.value)
-            }
-          />
+                <button
+                  className="btn btn-danger"
+                  onClick={() =>
+                    persons > 1 &&
+                    setPersons(
+                      persons - 1
+                    )
+                  }
+                >
+                  -
+                </button>
 
-          <button
-            className="btn btn-success w-100"
-            onClick={bookTable}
-          >
+                <h4 className="mx-4">
 
-            Book Table
+                  {persons}
 
-          </button>
+                </h4>
+
+                <button
+                  className="btn btn-success"
+                  onClick={() =>
+                    setPersons(
+                      persons + 1
+                    )
+                  }
+                >
+                  +
+                </button>
+
+              </div>
+
+              <input
+                type="date"
+                className="form-control mb-3"
+                value={date}
+                onChange={(e) =>
+                  setDate(
+                    e.target.value
+                  )
+                }
+              />
+
+              <select
+                className="form-control mb-4"
+                value={time}
+                onChange={(e) =>
+                  setTime(
+                    e.target.value
+                  )
+                }
+              >
+
+                <option value="">
+                  Select Time Slot
+                </option>
+
+                <option>
+                  12:00 PM
+                </option>
+
+                <option>
+                  01:00 PM
+                </option>
+
+                <option>
+                  02:00 PM
+                </option>
+
+                <option>
+                  06:00 PM
+                </option>
+
+                <option>
+                  07:00 PM
+                </option>
+
+                <option>
+                  08:00 PM
+                </option>
+
+                <option>
+                  09:00 PM
+                </option>
+
+              </select>
+
+              <button
+                className="btn btn-success btn-lg w-100"
+                onClick={bookTable}
+              >
+                Book Table
+              </button>
+
+            </div>
+
+          </div>
+
+          <div className="col-lg-4 mt-4 mt-lg-0">
+
+            <div
+              className="card border-0 shadow-lg"
+              style={{
+                borderRadius:
+                  "25px"
+              }}
+            >
+
+              <div className="card-body">
+
+                <h3 className="fw-bold mb-3">
+
+                  📋 Booking Summary
+
+                </h3>
+
+                <hr />
+
+                <p>
+                  👤 Customer :
+                  {" "}
+                  {name || "N/A"}
+                </p>
+
+                <p>
+                  👥 Guests :
+                  {" "}
+                  {persons}
+                </p>
+
+                <p>
+                  📅 Date :
+                  {" "}
+                  {date || "N/A"}
+                </p>
+
+                <p>
+                  ⏰ Time :
+                  {" "}
+                  {time || "N/A"}
+                </p>
+
+              </div>
+
+            </div>
+
+            <div
+              className="card border-0 shadow mt-4"
+              style={{
+                borderRadius:
+                  "25px"
+              }}
+            >
+
+              <div className="card-body">
+
+                <h4>
+                  ℹ Restaurant Rules
+                </h4>
+
+                <ul>
+
+                  <li>
+                    Arrive 10 minutes early
+                  </li>
+
+                  <li>
+                    Booking held for 15 minutes
+                  </li>
+
+                  <li>
+                    Outside food not allowed
+                  </li>
+
+                  <li>
+                    Family friendly environment
+                  </li>
+
+                </ul>
+
+              </div>
+
+            </div>
+
+          </div>
 
         </div>
 
       </div>
 
     </div>
+
   );
+
 }
 
 export default TableBooking;

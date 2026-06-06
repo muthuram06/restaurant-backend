@@ -279,181 +279,163 @@ function Orders() {
 
         ) : (
 
-          orders.map((order) => (
+           orders.map((order) => (
 
-            <div
-              key={order.id}
-              className="card shadow-lg border-0 mb-4"
-              style={{
-                borderRadius: "25px",
-                overflow: "hidden"
-              }}
-            >
+  <div
+    key={order.id}
+    className="card shadow-lg border-0 mb-4"
+    style={{
+      borderRadius: "25px",
+      overflow: "hidden"
+    }}
+  >
 
-              <div className="card-body p-4">
+    <div className="card-body">
 
-                <div className="d-flex justify-content-between align-items-center">
+      <div className="row">
 
-                  <img
-                    src={
-                      order.foodImage ||
-                      "https://via.placeholder.com/600x250?text=AFNA'S+GARDEN"
-                    }
-                    alt={order.foodName}
-                    className="img-fluid rounded mb-3"
-                    style={{
-                      width: "100%",
-                      height: "220px",
-                      objectFit: "cover"
-                    }}
-                  />
+        <div className="col-lg-4">
 
-                  <h3 className="fw-bold">
-                    🍽 {order.foodName}
-                  </h3>
+          <img
+            src={
+              order.foodImage ||
+              "https://via.placeholder.com/600x400"
+            }
+            alt={order.foodName}
+            className="img-fluid rounded"
+            style={{
+              width: "100%",
+              height: "220px",
+              objectFit: "cover"
+            }}
+          />
 
-                  <p className="text-muted mb-0">
-                    Order ID: #{order.id}
-                  </p>
+        </div>
 
-                  <span
-                    className={`badge bg-${getStatusColor(
-                      order.status
-                    )}`}
-                    style={{
-                      fontSize: "14px",
-                      padding: "10px"
-                    }}
-                  >
-                    {order.status}
-                  </span>
+        <div className="col-lg-8">
 
-                </div>
+          <div className="d-flex justify-content-between">
 
-                <div className="progress mt-3 mb-2">
+            <div>
 
-                  <div
-                    className={`progress-bar bg-${getStatusColor(
-                      order.status
-                    )}`}
-                    style={{
-                      width: `${getProgress(order.status)}%`
-                    }}
-                  ></div>
+              <h3 className="fw-bold">
+                🍽 {order.foodName}
+              </h3>
 
-                  <div
-                    className={`progress-bar bg-${getStatusColor(
-                      order.status
-                    )}`}
-                    style={{
-                      width:
-                        `${getProgress(
-                          order.status
-                        )}%`
-                    }}
-                  ></div>
-
-                </div>
-
-                <div className="row">
-
-                  <div className="col-md-6">
-
-                    <h5>
-                      👤 {order.customerName}
-                    </h5>
-
-                    <h6>
-                      📧 {order.email}
-                    </h6>
-
-                    <h6>
-                      📱 {order.phone || "N/A"}
-                    </h6>
-
-                    <h6>
-                      📍 {order.address || "N/A"}
-                    </h6>
-
-                  </div>
-
-                  <div className="col-md-6">
-
-                    <h6>
-                      💳 Payment :
-                      {" "}
-                      {order.paymentMethod || "COD"}
-                    </h6>
-
-                    <h6>
-                      🔢 Quantity :
-                      {" "}
-                      {order.quantity}
-                    </h6>
-
-                    <h6>
-                      💰 Price :
-                      ₹{order.price}
-                    </h6>
-
-                  </div>
-
-                </div>
-
-                <div
-                  className="mt-4 p-3"
-                  style={{
-                    background:
-                      "#ecfdf5",
-                    borderRadius:
-                      "15px"
-                  }}
-                >
-
-                  <div className="d-flex justify-content-between align-items-center">
-
-                    <h4 className="fw-bold text-success">
-                      Total Amount
-                    </h4>
-
-                    <h2 className="fw-bold text-success">
-                      ₹{order.total}
-                    </h2>
-
-                  </div>
-
-                  <button
-                    className="btn btn-success mt-3"
-                    onClick={() =>
-                      downloadInvoice(
-                        order
-                      )
-                    }
-                  >
-                    📄 Download Invoice
-                  </button>
-
-                  <button
-                    className="btn btn-outline-primary mt-3 ms-2"
-                  >
-                    🔁 Reorder
-                  </button>
-
-                </div>
-
-              </div>
+              <p className="text-muted">
+                Order ID #{order.id}
+              </p>
 
             </div>
 
-          ))
+            <span
+              className={`badge bg-${getStatusColor(order.status)}`}
+              style={{
+                height: "40px",
+                padding: "10px"
+              }}
+            >
+              {order.status}
+            </span>
 
-        )}
+          </div>
+
+          <div className="progress mb-4">
+
+            <div
+              className={`progress-bar bg-${getStatusColor(order.status)}`}
+              style={{
+                width: `${getProgress(order.status)}%`
+              }}
+            >
+              {getProgress(order.status)}%
+            </div>
+
+          </div>
+
+          <div className="row">
+
+            <div className="col-md-6">
+
+              <h6>👤 {order.customerName}</h6>
+
+              <h6>📧 {order.email}</h6>
+
+              <h6>📱 {order.phone || "N/A"}</h6>
+
+            </div>
+
+            <div className="col-md-6">
+
+              <h6>
+                💳 {order.paymentMethod || "Online"}
+              </h6>
+
+              <h6>
+                🍽 Qty : {order.quantity}
+              </h6>
+
+              <h6>
+                💰 ₹{order.price}
+              </h6>
+
+            </div>
+
+          </div>
+
+          <div
+            className="mt-4 p-3"
+            style={{
+              background: "#f0fdf4",
+              borderRadius: "15px"
+            }}
+          >
+
+            <div className="d-flex justify-content-between">
+
+              <h5>Total Amount</h5>
+
+              <h4 className="text-success fw-bold">
+                ₹{order.total}
+              </h4>
+
+            </div>
+
+            <div className="mt-3">
+
+              <button
+                className="btn btn-success me-2"
+                onClick={() => downloadInvoice(order)}
+              >
+                📄 Invoice
+              </button>
+
+              <button className="btn btn-primary">
+                🔁 Reorder
+              </button>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+))
+
+)}
 
       </div>
 
     </div>
 
   );
+
 }
 
 export default Orders;

@@ -11,313 +11,296 @@ function Checkout() {
   const [loading, setLoading] =
     useState(false);
 
-  const handlePayment = async () => {
+      const placeCODOrder = async () => {
 
-    const cart =
-      JSON.parse(
-        localStorage.getItem("cart")
-      ) || [];
+        const cart =
+          JSON.parse(localStorage.getItem("cart")) || [];
 
-    if (!name.trim()) {
-      alert("Please enter customer name");
-      return;
-    }
+        if (!name || !email || !phone || !address) {
+          alert("Fill all details");
+          return;
+        }
 
-    if (!email.trim()) {
-      alert("Please enter email");
-      return;
-    }
+        try {
 
-    if (!phone.trim()) {
-      alert("Please enter phone number");
-      return;
-    }
+          localStorage.setItem("userEmail", email);
 
-    if (!address.trim()) {
-      alert("Please enter address");
-      return;
-    }
+          for (const item of cart) {
 
-    if (cart.length === 0) {
-      alert("Cart is empty");
-      return;
-    }
-
-    try {
-
-      setLoading(true);
-
-      const totalAmount = cart.reduce(
-        (sum, item) =>
-          sum +
-          (item.price * (item.quantity || 1)),
-        0
-      );
-
-      const paymentResponse =
-        await axios.post(
-          `https://restaurant-backend-ca51.onrender.com/api/payment/create-order?amount=${totalAmount}`
-        );
-
-      const orderData =
-        paymentResponse.data;
-
-      console.log("ORDER DATA:", orderData);
-
-      console.log("ORDER ID:", orderData.id);
-      console.log("AMOUNT:", orderData.amount);
-      console.log("CURRENCY:", orderData.currency);
-
-      const options = {
-
-        key:
-          "rzp_test_SyKkEaFa2G5iyD",
-
-        amount:
-          orderData.amount,
-
-        currency:
-          orderData.currency,
-
-        order_id:
-          orderData.id,
-
-        name:
-          "AFNA'S GARDEN",
-
-        description:
-          "Food Order",
-
-        handler:
-          async function (
-            response
-          ) {
-
-            try {
-
-              localStorage.setItem(
-                "userEmail",
-                email
-              );
-
-              for (
-                const item of cart
-              ) {
-
-                const order = {
-
-                  customerName:
-                    name,
-
-                  email:
-                    email,
-
-                  phone:
-                    phone,
-
-                  address:
-                    address,
-
-                  paymentMethod:
-                    "Razorpay",
-
-                  foodName:
-                    item.name,
-
-                  price:
-                    item.price,
-
-                  quantity:
-                    item.quantity || 1,
-
-                  total:
-                    item.price *
-                    (item.quantity || 1),
-
-                  status:
-                    "Preparing",
-
-                  paymentId:
-                    response.razorpay_payment_id
-                };
-
-                await axios.post(
-                  "https://restaurant-backend-ca51.onrender.com/api/orders",
-                  order
-                );
-              }
-
-              localStorage.removeItem(
-                "cart"
-              );
-
-              window.dispatchEvent(
-                new Event(
-                  "cartUpdated"
-                )
-              );
-
-              alert(
-                "Payment Successful & Order Placed"
-              );
-
-              window.location.href =
-                "/orders";
-
-            } catch (error) {
-
-              console.error(
-                error
-              );
-
-              alert(
-                "Payment successful but order save failed"
-              );
-            }
-          },
-
-        prefill: {
-
-          name:
-            name,
-
-          email:
+           const order = {
+            customerName: name,
             email,
+            userEmail: email,
+            phone,
+            address,
 
-          contact:
-            phone
-        },
+            paymentMethod: "Cash On Delivery",
+            paymentStatus: "Pending",
 
-        theme: {
-          color:
-            "#28a745"
+            foodName: item.name,
+            price: item.price,
+            quantity: item.quantity || 1,
+            total: item.price * (item.quantity || 1),
+
+            status: "Preparing"
+          };
+
+            await axios.post(
+              "https://restaurant-backend-ca51.onrender.com/api/orders",
+              order
+            );
+          }
+
+          localStorage.removeItem("cart");
+
+          window.dispatchEvent(
+            new Event("cartUpdated")
+          );
+
+          alert(
+            "COD Order Placed Successfully"
+          );
+
+          window.location.href =
+            "/orders";
+
+        } catch (error) {
+
+          console.error(error);
+
+          alert(
+            "Failed To Place Order"
+          );
         }
       };
 
-      const razor = new window.Razorpay(options);
+      const handlePayment = async () => {
 
-      razor.on("payment.failed", function (response) {
+        alert(
+          "Razorpay Payment Button Clicked"
+        );
 
-  console.log("FULL ERROR", response);
+      };
 
-  alert(
-    "Code: " +
-    response.error.code +
-    "\nDescription: " +
-    response.error.description +
-    "\nSource: " +
-    response.error.source +
-    "\nStep: " +
-    response.error.step +
-    "\nReason: " +
-    response.error.reason
-  );
-});
+      const cart =
+        JSON.parse(localStorage.getItem("cart")) || [];
 
-      razor.open();
+      const subtotal =
+        cart.reduce(
+          (sum, item) =>
+            sum + item.price * item.quantity,
+          0
+        );
 
-    } catch (error) {
+      const deliveryFee =
+        subtotal >= 199 ? 0 : 40;
 
-      console.error(error);
-
-      alert(
-        "Payment failed"
-      );
-
-    } finally {
-
-      setLoading(false);
-    }
-  };
+      const grandTotal =
+        subtotal + deliveryFee;
 
   return (
 
-    <div>
+  <div
+    style={{
+      minHeight: "100vh",
+      background:
+        "linear-gradient(135deg,#f8fafc,#dbeafe)"
+    }}
+  >
 
-      <NavbarComponent />
+    <NavbarComponent />
 
-      <div className="container mt-5">
+    <div className="container py-5">
 
-        <h1 className="mb-4 fw-bold">
-          Checkout
-        </h1>
+      <h1 className="fw-bold text-center mb-5">
+        💳 Secure Checkout
+      </h1>
 
-        <div
-          className="card shadow-lg p-4 border-0"
-          style={{
-            borderRadius:
-              "20px"
-          }}
-        >
+      <div className="row">
 
-          <input
-            type="text"
-            className="form-control mb-3"
-            placeholder="Customer Name"
-            value={name}
-            onChange={(e) =>
-              setName(
-                e.target.value
-              )
-            }
-          />
+        <div className="col-lg-7">
 
-          <input
-            type="email"
-            className="form-control mb-3"
-            placeholder="Email Address"
-            value={email}
-            onChange={(e) =>
-              setEmail(
-                e.target.value
-              )
-            }
-          />
-
-          <input
-            type="text"
-            className="form-control mb-3"
-            placeholder="Phone Number"
-            value={phone}
-            onChange={(e) =>
-              setPhone(
-                e.target.value
-              )
-            }
-          />
-
-          <textarea
-            className="form-control mb-3"
-            rows="3"
-            placeholder="Delivery Address"
-            value={address}
-            onChange={(e) =>
-              setAddress(
-                e.target.value
-              )
-            }
-          />
-
-          <button
-            className="btn btn-success btn-lg"
-            onClick={
-              handlePayment
-            }
-            disabled={
-              loading
-            }
+          <div
+            className="card border-0 shadow-lg p-4"
+            style={{
+              borderRadius: "25px"
+            }}
           >
-            {loading
-              ? "Processing..."
-              : "Pay Now"}
-          </button>
+
+            <h3 className="mb-4">
+              Delivery Details
+            </h3>
+
+            <input
+              type="text"
+              className="form-control mb-3"
+              placeholder="Customer Name"
+              value={name}
+              onChange={(e) =>
+                setName(e.target.value)
+              }
+            />
+
+            <input
+              type="email"
+              className="form-control mb-3"
+              placeholder="Email Address"
+              value={email}
+              onChange={(e) =>
+                setEmail(e.target.value)
+              }
+            />
+
+            <input
+              type="text"
+              className="form-control mb-3"
+              placeholder="Phone Number"
+              value={phone}
+              onChange={(e) =>
+                setPhone(e.target.value)
+              }
+            />
+
+            <textarea
+              rows="4"
+              className="form-control mb-3"
+              placeholder="Delivery Address"
+              value={address}
+              onChange={(e) =>
+                setAddress(
+                  e.target.value
+                )
+              }
+            />
+
+            <input
+              type="text"
+              className="form-control mb-3"
+              placeholder="Coupon Code"
+            />
+
+            <div className="d-grid gap-3">
+
+              <button
+                className="btn btn-success btn-lg"
+                onClick={handlePayment}
+                disabled={loading}
+              >
+                {loading
+                  ? "Processing..."
+                  : "Pay With Razorpay"}
+              </button>
+
+              <button
+                className="btn btn-warning btn-lg"
+                onClick={placeCODOrder}
+              >
+                Cash On Delivery
+              </button>
+
+            </div>
+
+          </div>
+
+        </div>
+
+        <div className="col-lg-5">
+
+          <div
+            className="card border-0 shadow-lg p-4"
+            style={{
+              borderRadius: "25px"
+            }}
+          >
+
+            <h3 className="mb-4">
+              🧾 Order Summary
+            </h3>
+
+            {(
+              JSON.parse(
+                localStorage.getItem(
+                  "cart"
+                )
+              ) || []
+            ).map((item, index) => (
+
+              <div
+                key={index}
+                className="d-flex justify-content-between mb-2"
+              >
+
+                <span>
+                  {item.name}
+                  {" "}
+                  x
+                  {" "}
+                  {item.quantity}
+                </span>
+
+                <strong>
+                  ₹
+                  {
+                    item.price *
+                    item.quantity
+                  }
+                </strong>
+
+              </div>
+
+            ))}
+
+            <hr />
+
+            <div className="d-flex justify-content-between">
+
+              <span>
+                Delivery Fee
+              </span>
+
+              <strong>
+                ₹{deliveryFee}
+              </strong>
+
+            </div>
+
+            <div className="d-flex justify-content-between mt-2">
+
+              <span>
+                GST
+              </span>
+
+              <strong>
+                5%
+              </strong>
+
+            </div>
+
+            <hr />
+
+            <div className="d-flex justify-content-between">
+
+              <h4>
+                Grand Total
+              </h4>
+
+              <h4 className="text-success">
+                ₹{grandTotal}
+              </h4>
+
+            </div>
+
+          </div>
 
         </div>
 
       </div>
 
     </div>
-  );
+
+  </div>
+
+);
 }
 
 export default Checkout;

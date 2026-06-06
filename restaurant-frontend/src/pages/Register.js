@@ -1,4 +1,5 @@
 import { useState } from "react";
+import axios from "axios";
 import NavbarComponent from "../components/NavbarComponent";
 
 function Register() {
@@ -7,51 +8,35 @@ function Register() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
 
-    const registerUser = () => {
+    const registerUser = async () => {
 
-        if (
-            name === "" ||
-            email === "" ||
-            password === ""
-        ) {
+        if (!name || !email || !password) {
 
             alert("Fill all details");
-
             return;
         }
 
-        let users =
-            JSON.parse(localStorage.getItem("users"))
-            || [];
+        try {
 
-        const userExists = users.find(
-            (user) => user.email === email
-        );
+            await axios.post(
+                "http://localhost:8080/api/auth/register",
+                {
+                    name,
+                    email,
+                    password
+                }
+            );
 
-        if (userExists) {
+            alert("Registration Successful");
 
-            alert("User already exists");
+            window.location.href = "/login";
 
-            return;
+        } catch (error) {
+
+            console.error(error);
+
+            alert("Registration Failed");
         }
-
-        const newUser = {
-            id: Date.now(),
-            name,
-            email,
-            password
-        };
-
-        users.push(newUser);
-
-        localStorage.setItem(
-            "users",
-            JSON.stringify(users)
-        );
-
-        alert("Registration Successful");
-
-        window.location.href = "/login";
     };
 
     return (
@@ -62,7 +47,13 @@ function Register() {
 
             <div className="container mt-5">
 
-                <div className="card shadow p-4">
+                <div
+                    className="card shadow-lg p-4 mx-auto"
+                    style={{
+                        maxWidth: "500px",
+                        borderRadius: "20px"
+                    }}
+                >
 
                     <h1 className="text-center mb-4">
                         User Register
@@ -99,7 +90,7 @@ function Register() {
                     />
 
                     <button
-                        className="btn btn-success"
+                        className="btn btn-success w-100"
                         onClick={registerUser}
                     >
                         Register

@@ -1,109 +1,282 @@
-import { useEffect, useState } from "react";
+import React, {
+  useEffect,
+  useState
+} from "react";
 
 import NavbarComponent
 from "../components/NavbarComponent";
 
 function Favorites() {
 
-    const [favorites, setFavorites] =
-        useState([]);
+  const [favorites,
+    setFavorites] =
+    useState([]);
 
-    useEffect(() => {
+  useEffect(() => {
 
-        const savedFavorites =
-            JSON.parse(
-                localStorage.getItem("favorites")
-            ) || [];
+    const savedFavorites =
+      JSON.parse(
+        localStorage.getItem(
+          "favorites"
+        )
+      ) || [];
 
-        setFavorites(savedFavorites);
+    setFavorites(
+      savedFavorites
+    );
 
-    }, []);
+  }, []);
 
-    const removeFavorite = (id) => {
+  const removeFavorite =
+    (id) => {
 
-        const updatedFavorites =
-            favorites.filter(
-                (food) => food.id !== id
-            );
-
-        localStorage.setItem(
-            "favorites",
-            JSON.stringify(updatedFavorites)
+      const updatedFavorites =
+        favorites.filter(
+          (food) =>
+            food.id !== id
         );
 
-        setFavorites(updatedFavorites);
+      localStorage.setItem(
+        "favorites",
+        JSON.stringify(
+          updatedFavorites
+        )
+      );
+
+      setFavorites(
+        updatedFavorites
+      );
     };
 
-    return (
+  const addToCart =
+    (food) => {
 
-        <div>
+      const cart =
+        JSON.parse(
+          localStorage.getItem(
+            "cart"
+          )
+        ) || [];
 
-            <NavbarComponent />
+      const existingFood =
+        cart.find(
+          (item) =>
+            item.id === food.id
+        );
 
-            <div className="container mt-5">
+      if (existingFood) {
 
-                <h1 className="text-center mb-5">
-                    ❤️ Favorite Foods
-                </h1>
+        existingFood.quantity += 1;
 
-                <div className="row">
+      } else {
 
-                    {favorites.map((food) => (
+        cart.push({
+          ...food,
+          quantity: 1
+        });
 
-                        <div
-                            className="col-md-4 mb-4"
-                            key={food.id}
-                        >
+      }
 
-                            <div className="card shadow h-100">
+      localStorage.setItem(
+        "cart",
+        JSON.stringify(cart)
+      );
 
-                                <img
-                                    src={food.imageUrl}
-                                    alt={food.name}
-                                    className="card-img-top"
-                                    height="250"
-                                    style={{
-                                        objectFit: "cover"
-                                    }}
-                                />
+      window.dispatchEvent(
+        new Event(
+          "cartUpdated"
+        )
+      );
 
-                                <div className="card-body">
+      alert(
+        "Added To Cart"
+      );
+    };
 
-                                    <h4>{food.name}</h4>
+  return (
 
-                                    <p>
-                                        {food.description}
-                                    </p>
+    <div
+      style={{
+        minHeight:
+          "100vh",
+        background:
+          "linear-gradient(135deg,#fff7ed,#fef2f2)"
+      }}
+    >
 
-                                    <h5>
-                                        ₹ {food.price}
-                                    </h5>
+      <NavbarComponent />
 
-                                    <button
-                                        className="btn btn-danger"
-                                        onClick={() =>
-                                            removeFavorite(
-                                                food.id
-                                            )
-                                        }
-                                    >
-                                        Remove
-                                    </button>
+      <div className="container py-5">
 
-                                </div>
+        <div
+          className="card border-0 shadow-lg mb-5"
+          style={{
+            borderRadius:
+              "25px"
+          }}
+        >
 
-                            </div>
+          <div
+            className="card-body text-center"
+          >
 
-                        </div>
+            <h1 className="fw-bold text-danger">
 
-                    ))}
+              ❤️ My Favorites
 
-                </div>
+            </h1>
+
+            <h4 className="text-muted">
+
+              Total Favorites :
+              {" "}
+              {favorites.length}
+
+            </h4>
+
+          </div>
+
+        </div>
+
+        {favorites.length === 0 ? (
+
+          <div
+            className="card border-0 shadow-lg"
+          >
+
+            <div className="card-body text-center p-5">
+
+              <h1>
+                💔
+              </h1>
+
+              <h3>
+                No Favorites Yet
+              </h3>
+
+              <p className="text-muted">
+
+                Add foods to
+                your wishlist.
+
+              </p>
 
             </div>
 
-        </div>
-    );
+          </div>
+
+        ) : (
+
+          <div className="row">
+
+            {favorites.map(
+              (food) => (
+
+                <div
+                  key={food.id}
+                  className="col-lg-4 col-md-6 mb-4"
+                >
+
+                  <div
+                    className="card border-0 shadow-lg h-100"
+                    style={{
+                      borderRadius:
+                        "25px",
+                      overflow:
+                        "hidden"
+                    }}
+                  >
+
+                    <img
+                      src={
+                        food.imageUrl
+                      }
+                      alt={
+                        food.name
+                      }
+                      className="card-img-top"
+                      style={{
+                        height:
+                          "250px",
+                        objectFit:
+                          "cover"
+                      }}
+                    />
+
+                    <div className="card-body">
+
+                      <h4 className="fw-bold">
+
+                        {food.name}
+
+                      </h4>
+
+                      <p
+                        className="text-muted"
+                      >
+
+                        {
+                          food.description
+                        }
+
+                      </p>
+
+                      <h4 className="text-success">
+
+                        ₹
+                        {food.price}
+
+                      </h4>
+
+                      <div className="d-grid gap-2 mt-3">
+
+                        <button
+                          className="btn btn-success"
+                          onClick={() =>
+                            addToCart(
+                              food
+                            )
+                          }
+                        >
+
+                          🛒 Add To Cart
+
+                        </button>
+
+                        <button
+                          className="btn btn-danger"
+                          onClick={() =>
+                            removeFavorite(
+                              food.id
+                            )
+                          }
+                        >
+
+                          Remove Favorite
+
+                        </button>
+
+                      </div>
+
+                    </div>
+
+                  </div>
+
+                </div>
+
+              )
+            )}
+
+          </div>
+
+        )}
+
+      </div>
+
+    </div>
+
+  );
+
 }
 
 export default Favorites;

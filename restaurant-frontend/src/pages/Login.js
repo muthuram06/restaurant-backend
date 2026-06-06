@@ -3,27 +3,39 @@ import { Link } from "react-router-dom";
 import NavbarComponent from "../components/NavbarComponent";
 import { GoogleLogin } from "@react-oauth/google";
 import { jwtDecode } from "jwt-decode";
+import axios from "axios";
 
 function Login() {
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const loginUser = () => {
+  const loginUser = async () => {
 
-    let users =
-      JSON.parse(
-        localStorage.getItem("users")
-      ) || [];
+    if (!email || !password) {
 
-    const validUser =
-      users.find(
-        (user) =>
-          user.email === email &&
-          user.password === password
-      );
+      alert("Enter Email and Password");
+      return;
+    }
 
-    if (validUser) {
+    try {
+
+      const response =
+        await axios.post(
+          "http://localhost:8080/api/auth/login",
+          {
+            email,
+            password
+          }
+        );
+
+      const user = response.data;
+
+      if (!user) {
+
+        alert("Invalid Email or Password");
+        return;
+      }
 
       localStorage.setItem(
         "isUserLoggedIn",
@@ -32,81 +44,95 @@ function Login() {
 
       localStorage.setItem(
         "userEmail",
-        validUser.email
+        user.email
       );
 
       localStorage.setItem(
         "userName",
-        validUser.name || validUser.email
+        user.name
       );
 
       localStorage.setItem(
         "loggedInUser",
-        JSON.stringify(validUser)
+        JSON.stringify(user)
       );
 
       alert("Login Successful");
 
       window.location.href = "/";
 
-    } else {
+    } catch (error) {
 
-      alert(
-        "Invalid Email or Password"
-      );
+      console.error(error);
 
+      alert("Login Failed");
     }
-
   };
 
-  const handleGoogleSuccess = (
-    credentialResponse
-  ) => {
+  const handleGoogleSuccess =
+    async (credentialResponse) => {
 
-    const user =
-      jwtDecode(
-        credentialResponse.credential
-      );
+      try {
 
-    localStorage.setItem(
-      "isUserLoggedIn",
-      "true"
-    );
+        const googleUser =
+          jwtDecode(
+            credentialResponse.credential
+          );
 
-    localStorage.setItem(
-      "userEmail",
-      user.email
-    );
+        const response =
+          await axios.post(
+            "http://localhost:8080/api/auth/google",
+            {
+              name: googleUser.name,
+              email: googleUser.email,
+              password: "GOOGLE_LOGIN"
+            }
+          );
 
-    localStorage.setItem(
-      "userName",
-      user.name
-    );
+        const user = response.data;
 
-    localStorage.setItem(
-      "userPicture",
-      user.picture
-    );
+        localStorage.setItem(
+          "isUserLoggedIn",
+          "true"
+        );
 
-    localStorage.setItem(
-      "loggedInUser",
-      JSON.stringify(user)
-    );
+        localStorage.setItem(
+          "userEmail",
+          user.email
+        );
 
-    alert(
-      `Welcome ${user.name}`
-    );
+        localStorage.setItem(
+          "userName",
+          user.name
+        );
 
-    window.location.href = "/";
+        localStorage.setItem(
+          "userPicture",
+          googleUser.picture
+        );
 
-  };
+        localStorage.setItem(
+          "loggedInUser",
+          JSON.stringify(user)
+        );
+
+        alert(
+          `Welcome ${user.name}`
+        );
+
+        window.location.href = "/";
+
+      } catch (error) {
+
+        console.error(error);
+
+        alert("Google Login Failed");
+      }
+    };
 
   const handleGoogleError = () => {
 
-    alert(
-      "Google Login Failed"
-    );
-
+    alert("Google Login Failed");
   };
 
   return (
@@ -191,7 +217,6 @@ function Login() {
       </div>
 
     </div>
-
   );
 }
 
