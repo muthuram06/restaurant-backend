@@ -64,16 +64,15 @@ function NavbarComponent() {
 
   const logout = () => {
 
-    localStorage.removeItem(
-      "isUserLoggedIn"
-    );
+    localStorage.removeItem("isUserLoggedIn");
+    localStorage.removeItem("userEmail");
+    localStorage.removeItem("userName");
+    localStorage.removeItem("loggedInUser");
+    localStorage.removeItem("userPicture");
 
-    localStorage.removeItem(
-      "userEmail"
-    );
+    localStorage.removeItem("cart");
 
     navigate("/login");
-
   };
 
   return (

@@ -8,7 +8,7 @@ function Checkout() {
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [address, setAddress] = useState("");
-  const [loading, setLoading] =
+  const [loading,] =
     useState(false);
 
       const placeCODOrder = async () => {

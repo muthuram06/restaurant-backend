@@ -11,30 +11,29 @@ function Reviews({ foodName }) {
   const API_URL =
     "https://restaurant-backend-ca51.onrender.com/api/reviews";
 
-  const loadReviews = async () => {
-
-    try {
-
-      const response =
-        await axios.get(
-          `${API_URL}/${foodName}`
-        );
-
-      setReviews(response.data || []);
-
-    } catch (error) {
-
-      console.error(error);
-
-    }
-  };
-
   useEffect(() => {
 
+    const loadReviews = async () => {
+
+      try {
+
+        const response =
+          await axios.get(
+            `${API_URL}/${foodName}`
+          );
+
+        setReviews(response.data || []);
+
+      } catch (error) {
+
+        console.error(error);
+
+      }
+
+    };
+
     if (foodName) {
-
       loadReviews();
-
     }
 
   }, [foodName]);
@@ -46,6 +45,7 @@ function Reviews({ foodName }) {
       alert("Please enter your name");
 
       return;
+
     }
 
     if (!comment.trim()) {
@@ -53,6 +53,7 @@ function Reviews({ foodName }) {
       alert("Please enter review");
 
       return;
+
     }
 
     try {
@@ -66,11 +67,16 @@ function Reviews({ foodName }) {
 
       });
 
+      const response =
+        await axios.get(
+          `${API_URL}/${foodName}`
+        );
+
+      setReviews(response.data || []);
+
       setCustomerName("");
       setComment("");
       setRating(5);
-
-      loadReviews();
 
       alert(
         "Review Submitted Successfully"
@@ -85,6 +91,7 @@ function Reviews({ foodName }) {
       );
 
     }
+
   };
 
   const averageRating =
@@ -121,6 +128,7 @@ function Reviews({ foodName }) {
 
         <h5>
           Average Rating :
+          {" "}
           {averageRating} ⭐
         </h5>
 
@@ -149,6 +157,7 @@ function Reviews({ foodName }) {
             setRating(e.target.value)
           }
         >
+
           <option value="5">
             ⭐⭐⭐⭐⭐ Excellent
           </option>

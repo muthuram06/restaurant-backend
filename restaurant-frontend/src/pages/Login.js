@@ -72,6 +72,8 @@ function Login() {
   const handleGoogleSuccess =
     async (credentialResponse) => {
 
+      localStorage.removeItem("cart");
+
       try {
 
         const googleUser =
