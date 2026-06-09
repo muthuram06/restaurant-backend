@@ -7,80 +7,193 @@ function Payment() {
     const [customerName, setCustomerName] = useState("");
     const [phone, setPhone] = useState("");
     const [address, setAddress] = useState("");
-    const [successMessage, setSuccessMessage]
-    = useState("");
+    const [successMessage, setSuccessMessage] = useState("");
+
+    const loadRazorpay = () => {
+        return new Promise((resolve) => {
+
+            const script = document.createElement("script");
+
+            script.src =
+                "https://checkout.razorpay.com/v1/checkout.js";
+
+            script.onload = () => {
+                resolve(true);
+            };
+
+            script.onerror = () => {
+                resolve(false);
+            };
+
+            document.body.appendChild(script);
+        });
+    };
 
     const handlePayment = async () => {
 
         if (
-            customerName === "" ||
-            phone === "" ||
-            address === ""
+            customerName.trim() === "" ||
+            phone.trim() === "" ||
+            address.trim() === ""
         ) {
-
-
+            alert("Please fill all details");
             return;
         }
 
         const cart =
             JSON.parse(localStorage.getItem("cart")) || [];
 
+        if (cart.length === 0) {
+            alert("Cart is empty");
+            return;
+        }
+
         const currentUser =
             JSON.parse(localStorage.getItem("currentUser"));
 
-        try {
+        let totalAmount = 0;
 
-            for (const item of cart) {
+        cart.forEach((item) => {
+            totalAmount +=
+                item.price * item.quantity;
+        });
 
-                const orderData = {
+        const razorpayLoaded =
+            await loadRazorpay();
 
-                    foodName: item.name,
+        if (!razorpayLoaded) {
+            alert(
+                "Failed to load Razorpay. Check internet connection."
+            );
+            return;
+        }
 
-                    price: item.price,
+        const options = {
 
-                    quantity: item.quantity,
+            key:
+                process.env.REACT_APP_RAZORPAY_KEY_ID,
 
-                    totalPrice:
-                        item.price * item.quantity,
+            amount:
+                totalAmount * 100,
 
-                    userEmail: currentUser.email,
+            currency: "INR",
 
-                    customerName: customerName,
+            name: "AFNA'S GARDEN",
 
-                    phone: phone,
+            description:
+                "Food Order Payment",
 
-                    address: address
-                };
+            handler: async function (
+                response
+            ) {
 
-                await saveOrder(orderData);
+                try {
+
+                    for (const item of cart) {
+
+                        const orderData = {
+
+                            foodName:
+                                item.name,
+
+                            price:
+                                item.price,
+
+                            quantity:
+                                item.quantity,
+
+                            totalPrice:
+                                item.price *
+                                item.quantity,
+
+                            userEmail:
+                                currentUser.email,
+
+                            customerName,
+
+                            phone,
+
+                            address,
+
+                            paymentId:
+                                response.razorpay_payment_id
+                        };
+
+                        await saveOrder(
+                            orderData
+                        );
+                    }
+
+                    const orderDetails = {
+
+                        customerName,
+
+                        phone,
+
+                        address,
+
+                        paymentId:
+                            response.razorpay_payment_id,
+
+                        date:
+                            new Date().toLocaleString()
+                    };
+
+                    localStorage.setItem(
+                        "customerDetails",
+                        JSON.stringify(
+                            orderDetails
+                        )
+                    );
+
+                    localStorage.removeItem(
+                        "cart"
+                    );
+
+                    setSuccessMessage(
+                        "Payment Successful 🎉"
+                    );
+
+                    window.location.href =
+                        "/success";
+
+                } catch (error) {
+
+                    console.log(error);
+
+                    alert(
+                        "Payment succeeded but order save failed"
+                    );
+                }
+            },
+
+            prefill: {
+
+                name: customerName,
+
+                email:
+                    currentUser?.email || "",
+
+                contact: phone
+            },
+
+            notes: {
+
+                address: address
+            },
+
+            theme: {
+
+                color: "#198754"
             }
+        };
 
-            const orderDetails = {
-
-                customerName,
-                phone,
-                address,
-                date: new Date().toLocaleString()
-            };
-
-            localStorage.setItem(
-                "customerDetails",
-                JSON.stringify(orderDetails)
+        const razorpay =
+            new window.Razorpay(
+                options
             );
 
-            localStorage.removeItem("cart");
-
-            setSuccessMessage(
-                "Order Placed Successfully 🎉"
-        );
-
-            window.location.href = "/success";
-
-        } catch (error) {
-
-            console.log(error);
-
-        }
+        razorpay.open();
     };
 
     return (
@@ -103,7 +216,9 @@ function Payment() {
                         placeholder="Enter Your Name"
                         value={customerName}
                         onChange={(e) =>
-                            setCustomerName(e.target.value)
+                            setCustomerName(
+                                e.target.value
+                            )
                         }
                     />
 
@@ -113,36 +228,38 @@ function Payment() {
                         placeholder="Enter Phone Number"
                         value={phone}
                         onChange={(e) =>
-                            setPhone(e.target.value)
+                            setPhone(
+                                e.target.value
+                            )
                         }
                     />
 
                     <textarea
                         className="form-control mb-3"
-                        placeholder="Enter Address"
                         rows="4"
+                        placeholder="Enter Address"
                         value={address}
                         onChange={(e) =>
-                            setAddress(e.target.value)
+                            setAddress(
+                                e.target.value
+                            )
                         }
                     />
 
-                        {
-                            successMessage && (
+                    {successMessage && (
 
-                                <div className="alert alert-success">
+                        <div className="alert alert-success">
 
-                                    {successMessage}
+                            {successMessage}
 
-                                </div>
-                            )
-                        }
+                        </div>
+                    )}
 
                     <button
                         className="btn btn-success w-100"
                         onClick={handlePayment}
                     >
-                        Confirm Order
+                        Pay With Razorpay
                     </button>
 
                 </div>

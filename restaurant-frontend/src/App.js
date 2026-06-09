@@ -28,6 +28,7 @@ import AdminFoods from "./pages/AdminFoods";
 import AdminOrders from "./pages/AdminOrders";
 import AdminAnalytics from "./pages/AdminAnalytics";
 import AdminCustomers from "./pages/AdminCustomers";
+import AdminBookings from "./pages/AdminBookings";
 
 function App() {
 
@@ -137,6 +138,11 @@ function App() {
               ? <AdminFoods />
               : <Navigate to="/admin-login" replace />
           }
+        />
+
+        <Route
+          path="/admin/bookings"
+          element={<AdminBookings />}
         />
 
         <Route
