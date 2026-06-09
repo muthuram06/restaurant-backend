@@ -8,7 +8,7 @@ function Checkout() {
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [address, setAddress] = useState("");
-  const [loading,] =
+  const [loading] =
     useState(false);
 
       const placeCODOrder = async () => {
@@ -76,10 +76,105 @@ function Checkout() {
 
       const handlePayment = async () => {
 
-        alert(
-          "Razorpay Payment Button Clicked"
-        );
+        if (!name || !email || !phone || !address) {
+          alert("Fill all details");
+          return;
+        }
 
+        if (!window.Razorpay) {
+          alert("Razorpay SDK Not Loaded");
+          return;
+        }
+
+        const razorpayKey =
+          process.env.REACT_APP_RAZORPAY_KEY_ID;
+
+        console.log("Razorpay Key:", razorpayKey);
+
+        if (!razorpayKey) {
+          alert("Razorpay Key Missing");
+          return;
+        }
+
+        const options = {
+
+          key: razorpayKey,
+
+          amount: grandTotal * 100,
+
+          currency: "INR",
+
+          name: "AFNA'S GARDEN",
+
+          description: "Food Order Payment",
+
+          prefill: {
+            name,
+            email,
+            contact: phone
+          },
+
+          theme: {
+            color: "#198754"
+          },
+
+          handler: async function(response) {
+
+            try {
+
+              const cart =
+                JSON.parse(localStorage.getItem("cart")) || [];
+
+              for (const item of cart) {
+
+                const order = {
+
+                  customerName: name,
+                  email,
+                  userEmail: email,
+                  phone,
+                  address,
+
+                  paymentMethod: "Razorpay",
+                  paymentStatus: "Paid",
+
+                  paymentId:
+                    response.razorpay_payment_id,
+
+                  foodName: item.name,
+                  price: item.price,
+                  quantity: item.quantity || 1,
+                  total:
+                    item.price * (item.quantity || 1),
+
+                  status: "Preparing"
+                };
+
+                await axios.post(
+                  "https://restaurant-backend-ca51.onrender.com/api/orders",
+                  order
+                );
+              }
+
+              localStorage.removeItem("cart");
+
+              alert("Payment Successful");
+
+              window.location.href = "/orders";
+
+            } catch (error) {
+
+              console.error(error);
+
+              alert("Order Save Failed");
+            }
+          }
+        };
+
+        const razorpay =
+          new window.Razorpay(options);
+
+        razorpay.open();
       };
 
       const cart =
