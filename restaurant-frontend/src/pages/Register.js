@@ -19,7 +19,7 @@ function Register() {
         try {
 
             await axios.post(
-                "http://localhost:8080/api/auth/register",
+                "https://restaurant-backend-ca51.onrender.com/api/auth/register",
                 {
                     name,
                     email,
