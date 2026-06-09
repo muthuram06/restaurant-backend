@@ -20,7 +20,7 @@ function Home() {
     try {
 
       const response = await axios.get(
-        "http://https://restaurant-backend-ca51.onrender.com/api/food/all"
+        "https://restaurant-backend-ca51.onrender.com/api/food/all"
       );
 
       setFoods(response.data);

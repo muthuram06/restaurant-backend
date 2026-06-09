@@ -83,7 +83,7 @@ function Login() {
 
         const response =
           await axios.post(
-            "http://https://restaurant-backend-ca51.onrender.com/api/auth/google",
+            "https://restaurant-backend-ca51.onrender.com/api/auth/google",
             {
               name: googleUser.name,
               email: googleUser.email,
