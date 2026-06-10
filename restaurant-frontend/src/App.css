@@ -28,3 +28,33 @@ img {
   transform:translateY(-8px);
   box-shadow:0 15px 30px rgba(0,0,0,0.2);
 }
+
+.login-card{
+    border-radius:25px;
+    overflow:hidden;
+    backdrop-filter:blur(15px);
+}
+
+.login-card:hover{
+    transform:translateY(-5px);
+    transition:0.3s;
+}
+
+.food-card{
+  border:none;
+  overflow:hidden;
+  transition:0.4s;
+}
+
+.food-card:hover{
+  transform:translateY(-10px);
+  box-shadow:0 20px 40px rgba(0,0,0,0.18);
+}
+
+.food-card img{
+  transition:0.4s;
+}
+
+.food-card:hover img{
+  transform:scale(1.05);
+} 

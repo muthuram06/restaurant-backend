@@ -278,11 +278,11 @@ function Home() {
 
             <div className="card p-3">
 
-              <h2 className="text-warning">
-                ⭐ 4.8
+              <h2 className="text-danger">
+                4.8★
               </h2>
 
-              <p>Customer Rating</p>
+              <p>Average Rating</p>
 
             </div>
 
@@ -378,6 +378,18 @@ function Home() {
     </span>
   </div>
 
+    <div className="mb-2">
+
+    <span className="badge bg-warning text-dark">
+      ⭐ {food.rating}
+    </span>
+
+    <small className="ms-2 text-muted">
+      ({food.reviews} Reviews)
+    </small>
+
+  </div>
+
   <h4
     className="fw-bold mb-2"
     style={{
@@ -398,7 +410,7 @@ function Home() {
     style={{
       minHeight: "60px"
     }}
-  >
+  > 
     {
       food.description ||
       "Freshly prepared vegetarian food with authentic taste."

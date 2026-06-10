@@ -146,7 +146,7 @@ function Login() {
       <div className="container mt-5">
 
         <div
-          className="card shadow-lg border-0 p-4 mx-auto"
+          className="card login-card shadow-lg border-0 p-4 mx-auto"
           style={{
             maxWidth: "500px",
             borderRadius: "20px"

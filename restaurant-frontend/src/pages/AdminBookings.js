@@ -1,44 +1,84 @@
-import React, { useEffect, useState } from "react";
+import React, {
+  useEffect,
+  useState
+} from "react";
+
 import axios from "axios";
 
 function AdminBookings() {
 
-  const [bookings, setBookings] = useState([]);
+  const [bookings, setBookings] =
+    useState([]);
 
   useEffect(() => {
-    axios
-      .get(
-        "https://restaurant-backend-ca51.onrender.com/api/bookings"
-      )
-      .then((res) => setBookings(res.data));
+
+    loadBookings();
+
   }, []);
 
+  const loadBookings =
+    async () => {
+
+      const response =
+        await axios.get(
+          "https://restaurant-backend-ca51.onrender.com/api/bookings"
+        );
+
+      setBookings(response.data);
+    };
+
   return (
-    <div className="container mt-4">
 
-      <h2>Table Bookings</h2>
+    <div className="container mt-5">
 
-      <table className="table">
+      <h1 className="mb-4">
+
+        Table Reservations
+
+      </h1>
+
+      <table className="table table-striped">
 
         <thead>
+
           <tr>
+
             <th>Name</th>
-            <th>Phone</th>
-            <th>Date</th>
             <th>Guests</th>
+            <th>Date</th>
+            <th>Time</th>
+
           </tr>
+
         </thead>
 
         <tbody>
 
-          {bookings.map((b) => (
-            <tr key={b.id}>
-              <td>{b.name}</td>
-              <td>{b.phone}</td>
-              <td>{b.date}</td>
-              <td>{b.guests}</td>
-            </tr>
-          ))}
+          {bookings.map(
+            booking => (
+
+              <tr key={booking.id}>
+
+                <td>
+                  {booking.customerName}
+                </td>
+
+                <td>
+                  {booking.persons}
+                </td>
+
+                <td>
+                  {booking.bookingDate}
+                </td>
+
+                <td>
+                  {booking.bookingTime}
+                </td>
+
+              </tr>
+
+            )
+          )}
 
         </tbody>
 
