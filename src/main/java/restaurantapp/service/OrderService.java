@@ -18,9 +18,15 @@ public class OrderService {
     public Order saveOrder(Order order) {
 
         if (order.getStatus() == null ||
-            order.getStatus().isEmpty()) {
+                order.getStatus().isEmpty()) {
 
             order.setStatus("Preparing");
+        }
+
+        if (order.getPaymentStatus() == null ||
+                order.getPaymentStatus().isEmpty()) {
+
+            order.setPaymentStatus("Pending");
         }
 
         return orderRepository.save(order);

@@ -26,9 +26,15 @@ public class OrderController {
             @RequestBody Order order) {
 
         if (order.getStatus() == null ||
-            order.getStatus().isEmpty()) {
+                order.getStatus().isEmpty()) {
 
             order.setStatus("Preparing");
+        }
+
+        if (order.getPaymentStatus() == null ||
+                order.getPaymentStatus().isEmpty()) {
+
+            order.setPaymentStatus("Pending");
         }
 
         return orderService.saveOrder(order);
@@ -44,7 +50,7 @@ public class OrderController {
     public List<Order> getUserOrders(
             @PathVariable String email) {
 
-        return orderService.getUserOrders(email);
+        return orderRepository.findByEmail(email);
     }
 
     @GetMapping("/{id}")
@@ -57,19 +63,49 @@ public class OrderController {
         return order.orElse(null);
     }
 
+    @GetMapping("/status/{status}")
+    public List<Order> getOrdersByStatus(
+            @PathVariable String status) {
+
+        return orderRepository.findByStatus(status);
+    }
+
     @PutMapping("/{id}")
     public Order updateStatus(
             @PathVariable Long id,
             @RequestParam String status) {
 
         Optional<Order> optionalOrder =
-                orderService.getOrderById(id);
+                orderRepository.findById(id);
 
         if (optionalOrder.isPresent()) {
 
-            Order order = optionalOrder.get();
+            Order order =
+                    optionalOrder.get();
 
             order.setStatus(status);
+
+            return orderRepository.save(order);
+        }
+
+        return null;
+    }
+
+    @PutMapping("/payment/{id}")
+    public Order updatePaymentStatus(
+            @PathVariable Long id,
+            @RequestParam String paymentStatus) {
+
+        Optional<Order> optionalOrder =
+                orderRepository.findById(id);
+
+        if (optionalOrder.isPresent()) {
+
+            Order order =
+                    optionalOrder.get();
+
+            order.setPaymentStatus(
+                    paymentStatus);
 
             return orderRepository.save(order);
         }

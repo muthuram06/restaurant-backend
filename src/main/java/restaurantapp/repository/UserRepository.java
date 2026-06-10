@@ -6,8 +6,12 @@ import org.springframework.stereotype.Repository;
 import restaurantapp.model.User;
 
 @Repository
-public interface UserRepository extends JpaRepository<User, Long> {
+public interface UserRepository
+        extends JpaRepository<User, Long> {
 
-    User findByEmailAndPassword(String email, String password);
+    User findByEmail(String email);
 
+    User findByEmailAndPassword(
+            String email,
+            String password);
 }

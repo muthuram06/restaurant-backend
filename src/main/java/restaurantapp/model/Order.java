@@ -23,6 +23,12 @@ public class Order {
 
     private String paymentMethod;
 
+    private String paymentStatus = "Pending";
+
+    private String orderTrackingId;
+
+    private String userEmail;
+
     private String foodName;
 
     private double price;
@@ -40,8 +46,14 @@ public class Order {
 
     @PrePersist
     public void prePersist() {
+
         if (orderDate == null) {
             orderDate = LocalDateTime.now();
+        }
+
+        if (orderTrackingId == null) {
+            orderTrackingId =
+                "AFNA-" + System.currentTimeMillis();
         }
     }
 
@@ -87,6 +99,30 @@ public class Order {
 
     public void setPaymentMethod(String paymentMethod) {
         this.paymentMethod = paymentMethod;
+    }
+
+    public String getPaymentStatus() {
+        return paymentStatus;
+    }
+
+    public void setPaymentStatus(String paymentStatus) {
+        this.paymentStatus = paymentStatus;
+    }
+
+    public String getOrderTrackingId() {
+        return orderTrackingId;
+    }
+
+    public void setOrderTrackingId(String orderTrackingId) {
+        this.orderTrackingId = orderTrackingId;
+    }
+
+    public String getUserEmail() {
+        return userEmail;
+    }
+
+    public void setUserEmail(String userEmail) {
+        this.userEmail = userEmail;
     }
 
     public String getFoodName() {

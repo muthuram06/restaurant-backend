@@ -22,9 +22,9 @@ public class FoodItem {
     @Column(length = 1000)
     private String imageUrl;
 
-    private double rating = 4.8;
+    private double rating;
 
-    private int reviews = 120;
+    private int reviews;
 
     public FoodItem() {
     }

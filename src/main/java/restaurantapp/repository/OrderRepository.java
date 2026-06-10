@@ -13,8 +13,18 @@ public interface OrderRepository
 
     List<Order> findByEmail(String email);
 
+    List<Order> findByUserEmail(String userEmail);
+
     List<Order> findByStatus(String status);
+
+    List<Order> findByPaymentMethod(String paymentMethod);
+
+    List<Order> findByPaymentStatus(String paymentStatus);
+
+    List<Order> findByOrderTrackingId(String orderTrackingId);
 
     List<Order> findByCustomerNameContainingIgnoreCase(
             String customerName);
+
+    long countByStatus(String status);
 }

@@ -5,11 +5,15 @@ import org.springframework.web.bind.annotation.*;
 
 import restaurantapp.model.User;
 import restaurantapp.repository.UserRepository;
+import restaurantapp.service.UserService;
 
 @RestController
-@RequestMapping("/api/auth")
+@RequestMapping("/api/users")
 @CrossOrigin("*")
-public class AuthController {
+public class UserController {
+
+    @Autowired
+    private UserService userService;
 
     @Autowired
     private UserRepository userRepository;
@@ -26,17 +30,16 @@ public class AuthController {
             return existingUser;
         }
 
-        return userRepository.save(user);
+        return userService.registerUser(user);
     }
 
     @PostMapping("/login")
     public User loginUser(
             @RequestBody User user) {
 
-        return userRepository
-                .findByEmailAndPassword(
-                        user.getEmail(),
-                        user.getPassword());
+        return userService.loginUser(
+                user.getEmail(),
+                user.getPassword());
     }
 
     @PostMapping("/google")
