@@ -141,8 +141,15 @@ function App() {
         />
 
         <Route
-          path="/admin/bookings"
-          element={<AdminBookings />}
+          path="/admin-bookings"
+          element={
+            isAdminLoggedIn
+              ? <AdminBookings />
+              : <Navigate
+                  to="/admin-login"
+                  replace
+                />
+          }
         />
 
         <Route

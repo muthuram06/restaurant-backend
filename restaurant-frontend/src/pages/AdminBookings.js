@@ -19,72 +19,111 @@ function AdminBookings() {
   const loadBookings =
     async () => {
 
-      const response =
-        await axios.get(
-          "https://restaurant-backend-ca51.onrender.com/api/bookings"
-        );
+      try {
 
-      setBookings(response.data);
+        const response =
+          await axios.get(
+            "https://restaurant-backend-ca51.onrender.com/api/bookings"
+          );
+
+        setBookings(response.data);
+
+      } catch (error) {
+
+        console.log(error);
+
+      }
     };
 
   return (
 
     <div className="container mt-5">
 
-      <h1 className="mb-4">
+      <h1 className="text-center mb-4">
 
-        Table Reservations
+        📅 Table Reservations
 
       </h1>
 
-      <table className="table table-striped">
+      <div className="card shadow-lg">
 
-        <thead>
+        <div className="card-body">
 
-          <tr>
+          <table className="table table-hover">
 
-            <th>Name</th>
-            <th>Guests</th>
-            <th>Date</th>
-            <th>Time</th>
+            <thead className="table-dark">
 
-          </tr>
+              <tr>
 
-        </thead>
-
-        <tbody>
-
-          {bookings.map(
-            booking => (
-
-              <tr key={booking.id}>
-
-                <td>
-                  {booking.customerName}
-                </td>
-
-                <td>
-                  {booking.persons}
-                </td>
-
-                <td>
-                  {booking.bookingDate}
-                </td>
-
-                <td>
-                  {booking.bookingTime}
-                </td>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Guests</th>
+                <th>Date</th>
+                <th>Time</th>
 
               </tr>
 
-            )
-          )}
+            </thead>
 
-        </tbody>
+            <tbody>
 
-      </table>
+              {bookings.length === 0 ? (
+
+                <tr>
+
+                  <td
+                    colSpan="5"
+                    className="text-center"
+                  >
+                    No Bookings Found
+                  </td>
+
+                </tr>
+
+              ) : (
+
+                bookings.map(
+                  (booking) => (
+
+                    <tr key={booking.id}>
+
+                      <td>
+                        {booking.id}
+                      </td>
+
+                      <td>
+                        {booking.customerName}
+                      </td>
+
+                      <td>
+                        {booking.persons}
+                      </td>
+
+                      <td>
+                        {booking.bookingDate}
+                      </td>
+
+                      <td>
+                        {booking.bookingTime}
+                      </td>
+
+                    </tr>
+
+                  )
+                )
+
+              )}
+
+            </tbody>
+
+          </table>
+
+        </div>
+
+      </div>
 
     </div>
+
   );
 }
 

@@ -19,7 +19,7 @@ function TableBooking() {
   const [time, setTime] =
     useState("");
 
-  const bookTable = () => {
+  const bookTable = async () => {
 
     if (
       !name.trim() ||
@@ -27,10 +27,7 @@ function TableBooking() {
       !time
     ) {
 
-      alert(
-        "Please Fill All Details"
-      );
-
+      alert("Please Fill All Details");
       return;
 
     }
@@ -44,37 +41,40 @@ function TableBooking() {
 
     };
 
-    const bookings =
-      JSON.parse(
-        localStorage.getItem(
-          "tableBookings"
-        )
-      ) || [];
+    try {
 
-    bookings.push(
-      bookingData
-    );
+      await fetch(
+        "https://restaurant-backend-ca51.onrender.com/api/bookings",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type":
+              "application/json"
+          },
+          body: JSON.stringify(
+            bookingData
+          )
+        }
+      );
 
-    localStorage.setItem(
-      "tableBookings",
-      JSON.stringify(
-        bookings
-      )
-    );
+      alert(
+        "✅ Table Booked Successfully"
+      );
 
-    alert(
-      `✅ Table Booked Successfully
+      setName("");
+      setPersons(2);
+      setDate("");
+      setTime("");
 
-Customer : ${name}
-Guests : ${persons}
-Date : ${date}
-Time : ${time}`
-    );
+    } catch (error) {
 
-    setName("");
-    setPersons(2);
-    setDate("");
-    setTime("");
+      console.log(error);
+
+      alert(
+        "Booking Failed"
+      );
+
+    }
 
   };
 
