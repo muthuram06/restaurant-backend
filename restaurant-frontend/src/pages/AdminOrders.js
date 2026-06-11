@@ -369,8 +369,13 @@ const todayRevenue =
 
         ) : (
 
-          filteredOrders.map((order) => (
-
+          [...filteredOrders]
+            .sort(
+              (a, b) =>
+                new Date(b.orderDate) -
+                new Date(a.orderDate)
+            )
+            .map((order) => (
             <div
               key={order.id}
               className="card shadow-lg border-0 mb-4"

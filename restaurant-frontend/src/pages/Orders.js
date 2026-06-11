@@ -283,7 +283,13 @@ function Orders() {
 
         ) : (
 
-           orders.map((order) => (
+           [...orders]
+            .sort(
+              (a, b) =>
+                new Date(b.orderDate) -
+                new Date(a.orderDate)
+            )
+            .map((order) => (
 
   <div
     key={order.id}
