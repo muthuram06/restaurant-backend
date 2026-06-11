@@ -10,6 +10,12 @@ function Orders() {
 
   const email =
     localStorage.getItem("userEmail");
+    console.log("User Email:", email);
+
+    console.log(
+      "Fetching Orders For:",
+      email
+    );
 
   const downloadInvoice = (order) => {
 
@@ -102,18 +108,16 @@ function Orders() {
         )
         .then((response) => {
 
-          setOrders(response.data);
+          console.log(
+            "Orders Response:",
+            response.data
+          );
+
+          setOrders(response.data || []);
 
           setLoading(false);
 
         })
-        .catch((error) => {
-
-          console.error(error);
-
-          setLoading(false);
-
-        });
 
     } else {
 
