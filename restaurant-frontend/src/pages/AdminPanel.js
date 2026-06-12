@@ -1,9 +1,101 @@
-import React from "react";
-import { useNavigate } from "react-router-dom";
+import React, {
+  useEffect,
+  useState
+} from "react";
+
+import axios from "axios";
+
+import { useNavigate }
+from "react-router-dom";
 
 function AdminPanel() {
 
   const navigate = useNavigate();
+
+  const [newOrders,
+    setNewOrders] =
+    useState(0);
+
+  const [lastOrderId,
+    setLastOrderId] =
+    useState(
+      localStorage.getItem(
+        "lastOrderId"
+      ) || 0
+    );
+
+  useEffect(() => {
+
+    checkNewOrders();
+
+    const interval =
+      setInterval(
+        checkNewOrders,
+        5000
+      );
+
+    return () =>
+      clearInterval(interval);
+
+  }, []);
+
+  const checkNewOrders =
+    async () => {
+
+      try {
+
+        const response =
+          await axios.get(
+            "https://restaurant-backend-ca51.onrender.com/api/orders/latest"
+          );
+
+        const latestOrder =
+          response.data;
+
+        if (
+          latestOrder &&
+          latestOrder.id >
+          Number(lastOrderId)
+        ) {
+
+          setNewOrders(
+            (prev) => prev + 1
+          );
+
+          localStorage.setItem(
+            "lastOrderId",
+            latestOrder.id
+          );
+
+          setLastOrderId(
+            latestOrder.id
+          );
+
+          const audio =
+            new Audio(
+              "https://actions.google.com/sounds/v1/alarms/beep_short.ogg"
+            );
+
+          audio.play();
+
+          alert(
+            `🔔 New Order Received
+
+Customer : ${latestOrder.customerName}
+
+Food : ${latestOrder.foodName}
+
+Total : ₹${latestOrder.total}`
+          );
+        }
+
+      } catch (error) {
+
+        console.log(error);
+
+      }
+
+    };
 
   const logout = () => {
 
@@ -11,7 +103,9 @@ function AdminPanel() {
       "isAdminLoggedIn"
     );
 
-    navigate("/admin-login");
+    navigate(
+      "/admin-login"
+    );
   };
 
   return (
@@ -27,52 +121,41 @@ function AdminPanel() {
 
       <div className="container">
 
-        <h1
-          className="text-center text-white fw-bold mb-5"
-          style={{
-            fontSize: "60px"
-          }}
-        >
-          🍽 AFNA'S GARDEN
-          <br />
-          ADMIN CONTROL CENTER
-        </h1>
+        <div className="d-flex justify-content-between align-items-center mb-5">
+
+          <h1
+            className="text-white fw-bold"
+          >
+            🍽 AFNA'S GARDEN
+            <br />
+            ADMIN CONTROL CENTER
+          </h1>
+
+          <button
+            className="btn btn-warning position-relative"
+          >
+            🔔 Notifications
+
+            {newOrders > 0 && (
+
+              <span
+                className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
+              >
+                {newOrders}
+              </span>
+
+            )}
+
+          </button>
+
+        </div>
 
         <div className="row g-4">
 
           <div className="col-md-3">
-
             <div className="card shadow-lg border-0">
-
               <div className="card-body text-center p-4">
-
-                <h1>🍽</h1>
-
-                <h4>Bookings</h4>
-
-                <button
-                  className="btn btn-info w-100 mt-3"
-                  onClick={() =>
-                    navigate("/admin-bookings")
-                  }
-                >
-                  View Bookings
-                </button>
-
-              </div>
-
-            </div>
-
-          </div>
-
-          <div className="col-md-3">
-
-            <div className="card shadow-lg border-0">
-
-              <div className="card-body text-center p-4">
-
                 <h1>📅</h1>
-
                 <h4>Bookings</h4>
 
                 <button
@@ -85,19 +168,13 @@ function AdminPanel() {
                 </button>
 
               </div>
-
             </div>
-
           </div>
 
           <div className="col-md-3">
-
             <div className="card shadow-lg border-0">
-
               <div className="card-body text-center p-4">
-
                 <h1>🍔</h1>
-
                 <h4>Foods</h4>
 
                 <button
@@ -110,19 +187,13 @@ function AdminPanel() {
                 </button>
 
               </div>
-
             </div>
-
           </div>
 
           <div className="col-md-3">
-
             <div className="card shadow-lg border-0">
-
               <div className="card-body text-center p-4">
-
                 <h1>📦</h1>
-
                 <h4>Orders</h4>
 
                 <button
@@ -135,19 +206,13 @@ function AdminPanel() {
                 </button>
 
               </div>
-
             </div>
-
           </div>
 
           <div className="col-md-3">
-
             <div className="card shadow-lg border-0">
-
               <div className="card-body text-center p-4">
-
                 <h1>📊</h1>
-
                 <h4>Analytics</h4>
 
                 <button
@@ -160,19 +225,13 @@ function AdminPanel() {
                 </button>
 
               </div>
-
             </div>
-
           </div>
 
           <div className="col-md-3">
-
             <div className="card shadow-lg border-0">
-
               <div className="card-body text-center p-4">
-
                 <h1>👥</h1>
-
                 <h4>Customers</h4>
 
                 <button
@@ -185,9 +244,7 @@ function AdminPanel() {
                 </button>
 
               </div>
-
             </div>
-
           </div>
 
         </div>

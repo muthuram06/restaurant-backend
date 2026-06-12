@@ -21,76 +21,115 @@ function Orders() {
 
     const doc = new jsPDF();
 
-    doc.setFontSize(22);
+    doc.setFillColor(22, 101, 52);
+    doc.rect(0, 0, 210, 35, "F");
 
+    doc.setTextColor(255, 255, 255);
+    doc.setFontSize(24);
     doc.text(
       "AFNA'S GARDEN RESTAURANT",
       20,
-      20
+      22
+    );
+
+    doc.setTextColor(0, 0, 0);
+
+    doc.setFontSize(18);
+    doc.text(
+      "INVOICE",
+      150,
+      22
+    );
+
+    doc.setDrawColor(22, 101, 52);
+
+    doc.roundedRect(
+      10,
+      45,
+      190,
+      135,
+      4,
+      4
     );
 
     doc.setFontSize(12);
 
     doc.text(
-      `Order ID : ${order.id}`,
+      `Invoice No : ${order.id}`,
       20,
-      40
+      60
     );
 
     doc.text(
       `Customer : ${order.customerName}`,
       20,
-      55
+      75
     );
 
     doc.text(
       `Email : ${order.email}`,
       20,
-      70
+      90
     );
 
     doc.text(
-      `Phone : ${order.phone || "N/A"}`,
+      `Phone : ${order.phone}`,
       20,
-      85
+      105
     );
 
     doc.text(
-      `Address : ${order.address || "N/A"}`,
+      `Food Item : ${order.foodName}`,
       20,
-      100
-    );
-
-    doc.text(
-      `Food : ${order.foodName}`,
-      20,
-      115
+      120
     );
 
     doc.text(
       `Quantity : ${order.quantity}`,
       20,
-      130
+      135
     );
 
     doc.text(
-      `Payment : ${
-        order.paymentMethod || "COD"
-      }`,
+      `Payment : ${order.paymentMethod}`,
       20,
-      145
+      150
     );
 
     doc.text(
       `Status : ${order.status}`,
       20,
-      160
+      165
     );
 
-    doc.text(
-      `Total Amount : ₹${order.total}`,
+    doc.setFillColor(
+      240,
+      253,
+      244
+    );
+
+    doc.rect(
       20,
-      175
+      190,
+      160,
+      20,
+      "F"
+    );
+
+    doc.setFontSize(18);
+
+    doc.text(
+      `TOTAL : ₹${order.total}`,
+      25,
+      203
+    );
+
+    doc.setFontSize(11);
+
+    doc.text(
+      "Thank you for ordering with AFNA'S GARDEN RESTAURANT",
+      20,
+      240
     );
 
     doc.save(
@@ -201,11 +240,20 @@ function Orders() {
 
       <div className="container py-5">
 
-        <h1
-          className="text-center fw-bold mb-5"
-        >
-          📦 My Orders Dashboard
-        </h1>
+        <div className="d-flex justify-content-between align-items-center mb-5">
+
+          <h1 className="fw-bold">
+            📦 My Orders Dashboard
+          </h1>
+
+          <button
+            className="btn btn-success"
+            onClick={() => window.location.reload()}
+          >
+            🔄 Refresh Orders
+          </button>
+
+        </div>
 
         {!loading &&
           orders.length > 0 && (
