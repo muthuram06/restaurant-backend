@@ -21,98 +21,95 @@ function Orders() {
 
     const doc = new jsPDF();
 
-    doc.setFillColor(22, 101, 52);
-    doc.rect(0, 0, 210, 35, "F");
+    doc.setFillColor(25, 135, 84);
+    doc.rect(0, 0, 220, 35, "F");
 
-    doc.setTextColor(255, 255, 255);
+    doc.setTextColor(255,255,255);
     doc.setFontSize(24);
+
     doc.text(
       "AFNA'S GARDEN RESTAURANT",
       20,
       22
     );
 
-    doc.setTextColor(0, 0, 0);
+    doc.setTextColor(0,0,0);
 
-    doc.setFontSize(18);
-    doc.text(
-      "INVOICE",
-      150,
-      22
-    );
+    doc.setFontSize(14);
 
-    doc.setDrawColor(22, 101, 52);
-
-    doc.roundedRect(
-      10,
-      45,
-      190,
-      135,
-      4,
-      4
-    );
-
-    doc.setFontSize(12);
+    let y = 55;
 
     doc.text(
       `Invoice No : ${order.id}`,
       20,
-      60
+      y
     );
+
+    y += 12;
 
     doc.text(
       `Customer : ${order.customerName}`,
       20,
-      75
+      y
     );
+
+    y += 12;
 
     doc.text(
       `Email : ${order.email}`,
       20,
-      90
+      y
     );
+
+    y += 12;
 
     doc.text(
       `Phone : ${order.phone}`,
       20,
-      105
+      y
     );
 
+    y += 12;
+
     doc.text(
-      `Food Item : ${order.foodName}`,
+      `Food : ${order.foodName}`,
       20,
-      120
+      y
     );
+
+    y += 12;
 
     doc.text(
       `Quantity : ${order.quantity}`,
       20,
-      135
+      y
     );
+
+    y += 12;
 
     doc.text(
       `Payment : ${order.paymentMethod}`,
       20,
-      150
+      y
     );
+
+    y += 12;
 
     doc.text(
       `Status : ${order.status}`,
       20,
-      165
+      y
     );
 
-    doc.setFillColor(
-      240,
-      253,
-      244
-    );
+    y += 20;
+
+    doc.setFillColor(240,253,244);
 
     doc.rect(
-      20,
-      190,
-      160,
-      20,
+      15,
+      y - 10,
+      180,
+      25,
       "F"
     );
 
@@ -120,16 +117,8 @@ function Orders() {
 
     doc.text(
       `TOTAL : ₹${order.total}`,
-      25,
-      203
-    );
-
-    doc.setFontSize(11);
-
-    doc.text(
-      "Thank you for ordering with AFNA'S GARDEN RESTAURANT",
       20,
-      240
+      y + 5
     );
 
     doc.save(

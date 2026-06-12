@@ -42,7 +42,8 @@ function Checkout() {
             quantity: item.quantity || 1,
             total: item.price * (item.quantity || 1),
 
-            status: "Preparing"
+            status: "Preparing",
+            isNew: true
           };
 
             await axios.post(
@@ -147,7 +148,8 @@ function Checkout() {
                   total:
                     item.price * (item.quantity || 1),
 
-                  status: "Preparing"
+                  status: "Preparing",
+                  isNew: true  
                 };
 
                 await axios.post(

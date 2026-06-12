@@ -4,6 +4,8 @@ import axios from "axios";
 function AdminOrders() {
 
   const [orders, setOrders] = useState([]);
+  const [lastOrderCount, setLastOrderCount] =
+  useState(0);
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] =
     useState("All");
@@ -15,12 +17,17 @@ function AdminOrders() {
 
     loadOrders();
 
-    const interval = setInterval(() => {
-      loadOrders();
-    }, 30000);
+    const interval =
+      setInterval(() => {
 
-    return () => clearInterval(interval);
+        loadOrders();
 
+      }, 5000);
+
+    return () =>
+      clearInterval(interval);
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const loadOrders = () => {
@@ -28,7 +35,33 @@ function AdminOrders() {
     axios
       .get(API_URL)
       .then((response) => {
-        setOrders(response.data);
+
+        const newOrders =
+          response.data || [];
+
+        if (
+          lastOrderCount > 0 &&
+          newOrders.length > lastOrderCount
+        ) {
+
+          const audio =
+            new Audio(
+              "https://actions.google.com/sounds/v1/alarms/beep_short.ogg"
+            );
+
+          audio.play();
+
+          alert(
+            "🔔 New Order Received!"
+          );
+        }
+
+        setLastOrderCount(
+          newOrders.length
+        );
+
+        setOrders(newOrders);
+
       })
       .catch((error) => {
         console.error(error);
@@ -197,9 +230,19 @@ const todayRevenue =
 
         <div className="d-flex justify-content-between align-items-center mb-4">
 
-          <h1 className="fw-bold">
-            📦 Admin Orders Dashboard
-          </h1>
+          <div className="d-flex align-items-center">
+
+            <h1 className="fw-bold me-3">
+              📦 Admin Orders Dashboard
+            </h1>
+
+            <span
+              className="badge bg-danger fs-6"
+            >
+              {orders.length} Orders
+            </span>
+
+          </div>
 
           <button
             className="btn btn-dark"
@@ -378,7 +421,11 @@ const todayRevenue =
             .map((order) => (
             <div
               key={order.id}
-              className="card shadow-lg border-0 mb-4"
+              className={`card shadow-lg border-3 mb-4 ${
+                order.status === "Preparing"
+                  ? "border-danger"
+                  : "border-light"
+              }`}
               style={{
                 borderRadius: "20px"
               }}

@@ -26,17 +26,19 @@ function AdminPanel() {
 
   useEffect(() => {
 
-    checkNewOrders();
-
     const interval =
-      setInterval(
-        checkNewOrders,
-        5000
-      );
+      setInterval(() => {
+
+        checkNewOrders();
+
+      }, 5000);
+
+    checkNewOrders();
 
     return () =>
       clearInterval(interval);
 
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const checkNewOrders =
