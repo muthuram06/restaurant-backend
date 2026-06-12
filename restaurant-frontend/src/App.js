@@ -39,7 +39,7 @@ function App() {
 
   useEffect(() => {
 
-    const APP_VERSION = "2.0.1";
+    const APP_VERSION = "2.0.2";
 
     const savedVersion =
       localStorage.getItem(
@@ -50,8 +50,9 @@ function App() {
       savedVersion !== APP_VERSION
     ) {
 
-      localStorage.removeItem("cart");
-      localStorage.removeItem("userEmail");
+      localStorage.clear();
+
+      sessionStorage.clear();
 
       localStorage.setItem(
         "app_version",

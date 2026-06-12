@@ -1,12 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 function NavbarComponent() {
 
   const [cartCount, setCartCount] =
     useState(0);
-
-  const navigate = useNavigate();
 
   const isLoggedIn =
     localStorage.getItem(
@@ -69,10 +67,12 @@ function NavbarComponent() {
     localStorage.removeItem("userName");
     localStorage.removeItem("loggedInUser");
     localStorage.removeItem("userPicture");
-
     localStorage.removeItem("cart");
+    localStorage.removeItem("favorites");
 
-    navigate("/login");
+    sessionStorage.clear();
+
+    window.location.href = "/login";
   };
 
   return (
