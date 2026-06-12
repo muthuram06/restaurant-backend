@@ -153,11 +153,40 @@ function Orders() {
 
         });
 
+
     } else {
 
       setLoading(false);
 
     }
+
+  }, [email]);
+
+  useEffect(() => {
+
+    const interval =
+      setInterval(() => {
+
+        if (email) {
+
+          axios
+            .get(
+              `https://restaurant-backend-ca51.onrender.com/api/orders/user/${email}`
+            )
+            .then((response) => {
+
+              setOrders(
+                response.data || []
+              );
+
+            });
+
+        }
+
+      }, 5000);
+
+    return () =>
+      clearInterval(interval);
 
   }, [email]);
 

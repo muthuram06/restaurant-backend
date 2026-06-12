@@ -5,7 +5,13 @@ function AdminOrders() {
 
   const [orders, setOrders] = useState([]);
   const [lastOrderCount, setLastOrderCount] =
-  useState(0);
+  useState(
+    Number(
+      sessionStorage.getItem(
+        "lastOrderCount"
+      ) || 0
+    )
+  );
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] =
     useState("All");
@@ -86,6 +92,11 @@ function AdminOrders() {
         }
 
         setLastOrderCount(
+          newOrders.length
+        );
+
+        sessionStorage.setItem(
+          "lastOrderCount",
           newOrders.length
         );
 
@@ -302,6 +313,28 @@ const todayRevenue =
 
             <div className="card shadow border-0 text-center p-4">
 
+              <h5>COD Orders</h5>
+
+              <h2 className="text-danger">
+
+                {
+                  filteredOrders.filter(
+                    (o) =>
+                      o.paymentMethod ===
+                      "Cash On Delivery"
+                  ).length
+                }
+
+              </h2>
+
+            </div>
+
+          </div>
+
+          <div className="col-md-3 mb-3">
+
+            <div className="card shadow border-0 text-center p-4">
+
               <h5>Total Revenue</h5>
 
               <h2 className="text-success">
@@ -326,70 +359,49 @@ const todayRevenue =
 
           </div>
 
-          <div className="col-md-3 mb-3">
+        </div>
 
-            <div className="card shadow border-0 text-center p-4">
+        <div className="col-md-4 mb-3">
 
-              <h5>Pending</h5>
+          <div className="card shadow border-0 text-center p-4">
 
-              <h2 className="text-warning">
-                {
-                  filteredOrders.length -
-                  deliveredOrders
-                }
-              </h2>
+            <h5>Pending Orders</h5>
 
-            </div>
+            <h2 className="text-warning">
+              {pendingOrders}
+            </h2>
 
           </div>
 
         </div>
 
-        <div className="row mb-4">
+        <div className="col-md-4 mb-3">
 
-  <div className="col-md-4 mb-3">
+          <div className="card shadow border-0 text-center p-4">
 
-    <div className="card shadow border-0 text-center p-4">
+            <h5>Customers</h5>
 
-      <h5>Pending Orders</h5>
+            <h2 className="text-info">
+              {uniqueCustomers}
+            </h2>
 
-      <h2 className="text-warning">
-        {pendingOrders}
-      </h2>
+          </div>
 
-    </div>
+        </div>
 
-  </div>
+        <div className="col-md-4 mb-3">
 
-  <div className="col-md-4 mb-3">
+          <div className="card shadow border-0 text-center p-4">
 
-    <div className="card shadow border-0 text-center p-4">
+            <h5>Today's Revenue</h5>
 
-      <h5>Customers</h5>
+            <h2 className="text-success">
+              ₹{todayRevenue}
+            </h2>
 
-      <h2 className="text-info">
-        {uniqueCustomers}
-      </h2>
+          </div>
 
-    </div>
-
-  </div>
-
-  <div className="col-md-4 mb-3">
-
-    <div className="card shadow border-0 text-center p-4">
-
-      <h5>Today's Revenue</h5>
-
-      <h2 className="text-success">
-        ₹{todayRevenue}
-      </h2>
-
-    </div>
-
-  </div>
-
-  </div>
+        </div>
 
         <div className="row mb-4">
 

@@ -1,5 +1,7 @@
-import React from "react";
+import React, { useState } from "react";
 import { useLocation } from "react-router-dom";
+import { toast } from "react-toastify";
+
 import NavbarComponent from "../components/NavbarComponent";
 import Reviews from "./Reviews";
 
@@ -8,18 +10,25 @@ function FoodDetails() {
   const location = useLocation();
   const food = location.state;
 
+  const [quantity, setQuantity] =
+    useState(1);
+
   if (!food) {
+
     return (
       <div className="container mt-5">
         <h2>Food Details Not Found</h2>
       </div>
     );
+
   }
 
   const addToCart = () => {
 
     const existingCart =
-      JSON.parse(localStorage.getItem("cart")) || [];
+      JSON.parse(
+        localStorage.getItem("cart")
+      ) || [];
 
     const existingItem =
       existingCart.find(
@@ -28,14 +37,13 @@ function FoodDetails() {
 
     if (existingItem) {
 
-      existingItem.quantity =
-        (existingItem.quantity || 1) + 1;
+      existingItem.quantity += quantity;
 
     } else {
 
       existingCart.push({
         ...food,
-        quantity: 1
+        quantity
       });
 
     }
@@ -49,7 +57,25 @@ function FoodDetails() {
       new Event("cartUpdated")
     );
 
-    alert("Food Added To Cart");
+    window.dispatchEvent(
+      new Event("cartBounce")
+    );
+
+    toast.success(
+      `${food.name} added to cart 🛒`
+    );
+  };
+
+  const buyNow = () => {
+
+    addToCart();
+
+    setTimeout(() => {
+
+      window.location.href =
+        "/checkout";
+
+    }, 500);
 
   };
 
@@ -57,8 +83,8 @@ function FoodDetails() {
 
     <div
       style={{
-        background:"#f8fafc",
-        minHeight:"100vh"
+        background: "#f8fafc",
+        minHeight: "100vh"
       }}
     >
 
@@ -77,9 +103,9 @@ function FoodDetails() {
                 alt={food.name}
                 className="img-fluid rounded"
                 style={{
-                  width:"100%",
-                  height:"500px",
-                  objectFit:"cover"
+                  width: "100%",
+                  height: "500px",
+                  objectFit: "cover"
                 }}
               />
 
@@ -110,7 +136,7 @@ function FoodDetails() {
               <p
                 className="mt-4"
                 style={{
-                  fontSize:"18px"
+                  fontSize: "18px"
                 }}
               >
                 {food.description}
@@ -162,18 +188,68 @@ function FoodDetails() {
 
               </div>
 
-              <div
-                className="alert alert-success mt-4"
-              >
+              <div className="alert alert-success mt-4">
+
                 🎉 Flat 20% OFF Today
+
               </div>
 
-              <button
-                className="btn btn-success btn-lg w-100 mt-3"
-                onClick={addToCart}
-              >
-                🛒 Add To Cart
-              </button>
+              <div className="d-flex align-items-center justify-content-center mt-3">
+
+                <button
+                  className="btn btn-danger"
+                  onClick={() =>
+                    quantity > 1 &&
+                    setQuantity(
+                      quantity - 1
+                    )
+                  }
+                >
+                  -
+                </button>
+
+                <span className="mx-4 fs-4 fw-bold">
+                  {quantity}
+                </span>
+
+                <button
+                  className="btn btn-success"
+                  onClick={() =>
+                    setQuantity(
+                      quantity + 1
+                    )
+                  }
+                >
+                  +
+                </button>
+
+              </div>
+
+              <div className="row mt-4">
+
+                <div className="col-6">
+
+                  <button
+                    className="btn btn-success btn-lg w-100"
+                    onClick={addToCart}
+                  >
+                    🛒 Add To Cart
+                  </button>
+
+                </div>
+
+                <div className="col-6">
+
+                  <button
+                    className="btn btn-warning btn-lg w-100"
+                    onClick={buyNow}
+                  >
+                    ⚡ Buy Now
+                  </button>
+
+                </div>
+
+              </div>
 
             </div>
 
@@ -190,6 +266,7 @@ function FoodDetails() {
     </div>
 
   );
+
 }
 
 export default FoodDetails;

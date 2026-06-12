@@ -14,6 +14,12 @@ function Profile() {
   const email =
     localStorage.getItem("userEmail");
 
+  const userName =
+    localStorage.getItem("userName");
+
+  const userPicture =
+    localStorage.getItem("userPicture");
+
   useEffect(() => {
 
     if (email) {
@@ -24,7 +30,9 @@ function Profile() {
         )
         .then((response) => {
 
-          setOrders(response.data);
+          setOrders(
+            response.data || []
+          );
 
         })
         .catch((error) => {
@@ -71,6 +79,16 @@ function Profile() {
       ? "🥇 Gold"
       : "🥈 Silver";
 
+  const logout = () => {
+
+    localStorage.clear();
+
+    sessionStorage.clear();
+
+    window.location.href =
+      "/login";
+  };
+
   return (
 
     <div
@@ -92,35 +110,51 @@ function Profile() {
           }}
         >
 
-          <div
-            className="card-body p-5"
-          >
+          <div className="card-body p-5">
 
             <div className="text-center">
 
-              <div
-                className="mx-auto d-flex align-items-center justify-content-center text-white fw-bold"
-                style={{
-                  width: "120px",
-                  height: "120px",
-                  borderRadius: "50%",
-                  background:
-                    "linear-gradient(135deg,#22c55e,#16a34a)",
-                  fontSize: "48px"
-                }}
-              >
+              {userPicture ? (
 
-                {
-                  user.customerName
-                    ?.charAt(0)
-                    ?.toUpperCase() || "U"
-                }
+                <img
+                  src={userPicture}
+                  alt="Profile"
+                  style={{
+                    width: "130px",
+                    height: "130px",
+                    borderRadius: "50%",
+                    objectFit: "cover",
+                    border:
+                      "5px solid #22c55e"
+                  }}
+                />
 
-              </div>
+              ) : (
+
+                <div
+                  className="mx-auto d-flex align-items-center justify-content-center text-white fw-bold"
+                  style={{
+                    width: "120px",
+                    height: "120px",
+                    borderRadius: "50%",
+                    background:
+                      "linear-gradient(135deg,#22c55e,#16a34a)",
+                    fontSize: "48px"
+                  }}
+                >
+                  {
+                    userName
+                      ?.charAt(0)
+                      ?.toUpperCase() || "U"
+                  }
+                </div>
+
+              )}
 
               <h2 className="fw-bold mt-3">
 
                 {
+                  userName ||
                   user.customerName ||
                   "Customer"
                 }
@@ -151,7 +185,7 @@ function Profile() {
                 <h5>
                   📧 Email :
                   {" "}
-                  {user.email || "N/A"}
+                  {email || "N/A"}
                 </h5>
 
                 <h5>
@@ -183,21 +217,12 @@ function Profile() {
 
               <div className="col-lg-3 col-md-6 mb-4">
 
-                <div
-                  className="card border-0 shadow text-center p-4"
-                  style={{
-                    borderRadius: "20px"
-                  }}
-                >
+                <div className="card shadow text-center p-4">
 
-                  <h5>
-                    📦 Orders
-                  </h5>
+                  <h5>📦 Orders</h5>
 
                   <h1 className="text-primary">
-
                     {orders.length}
-
                   </h1>
 
                 </div>
@@ -206,21 +231,12 @@ function Profile() {
 
               <div className="col-lg-3 col-md-6 mb-4">
 
-                <div
-                  className="card border-0 shadow text-center p-4"
-                  style={{
-                    borderRadius: "20px"
-                  }}
-                >
+                <div className="card shadow text-center p-4">
 
-                  <h5>
-                    💰 Spent
-                  </h5>
+                  <h5>💰 Spent</h5>
 
                   <h1 className="text-success">
-
                     ₹{totalSpent}
-
                   </h1>
 
                 </div>
@@ -229,21 +245,12 @@ function Profile() {
 
               <div className="col-lg-3 col-md-6 mb-4">
 
-                <div
-                  className="card border-0 shadow text-center p-4"
-                  style={{
-                    borderRadius: "20px"
-                  }}
-                >
+                <div className="card shadow text-center p-4">
 
-                  <h5>
-                    🚚 Delivered
-                  </h5>
+                  <h5>🚚 Delivered</h5>
 
                   <h1 className="text-warning">
-
                     {deliveredOrders}
-
                   </h1>
 
                 </div>
@@ -252,21 +259,12 @@ function Profile() {
 
               <div className="col-lg-3 col-md-6 mb-4">
 
-                <div
-                  className="card border-0 shadow text-center p-4"
-                  style={{
-                    borderRadius: "20px"
-                  }}
-                >
+                <div className="card shadow text-center p-4">
 
-                  <h5>
-                    📈 Success
-                  </h5>
+                  <h5>📈 Success</h5>
 
                   <h1 className="text-info">
-
                     {successRate}%
-
                   </h1>
 
                 </div>
@@ -275,60 +273,69 @@ function Profile() {
 
             </div>
 
-            {orders.length > 0 && (
+            <div className="card mt-4 shadow">
 
-              <div
-                className="card border-0 shadow mt-4"
-              >
+              <div className="card-body">
 
-                <div className="card-body">
+                <h4>
+                  🕒 Recent Orders
+                </h4>
 
-                  <h4 className="fw-bold">
+                <table className="table">
 
-                    🕒 Latest Order
+                  <thead>
 
-                  </h4>
+                    <tr>
+                      <th>Food</th>
+                      <th>Status</th>
+                      <th>Total</th>
+                    </tr>
 
-                  <hr />
+                  </thead>
 
-                  <h5>
+                  <tbody>
 
-                    🍽 {
-                      orders[
-                        orders.length - 1
-                      ].foodName
-                    }
+                    {orders
+                      .slice(-5)
+                      .reverse()
+                      .map((order) => (
 
-                  </h5>
+                        <tr key={order.id}>
 
-                  <p>
+                          <td>
+                            {order.foodName}
+                          </td>
 
-                    Status :
-                    {" "}
-                    {
-                      orders[
-                        orders.length - 1
-                      ].status
-                    }
+                          <td>
+                            {order.status}
+                          </td>
 
-                  </p>
+                          <td>
+                            ₹{order.total}
+                          </td>
 
-                  <h5 className="text-success">
+                        </tr>
 
-                    ₹
-                    {
-                      orders[
-                        orders.length - 1
-                      ].total
-                    }
+                      ))}
 
-                  </h5>
+                  </tbody>
 
-                </div>
+                </table>
 
               </div>
 
-            )}
+            </div>
+
+            <div className="text-center mt-4">
+
+              <button
+                className="btn btn-danger btn-lg"
+                onClick={logout}
+              >
+                🚪 Logout
+              </button>
+
+            </div>
 
           </div>
 
