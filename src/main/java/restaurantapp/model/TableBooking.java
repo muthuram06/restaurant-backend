@@ -12,35 +12,56 @@ public class TableBooking {
 
     private String customerName;
 
+    private String email;
+
+    private String phone;
+
     private int persons;
 
     private String bookingDate;
 
     private String bookingTime;
 
-    public TableBooking() {}
+    public TableBooking() {
+    }
 
     public Long getId() {
         return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public String getCustomerName() {
         return customerName;
     }
 
-    public void setCustomerName(String customerName) {
+    public void setCustomerName(
+            String customerName) {
         this.customerName = customerName;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(
+            String email) {
+        this.email = email;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(
+            String phone) {
+        this.phone = phone;
     }
 
     public int getPersons() {
         return persons;
     }
 
-    public void setPersons(int persons) {
+    public void setPersons(
+            int persons) {
         this.persons = persons;
     }
 
@@ -48,7 +69,8 @@ public class TableBooking {
         return bookingDate;
     }
 
-    public void setBookingDate(String bookingDate) {
+    public void setBookingDate(
+            String bookingDate) {
         this.bookingDate = bookingDate;
     }
 
@@ -56,7 +78,8 @@ public class TableBooking {
         return bookingTime;
     }
 
-    public void setBookingTime(String bookingTime) {
+    public void setBookingTime(
+            String bookingTime) {
         this.bookingTime = bookingTime;
     }
 }

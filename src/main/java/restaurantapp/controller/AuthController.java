@@ -8,7 +8,7 @@ import restaurantapp.repository.UserRepository;
 
 @RestController
 @RequestMapping("/api/auth")
-@CrossOrigin("*")
+@CrossOrigin(origins = "*")
 public class AuthController {
 
     @Autowired
@@ -23,7 +23,10 @@ public class AuthController {
                         user.getEmail());
 
         if (existingUser != null) {
-            return existingUser;
+
+            throw new RuntimeException(
+                    "User already exists with email: "
+                            + user.getEmail());
         }
 
         return userRepository.save(user);
@@ -33,10 +36,18 @@ public class AuthController {
     public User loginUser(
             @RequestBody User user) {
 
-        return userRepository
-                .findByEmailAndPassword(
+        User existingUser =
+                userRepository.findByEmailAndPassword(
                         user.getEmail(),
                         user.getPassword());
+
+        if (existingUser == null) {
+
+            throw new RuntimeException(
+                    "Invalid Email or Password");
+        }
+
+        return existingUser;
     }
 
     @PostMapping("/google")
@@ -52,5 +63,11 @@ public class AuthController {
         }
 
         return userRepository.save(user);
+    }
+
+    @GetMapping("/users")
+    public Iterable<User> getAllUsers() {
+
+        return userRepository.findAll();
     }
 }
