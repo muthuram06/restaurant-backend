@@ -108,16 +108,22 @@ function Orders() {
         )
         .then((response) => {
 
-          console.log(
-            "Orders Response:",
-            response.data
-          );
+          console.log("USER EMAIL:", email);
+
+          console.log("ORDERS FROM API:", response.data);
 
           setOrders(response.data || []);
 
           setLoading(false);
 
         })
+        .catch((error) => {
+
+          console.error("ORDER ERROR:", error);
+
+          setLoading(false);
+
+        });
 
     } else {
 

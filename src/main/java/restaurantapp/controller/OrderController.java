@@ -50,7 +50,16 @@ public class OrderController {
     public List<Order> getUserOrders(
             @PathVariable String email) {
 
-        return orderRepository.findByEmail(email);
+        List<Order> orders =
+                orderRepository.findByEmail(email);
+
+        if (orders == null || orders.isEmpty()) {
+
+            orders =
+                    orderRepository.findByUserEmail(email);
+        }
+
+        return orders;
     }
 
     @GetMapping("/{id}")
@@ -104,8 +113,7 @@ public class OrderController {
             Order order =
                     optionalOrder.get();
 
-            order.setPaymentStatus(
-                    paymentStatus);
+            order.setPaymentStatus(paymentStatus);
 
             return orderRepository.save(order);
         }
