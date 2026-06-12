@@ -1,107 +1,132 @@
 import { useState } from "react";
 import axios from "axios";
 import NavbarComponent from "../components/NavbarComponent";
+import { toast } from "react-toastify";
 
 function Register() {
 
-    const [name, setName] = useState("");
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
 
-    const registerUser = async () => {
+  const registerUser = async () => {
 
-        if (!name || !email || !password) {
+    if (!name || !email || !password) {
 
-            alert("Fill all details");
-            return;
+      toast.error("Fill all details");
+      return;
+
+    }
+
+    try {
+
+      setLoading(true);
+
+      await axios.post(
+        "https://restaurant-backend-ca51.onrender.com/api/auth/register",
+        {
+          name,
+          email,
+          password
         }
+      );
 
-        try {
+      toast.success(
+        "Registration Successful"
+      );
 
-            await axios.post(
-                "https://restaurant-backend-ca51.onrender.com/api/auth/register",
-                {
-                    name,
-                    email,
-                    password
-                }
-            );
+      setTimeout(() => {
 
-            alert("Registration Successful");
+        window.location.href = "/login";
 
-            window.location.href = "/login";
+      }, 1500);
 
-        } catch (error) {
+    } catch (error) {
 
-            console.error(error);
+      console.error(error);
 
-            alert("Registration Failed");
-        }
-    };
+      toast.error(
+        "Registration Failed"
+      );
 
-    return (
+    } finally {
 
-        <div>
+      setLoading(false);
 
-            <NavbarComponent />
+    }
 
-            <div className="container mt-5">
+  };
 
-                <div
-                    className="card shadow-lg p-4 mx-auto"
-                    style={{
-                        maxWidth: "500px",
-                        borderRadius: "20px"
-                    }}
-                >
+  return (
 
-                    <h1 className="text-center mb-4">
-                        User Register
-                    </h1>
+    <div>
 
-                    <input
-                        type="text"
-                        className="form-control mb-3"
-                        placeholder="Enter Name"
-                        value={name}
-                        onChange={(e) =>
-                            setName(e.target.value)
-                        }
-                    />
+      <NavbarComponent />
 
-                    <input
-                        type="email"
-                        className="form-control mb-3"
-                        placeholder="Enter Email"
-                        value={email}
-                        onChange={(e) =>
-                            setEmail(e.target.value)
-                        }
-                    />
+      <div className="container mt-5">
 
-                    <input
-                        type="password"
-                        className="form-control mb-3"
-                        placeholder="Enter Password"
-                        value={password}
-                        onChange={(e) =>
-                            setPassword(e.target.value)
-                        }
-                    />
+        <div
+          className="card shadow-lg p-4 mx-auto"
+          style={{
+            maxWidth: "500px",
+            borderRadius: "20px"
+          }}
+        >
 
-                    <button
-                        className="btn btn-success w-100"
-                        onClick={registerUser}
-                    >
-                        Register
-                    </button>
+          <h1 className="text-center mb-4">
+            User Register
+          </h1>
 
-                </div>
+          <input
+            type="text"
+            className="form-control mb-3"
+            placeholder="Enter Name"
+            value={name}
+            onChange={(e) =>
+              setName(e.target.value)
+            }
+          />
 
-            </div>
+          <input
+            type="email"
+            className="form-control mb-3"
+            placeholder="Enter Email"
+            value={email}
+            onChange={(e) =>
+              setEmail(e.target.value)
+            }
+          />
+
+          <input
+            type="password"
+            className="form-control mb-3"
+            placeholder="Enter Password"
+            value={password}
+            onChange={(e) =>
+              setPassword(e.target.value)
+            }
+          />
+
+          <button
+            className="btn btn-success w-100"
+            onClick={registerUser}
+            disabled={loading}
+          >
+
+            {loading
+              ? "Registering..."
+              : "Register"}
+
+          </button>
 
         </div>
-    );
+
+      </div>
+
+    </div>
+
+  );
 }
 
 export default Register;

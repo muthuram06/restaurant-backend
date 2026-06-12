@@ -46,6 +46,31 @@ function AdminPanel() {
 
               <div className="card-body text-center p-4">
 
+                <h1>🍽</h1>
+
+                <h4>Bookings</h4>
+
+                <button
+                  className="btn btn-info w-100 mt-3"
+                  onClick={() =>
+                    navigate("/admin-bookings")
+                  }
+                >
+                  View Bookings
+                </button>
+
+              </div>
+
+            </div>
+
+          </div>
+
+          <div className="col-md-3">
+
+            <div className="card shadow-lg border-0">
+
+              <div className="card-body text-center p-4">
+
                 <h1>📅</h1>
 
                 <h4>Bookings</h4>

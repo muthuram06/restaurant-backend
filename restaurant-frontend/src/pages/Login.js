@@ -4,21 +4,26 @@ import NavbarComponent from "../components/NavbarComponent";
 import { GoogleLogin } from "@react-oauth/google";
 import { jwtDecode } from "jwt-decode";
 import axios from "axios";
+import { toast } from "react-toastify";
 
 function Login() {
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const loginUser = async () => {
 
     if (!email || !password) {
 
-      alert("Enter Email and Password");
+      toast.error("Enter Email and Password");
       return;
+
     }
 
     try {
+
+      setLoading(true);
 
       const response =
         await axios.post(
@@ -33,8 +38,12 @@ function Login() {
 
       if (!user) {
 
-        alert("Invalid Email or Password");
+        toast.error(
+          "Invalid Email or Password"
+        );
+
         return;
+
       }
 
       localStorage.setItem(
@@ -57,22 +66,32 @@ function Login() {
         JSON.stringify(user)
       );
 
-      alert("Login Successful");
+      toast.success(
+        "Login Successful"
+      );
 
-      window.location.href = "/";
+      setTimeout(() => {
+
+        window.location.href = "/";
+
+      }, 1500);
 
     } catch (error) {
 
       console.error(error);
 
-      alert("Login Failed");
+      toast.error("Login Failed");
+
+    } finally {
+
+      setLoading(false);
+
     }
+
   };
 
   const handleGoogleSuccess =
     async (credentialResponse) => {
-
-      localStorage.removeItem("cart");
 
       try {
 
@@ -118,23 +137,33 @@ function Login() {
           JSON.stringify(user)
         );
 
-        alert(
+        toast.success(
           `Welcome ${user.name}`
         );
 
-        window.location.href = "/";
+        setTimeout(() => {
+
+          window.location.href = "/";
+
+        }, 1500);
 
       } catch (error) {
 
         console.error(error);
 
-        alert("Google Login Failed");
+        toast.error(
+          "Google Login Failed"
+        );
+
       }
     };
 
   const handleGoogleError = () => {
 
-    alert("Google Login Failed");
+    toast.error(
+      "Google Login Failed"
+    );
+
   };
 
   return (
@@ -180,8 +209,13 @@ function Login() {
           <button
             className="btn btn-primary w-100"
             onClick={loginUser}
+            disabled={loading}
           >
-            Login
+
+            {loading
+              ? "Logging In..."
+              : "Login"}
+
           </button>
 
           <div className="text-center mt-4">

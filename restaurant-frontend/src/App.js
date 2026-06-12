@@ -6,6 +6,9 @@ import {
   Navigate
 } from "react-router-dom";
 
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 /* USER PAGES */
 import Home from "./pages/Home";
 import Cart from "./pages/Cart";
@@ -39,7 +42,14 @@ function App() {
     localStorage.getItem("isAdminLoggedIn") === "true";
 
   return (
+
     <BrowserRouter>
+
+      <ToastContainer
+        position="top-right"
+        autoClose={2500}
+        theme="colored"
+      />
 
       <Routes>
 
@@ -50,7 +60,7 @@ function App() {
         <Route path="/register" element={<Register />} />
         <Route path="/food-details" element={<FoodDetails />} />
 
-        {/* USER PROTECTED ROUTES */}
+        {/* USER ROUTES */}
 
         <Route
           path="/cart"
@@ -145,10 +155,7 @@ function App() {
           element={
             isAdminLoggedIn
               ? <AdminBookings />
-              : <Navigate
-                  to="/admin-login"
-                  replace
-                />
+              : <Navigate to="/admin-login" replace />
           }
         />
 
@@ -170,14 +177,14 @@ function App() {
           }
         />
 
-          <Route
-            path="/admin-customers"
-            element={
-              isAdminLoggedIn
-                ? <AdminCustomers />
-                : <Navigate to="/admin-login" replace />
-            }
-          />
+        <Route
+          path="/admin-customers"
+          element={
+            isAdminLoggedIn
+              ? <AdminCustomers />
+              : <Navigate to="/admin-login" replace />
+          }
+        />
 
         {/* FALLBACK */}
 
@@ -189,6 +196,7 @@ function App() {
       </Routes>
 
     </BrowserRouter>
+
   );
 }
 

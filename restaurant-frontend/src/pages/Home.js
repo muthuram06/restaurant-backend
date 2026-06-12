@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import { toast } from "react-toastify";
 
 import NavbarComponent from "../components/NavbarComponent";
 import FooterComponent from "../components/FooterComponent";
@@ -86,6 +87,10 @@ function Home() {
 
     updateCartStorage(updatedCart);
 
+    toast.success(
+      `${food.name} added to cart 🛒`
+    );
+
   };
 
   const decreaseQuantity = (food) => {
@@ -136,7 +141,7 @@ function Home() {
         JSON.stringify(favorites)
       );
 
-      alert(
+      toast.success(
         `${food.name} added to favorites ❤️`
       );
 
@@ -374,7 +379,7 @@ function Home() {
         color: "#000"
       }}
     >
-      ⭐ {food.rating || (4.2 + Math.random() * 0.8).toFixed(1)}
+      ⭐ {food.rating || 4.5}
     </span>
   </div>
 
@@ -447,7 +452,7 @@ function Home() {
     </small>
 
     <small className="text-secondary">
-      🚚 Free Delivery
+      🚚 Free Delivery Above ₹199
     </small>
 
   </div>
