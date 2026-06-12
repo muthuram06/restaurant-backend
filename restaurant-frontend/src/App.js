@@ -33,7 +33,33 @@ import AdminAnalytics from "./pages/AdminAnalytics";
 import AdminCustomers from "./pages/AdminCustomers";
 import AdminBookings from "./pages/AdminBookings";
 
+import { useEffect } from "react";
+
 function App() {
+
+  useEffect(() => {
+
+    const APP_VERSION = "2.0.1";
+
+    const savedVersion =
+      localStorage.getItem(
+        "app_version"
+      );
+
+    if (
+      savedVersion !== APP_VERSION
+    ) {
+
+      localStorage.removeItem("cart");
+      localStorage.removeItem("userEmail");
+
+      localStorage.setItem(
+        "app_version",
+        APP_VERSION
+      );
+    }
+
+  }, []);
 
   const isUserLoggedIn =
     localStorage.getItem("isUserLoggedIn") === "true";

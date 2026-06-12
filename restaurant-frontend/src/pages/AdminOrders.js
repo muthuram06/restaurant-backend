@@ -44,16 +44,45 @@ function AdminOrders() {
           newOrders.length > lastOrderCount
         ) {
 
-          const audio =
-            new Audio(
-              "https://actions.google.com/sounds/v1/alarms/beep_short.ogg"
+          const latestOrder =
+            newOrders[newOrders.length - 1];
+
+          const alreadyShown =
+            sessionStorage.getItem(
+              "lastAdminOrder"
             );
 
-          audio.play();
+          if (
+            alreadyShown !==
+            String(latestOrder.id)
+          ) {
 
-          alert(
-            "🔔 New Order Received!"
-          );
+            sessionStorage.setItem(
+              "lastAdminOrder",
+              latestOrder.id
+            );
+
+            const audio =
+              new Audio(
+                "https://actions.google.com/sounds/v1/alarms/beep_short.ogg"
+              );
+
+            audio.play();
+
+            setTimeout(() => {
+
+              alert(
+                `🔔 New Order
+
+        Customer: ${latestOrder.customerName}
+
+        Food: ${latestOrder.foodName}
+
+        Amount: ₹${latestOrder.total}`
+              );
+
+            }, 500);
+          }
         }
 
         setLastOrderCount(

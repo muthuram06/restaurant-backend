@@ -60,6 +60,15 @@ function AdminPanel() {
           Number(lastOrderId)
         ) {
 
+          if (
+            sessionStorage.getItem(
+              "notifiedOrder"
+            ) ===
+            String(latestOrder.id)
+          ) {
+            return;
+          }
+
           setNewOrders(
             (prev) => prev + 1
           );
@@ -73,6 +82,11 @@ function AdminPanel() {
             latestOrder.id
           );
 
+          sessionStorage.setItem(
+            "notifiedOrder",
+            latestOrder.id
+          );
+
           const audio =
             new Audio(
               "https://actions.google.com/sounds/v1/alarms/beep_short.ogg"
@@ -80,15 +94,21 @@ function AdminPanel() {
 
           audio.play();
 
-          alert(
-            `🔔 New Order Received
+          window.toastShown = true;
 
-Customer : ${latestOrder.customerName}
+          setTimeout(() => {
 
-Food : ${latestOrder.foodName}
+            alert(
+              `🔔 NEW ORDER
 
-Total : ₹${latestOrder.total}`
-          );
+          Customer : ${latestOrder.customerName}
+
+          Food : ${latestOrder.foodName}
+
+          Amount : ₹${latestOrder.total}`
+            );
+
+          }, 500);
         }
 
       } catch (error) {
