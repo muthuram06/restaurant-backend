@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useEffect } from "react";
+
 import {
   BrowserRouter,
   Routes,
@@ -9,7 +10,10 @@ import {
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-/* USER PAGES */
+/* ==========================
+   USER PAGES
+========================== */
+
 import Home from "./pages/Home";
 import Cart from "./pages/Cart";
 import Orders from "./pages/Orders";
@@ -20,11 +24,17 @@ import Checkout from "./pages/Checkout";
 import TableBooking from "./pages/TableBooking";
 import FoodDetails from "./pages/FoodDetails";
 
-/* OPTIONAL USER PAGES */
+/* ==========================
+   OPTIONAL USER PAGES
+========================== */
+
 import Profile from "./pages/Profile";
 import Payment from "./pages/Payment";
 
-/* ADMIN PAGES */
+/* ==========================
+   ADMIN PAGES
+========================== */
+
 import AdminLogin from "./pages/AdminLogin";
 import AdminPanel from "./pages/AdminPanel";
 import AdminFoods from "./pages/AdminFoods";
@@ -33,25 +43,23 @@ import AdminAnalytics from "./pages/AdminAnalytics";
 import AdminCustomers from "./pages/AdminCustomers";
 import AdminBookings from "./pages/AdminBookings";
 
-import { useEffect } from "react";
 
 function App() {
+
+  /* ==========================
+     APP VERSION
+  ========================== */
 
   useEffect(() => {
 
     const APP_VERSION = "2.0.2";
 
     const savedVersion =
-      localStorage.getItem(
-        "app_version"
-      );
+      localStorage.getItem("app_version");
 
-    if (
-      savedVersion !== APP_VERSION
-    ) {
+    if (savedVersion !== APP_VERSION) {
 
       localStorage.clear();
-
       sessionStorage.clear();
 
       localStorage.setItem(
@@ -62,15 +70,25 @@ function App() {
 
   }, []);
 
+
+  /* ==========================
+     LOGIN STATUS
+  ========================== */
+
   const isUserLoggedIn =
     localStorage.getItem("isUserLoggedIn") === "true";
 
   const isAdminLoggedIn =
     localStorage.getItem("isAdminLoggedIn") === "true";
 
+
   return (
 
     <BrowserRouter>
+
+      {/* ==========================
+          TOAST NOTIFICATIONS
+      ========================== */}
 
       <ToastContainer
         position="top-right"
@@ -78,23 +96,47 @@ function App() {
         theme="colored"
       />
 
+
       <Routes>
 
-        {/* PUBLIC ROUTES */}
+        {/* ==========================
+            PUBLIC ROUTES
+        ========================== */}
 
-        <Route path="/" element={<Home />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
-        <Route path="/food-details" element={<FoodDetails />} />
+        <Route
+          path="/"
+          element={<Home />}
+        />
 
-        {/* USER ROUTES */}
+        <Route
+          path="/login"
+          element={<Login />}
+        />
+
+        <Route
+          path="/register"
+          element={<Register />}
+        />
+
+        <Route
+          path="/food-details"
+          element={<FoodDetails />}
+        />
+
+
+        {/* ==========================
+            USER ROUTES
+        ========================== */}
 
         <Route
           path="/cart"
           element={
             isUserLoggedIn
               ? <Cart />
-              : <Navigate to="/login" replace />
+              : <Navigate
+                  to="/login"
+                  replace
+                />
           }
         />
 
@@ -103,7 +145,10 @@ function App() {
           element={
             isUserLoggedIn
               ? <Orders />
-              : <Navigate to="/login" replace />
+              : <Navigate
+                  to="/login"
+                  replace
+                />
           }
         />
 
@@ -112,7 +157,10 @@ function App() {
           element={
             isUserLoggedIn
               ? <Favorites />
-              : <Navigate to="/login" replace />
+              : <Navigate
+                  to="/login"
+                  replace
+                />
           }
         />
 
@@ -121,7 +169,10 @@ function App() {
           element={
             isUserLoggedIn
               ? <Checkout />
-              : <Navigate to="/login" replace />
+              : <Navigate
+                  to="/login"
+                  replace
+                />
           }
         />
 
@@ -130,7 +181,10 @@ function App() {
           element={
             isUserLoggedIn
               ? <TableBooking />
-              : <Navigate to="/login" replace />
+              : <Navigate
+                  to="/login"
+                  replace
+                />
           }
         />
 
@@ -139,7 +193,10 @@ function App() {
           element={
             isUserLoggedIn
               ? <Profile />
-              : <Navigate to="/login" replace />
+              : <Navigate
+                  to="/login"
+                  replace
+                />
           }
         />
 
@@ -148,82 +205,143 @@ function App() {
           element={
             isUserLoggedIn
               ? <Payment />
-              : <Navigate to="/login" replace />
+              : <Navigate
+                  to="/login"
+                  replace
+                />
           }
         />
 
-        {/* ADMIN ROUTES */}
+
+        {/* ==========================
+            ADMIN LOGIN
+        ========================== */}
 
         <Route
           path="/admin-login"
           element={<AdminLogin />}
         />
 
+
+        {/* ==========================
+            ADMIN DASHBOARD
+        ========================== */}
+
         <Route
           path="/admin"
           element={
             isAdminLoggedIn
               ? <AdminPanel />
-              : <Navigate to="/admin-login" replace />
+              : <Navigate
+                  to="/admin-login"
+                  replace
+                />
           }
         />
+
+
+        {/* ==========================
+            ADMIN FOOD MANAGEMENT
+        ========================== */}
 
         <Route
           path="/admin-foods"
           element={
             isAdminLoggedIn
               ? <AdminFoods />
-              : <Navigate to="/admin-login" replace />
+              : <Navigate
+                  to="/admin-login"
+                  replace
+                />
           }
         />
+
+
+        {/* ==========================
+            ADMIN BOOKINGS
+        ========================== */}
 
         <Route
           path="/admin-bookings"
           element={
             isAdminLoggedIn
               ? <AdminBookings />
-              : <Navigate to="/admin-login" replace />
+              : <Navigate
+                  to="/admin-login"
+                  replace
+                />
           }
         />
+
+
+        {/* ==========================
+            ADMIN ORDERS
+        ========================== */}
 
         <Route
           path="/admin-orders"
           element={
             isAdminLoggedIn
               ? <AdminOrders />
-              : <Navigate to="/admin-login" replace />
+              : <Navigate
+                  to="/admin-login"
+                  replace
+                />
           }
         />
+
+
+        {/* ==========================
+            ADMIN ANALYTICS
+        ========================== */}
 
         <Route
           path="/admin-analytics"
           element={
             isAdminLoggedIn
               ? <AdminAnalytics />
-              : <Navigate to="/admin-login" replace />
+              : <Navigate
+                  to="/admin-login"
+                  replace
+                />
           }
         />
+
+
+        {/* ==========================
+            ADMIN CUSTOMERS
+        ========================== */}
 
         <Route
           path="/admin-customers"
           element={
             isAdminLoggedIn
               ? <AdminCustomers />
-              : <Navigate to="/admin-login" replace />
+              : <Navigate
+                  to="/admin-login"
+                  replace
+                />
           }
         />
 
-        {/* FALLBACK */}
+
+        {/* ==========================
+            FALLBACK
+        ========================== */}
 
         <Route
           path="*"
-          element={<Navigate to="/" replace />}
+          element={
+            <Navigate
+              to="/"
+              replace
+            />
+          }
         />
 
       </Routes>
 
     </BrowserRouter>
-
   );
 }
 
